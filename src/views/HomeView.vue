@@ -18,7 +18,7 @@
       <button>开始试用</button>
     </div>
     <div class="image">
-      <img src="https://i.postimg.cc/65QxYYzh/001234.png" />
+      <img src="../assets/images/开发经验.svg" />
     </div>
   </div>
 </template>
@@ -79,7 +79,7 @@ ul {
   height: calc(100vh - 80px);
 }
 .content .info {
-  flex: 3;
+  flex: 1;
 }
 .content .info h1 {
   color: #5d5d5d;
@@ -102,7 +102,7 @@ ul {
 }
 
 .content .image {
-  flex: 2;
+  flex: 1;
 }
 img {
   width: 100%;
