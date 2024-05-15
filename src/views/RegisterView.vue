@@ -33,8 +33,12 @@
             v-model="registerForm.code"
             autocomplete="off"
             placeholder="验证码"
+            ><template #prepend>
+              <el-icon>
+                <Iphone />
+              </el-icon> </template
           ></el-input>
-          <el-button type="default" @click="getCode" style="margin-left: 10px"
+          <el-button type="default" @click="getCode" style="margin-left: 5px"
             >获取验证码</el-button
           >
         </div>
@@ -92,6 +96,8 @@ const registerForm = reactive({
 const register = () => {
   if (
     !registerForm.username ||
+    !registerForm.email ||
+    !registerForm.code ||
     !registerForm.password ||
     !registerForm.checkPassword
   ) {
