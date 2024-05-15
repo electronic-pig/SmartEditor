@@ -1,11 +1,25 @@
 <template>
   <div class="container">
     <div class="left-pane">
+      <div class="platform">
+        <router-link to="/">
+          <img
+            class="platform-logo"
+            src="@/assets/images/开发经验.svg"
+            alt="logo"
+          />
+        </router-link>
+        <div class="platform-title">
+          <a>Smart Editor</a>
+        </div>
+      </div>
+      <el-divider class="divider-title"> 功能区 </el-divider>
       <!-- 左侧导航链接 -->
       <div class="router-link">
-        <router-link to="/dashboard/Apage" class="link">首页</router-link>
-        <router-link to="/dashboard/Bpage" class="link">Bpage</router-link>
-        <router-link to="/dashboard/Cpage" class="link">Cpage</router-link>
+        <router-link to="/dashboard/Apage" class="link">开始</router-link>
+        <router-link to="/dashboard/Bpage" class="link">我的文档</router-link>
+        <router-link to="/dashboard/Cpage" class="link">模板库</router-link>
+        <div class="more">更多</div>
       </div>
     </div>
     <div class="right-pane">
@@ -39,7 +53,51 @@
 }
 
 .left-pane {
-  background-color: #eee; /* 左侧面板的背景色 */
+  background-color: #f2f3f5; /* 左侧面板的背景色 */
+}
+
+.platform {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--theme--color);
+  height: 20vh;
+}
+
+.platform-logo {
+  width: 8vw;
+}
+
+.platform-title {
+  position: relative;
+  font-weight: 1000;
+  font-family: Microsoft JhengHei UI, sans-serif;
+  font-size: 22px;
+  cursor: pointer;
+  color: var(--theme--color);
+}
+
+.platform-title::after {
+  content: "";
+  width: 0;
+  height: 3px;
+  background: var(--theme--color);
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  right: 50%;
+  transition: all 0.5s;
+}
+
+.platform-title:hover:after {
+  left: 0%;
+  width: 100%;
+}
+
+.divider-title :deep(.el-divider__text) {
+  line-height: 24px;
+  background-color: #f2f3f5;
+  color: rgb(140, 157, 182);
 }
 
 .router-link {
@@ -73,6 +131,24 @@
 
 .link.router-link-active {
   background-color: var(--el-color-primary-light-3);
+  color: #eee;
+}
+
+.more {
+  width: 100%;
+  padding: 10px 0;
+  margin-top: 50vh;
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 10px;
+  color: var(--el-color-primary-light-3);
+  background-color: #EBEDF0;
+  cursor: pointer;
+}
+
+.more:hover {
+  background-color: var(--el-color-primary-light-5);
   color: #eee;
 }
 </style>
