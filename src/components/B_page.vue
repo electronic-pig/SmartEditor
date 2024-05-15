@@ -1,5 +1,7 @@
 <template>
-  <div class="card"><h1>Bpage</h1></div>
+  <div class="card">
+    <h1>我的文档</h1>
+  </div>
 </template>
 
 <style scoped>

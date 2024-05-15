@@ -6,68 +6,39 @@
     <p class="logo">Smart Editor</p>
     <el-form class="form" :model="registerForm">
       <el-form-item>
-        <el-input
-          v-model="registerForm.username"
-          autocomplete="off"
-          placeholder="用户名"
-          ><template #prepend>
+        <el-input v-model="registerForm.username" autocomplete="off" placeholder="用户名"><template #prepend>
             <el-icon>
               <Avatar />
-            </el-icon> </template
-        ></el-input>
+            </el-icon> </template></el-input>
       </el-form-item>
       <el-form-item>
-        <el-input
-          v-model="registerForm.email"
-          autocomplete="off"
-          placeholder="邮箱"
-          ><template #prepend>
+        <el-input v-model="registerForm.email" autocomplete="off" placeholder="邮箱"><template #prepend>
             <el-icon>
               <Message />
-            </el-icon> </template
-        ></el-input>
+            </el-icon> </template></el-input>
       </el-form-item>
       <el-form-item>
         <div class="code-container">
-          <el-input
-            v-model="registerForm.code"
-            autocomplete="off"
-            placeholder="验证码"
-            ><template #prepend>
+          <el-input v-model="registerForm.code" autocomplete="off" placeholder="验证码"><template #prepend>
               <el-icon>
                 <Iphone />
-              </el-icon> </template
-          ></el-input>
-          <el-button type="default" @click="getCode" style="margin-left: 5px"
-            >获取验证码</el-button
-          >
+              </el-icon> </template></el-input>
+          <el-button type="default" @click="getCode" style="margin-left: 5px">获取验证码</el-button>
         </div>
       </el-form-item>
       <el-form-item>
-        <el-input
-          type="password"
-          v-model="registerForm.password"
-          autocomplete="off"
-          show-password
-          placeholder="密码"
-          ><template #prepend>
+        <el-input type="password" v-model="registerForm.password" autocomplete="off" show-password
+          placeholder="密码"><template #prepend>
             <el-icon>
               <Lock />
-            </el-icon> </template
-        ></el-input>
+            </el-icon> </template></el-input>
       </el-form-item>
       <el-form-item>
-        <el-input
-          type="password"
-          v-model="registerForm.checkPassword"
-          autocomplete="off"
-          show-password
-          placeholder="确认密码"
-          ><template #prepend>
+        <el-input type="password" v-model="registerForm.checkPassword" autocomplete="off" show-password
+          placeholder="确认密码"><template #prepend>
             <el-icon>
               <Lock />
-            </el-icon> </template
-        ></el-input>
+            </el-icon> </template></el-input>
       </el-form-item>
 
       <div style="text-align: center">
@@ -165,13 +136,16 @@ const goLogin = () => {
 img {
   width: 50%;
 }
+
 .form {
-  width: 20vw; /* 你可以根据需要调整这个值 */
+  width: 20vw;
+  /* 你可以根据需要调整这个值 */
 }
 
 .code-container {
   display: flex;
 }
+
 .login {
   margin-top: 20px;
   font-size: 14px;
@@ -181,6 +155,7 @@ img {
   cursor: pointer;
   display: inline-block;
 }
+
 .login:hover {
   color: var(--el-color-primary-dark-2);
 }

@@ -1,10 +1,21 @@
 :root {
   --theme--color: #6c63ff;
   --el-color-primary: var(--theme--color);
-  --el-color-primary-light-3: #8d86ff;  
+  --el-color-primary-light-3: #8d86ff;
   --el-color-primary-light-5: #ada8ff;
   --el-color-primary-light-7: #cecbff;
   --el-color-primary-light-8: #dedcff;
   --el-color-primary-light-9: #efeeff;
   --el-color-primary-dark-2: #3c378e;
+
+  --nav--color: #f2f3f5;
+}
+
+.el-header {
+  height: 6vh;
+  box-shadow: 0 0 2rem 0 rgba(41, 48, 66, 0.1);
+  display: flex;
+  align-items: center;
+  background-color: var(--nav--color);
+  color: #606266;
 }

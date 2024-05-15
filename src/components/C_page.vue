@@ -1,5 +1,7 @@
 <template>
-  <div class="card"><h1>Cpage</h1></div>
+  <div class="card">
+    <h1>模板库</h1>
+  </div>
 </template>
 
 <style scoped>

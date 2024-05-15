@@ -6,28 +6,17 @@
     <p class="logo">Smart Editor</p>
     <el-form class="form" :model="loginForm">
       <el-form-item>
-        <el-input
-          v-model="loginForm.username"
-          autocomplete="off"
-          placeholder="用户名"
-          ><template #prepend>
+        <el-input v-model="loginForm.username" autocomplete="off" placeholder="用户名"><template #prepend>
             <el-icon>
               <Avatar />
-            </el-icon> </template
-        ></el-input>
+            </el-icon> </template></el-input>
       </el-form-item>
       <el-form-item>
-        <el-input
-          type="password"
-          v-model="loginForm.password"
-          autocomplete="off"
-          show-password
-          placeholder="密码"
-          ><template #prepend>
+        <el-input type="password" v-model="loginForm.password" autocomplete="off" show-password
+          placeholder="密码"><template #prepend>
             <el-icon>
               <Lock />
-            </el-icon> </template
-        ></el-input>
+            </el-icon> </template></el-input>
       </el-form-item>
       <div style="text-align: center">
         <el-button type="default" @click="cancel">取消</el-button>
@@ -104,9 +93,11 @@ const goRegist = () => {
 img {
   width: 50%;
 }
+
 .form {
   width: 20vw;
 }
+
 .register {
   margin-top: 20px;
   font-size: 14px;
@@ -116,6 +107,7 @@ img {
   cursor: pointer;
   display: inline-block;
 }
+
 .register:hover {
   color: var(--el-color-primary-dark-2);
 }

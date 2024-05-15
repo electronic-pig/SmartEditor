@@ -66,12 +66,14 @@ ul {
   display: flex;
   align-items: center;
 }
+
 .links li {
   margin-left: 30px;
   color: #5d5d5d;
   cursor: pointer;
   transition: 0.3s;
 }
+
 .toLogin {
   margin-left: 30px;
   border-radius: 20px;
@@ -79,6 +81,7 @@ ul {
   color: #fff;
   background-color: #6c63ff;
 }
+
 .links li:hover {
   color: #6c63ff;
 }
@@ -90,19 +93,23 @@ ul {
   justify-content: space-between;
   height: calc(100vh - 80px);
 }
+
 .content .info {
   flex: 1;
 }
+
 .content .info h1 {
   color: #5d5d5d;
   font-size: 44px;
 }
+
 .content .info p {
   margin: 0;
   line-height: 1.6;
   font-size: 16px;
   color: #5d5d5d;
 }
+
 .content .info button {
   border: 0;
   border-radius: 20px;
@@ -116,6 +123,7 @@ ul {
 .content .image {
   flex: 1;
 }
+
 img {
   width: 100%;
 }

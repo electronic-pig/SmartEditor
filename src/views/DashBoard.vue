@@ -1,19 +1,15 @@
 <template>
-  <div class="container">
-    <div class="left-pane">
+  <el-container style="height: 100vh">
+    <el-aside width="14vw" style="background-color: var(--nav--color)">
       <div class="platform">
         <router-link to="/">
-          <img
-            class="platform-logo"
-            src="@/assets/images/开发经验.svg"
-            alt="logo"
-          />
+          <img class="platform-logo" src="@/assets/images/开发经验.svg" alt="logo" />
         </router-link>
         <div class="platform-title">
           <a>Smart Editor</a>
         </div>
       </div>
-      <el-divider class="divider-title"> 功能区 </el-divider>
+      <el-divider class="divider-title">功能区</el-divider>
       <!-- 左侧导航链接 -->
       <div class="router-link">
         <router-link to="/dashboard/Apage" class="link">开始</router-link>
@@ -21,41 +17,44 @@
         <router-link to="/dashboard/Cpage" class="link">模板库</router-link>
         <div class="more">更多</div>
       </div>
-    </div>
-    <div class="right-pane">
-      <!-- 右侧内容 -->
-      <router-view v-slot="{ Component }">
-        <transition name="fade" mode="out-in">
-          <component :is="Component" />
-        </transition>
-      </router-view>
-    </div>
-  </div>
+    </el-aside>
+    <el-container>
+      <el-header class="el-header"><span>文档名</span><el-avatar
+          src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" size="small"
+          style="margin-left: 70vw" />
+        <el-dropdown size="large" trigger="click" @command="handleCommand">
+          <span class="el-dropdown-link">
+            admin
+            <el-icon class="el-icon--right">
+              <arrow-down />
+            </el-icon>
+          </span>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item command="logout">退出登录</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown></el-header>
+      <el-main><Router-view v-slot="{ Component }">
+          <transition name="fade" mode="out-in">
+            <component :is="Component" />
+          </transition>
+        </Router-view></el-main>
+    </el-container>
+  </el-container>
 </template>
 
+<script setup>
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+const handleCommand = (command) => {
+  if (command === "logout") {
+    router.push("/");
+  }
+};
+</script>
 <style scoped>
-.container {
-  display: flex;
-  flex-direction: row;
-  height: 100vh; /* 100%视窗高度 */
-}
-
-.left-pane {
-  width: 14vw;
-  height: 100%; /* 100%父容器的高度 */
-  box-sizing: border-box; /* 让边框不会撑大容器 */
-}
-
-.right-pane {
-  flex: 1; /* 平分父容器的宽度 */
-  height: 100%; /* 100%父容器的高度 */
-  box-sizing: border-box; /* 让边框不会撑大容器 */
-}
-
-.left-pane {
-  background-color: #f2f3f5; /* 左侧面板的背景色 */
-}
-
 .platform {
   display: flex;
   flex-direction: column;
@@ -96,8 +95,16 @@
 
 .divider-title :deep(.el-divider__text) {
   line-height: 24px;
-  background-color: #f2f3f5;
+  background-color: var(--nav--color);
   color: rgb(140, 157, 182);
+}
+
+.el-dropdown-link {
+  cursor: pointer;
+  color: var(--el-color-primary);
+  display: flex;
+  align-items: center;
+  margin-left: 1vw;
 }
 
 .router-link {
@@ -113,10 +120,6 @@
   text-decoration: none;
   border-radius: 10px;
   color: var(--el-color-primary-light-3);
-}
-
-.right-pane {
-  background-color: #ffffff; /* 右侧面板的背景色 */
 }
 
 .fade-enter-active,
@@ -143,7 +146,7 @@
   text-decoration: none;
   border-radius: 10px;
   color: var(--el-color-primary-light-3);
-  background-color: #EBEDF0;
+  background-color: #ebedf0;
   cursor: pointer;
 }
 

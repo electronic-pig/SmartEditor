@@ -1,13 +1,14 @@
 <template>
-  <div class="card"><h1>Index</h1></div>
+  <div class="card">
+    <h1>首页</h1>
+  </div>
 </template>
 
 <style scoped>
 .card {
-  width: 90%;
+  width: 100%;
   height: 500px;
   background: #eee;
-  margin: 20px auto;
   text-align: center;
   line-height: 500px;
   border-radius: 10px;
