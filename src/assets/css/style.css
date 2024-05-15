@@ -14,7 +14,7 @@ body,
 }
 
 .load_title {
-  color: #6c63ff;
+  color: var(--theme--color);
   font-size: 36px;
   width: 100%;
   text-align: center;

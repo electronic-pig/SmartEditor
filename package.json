@@ -10,9 +10,11 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
-    "normalize.css": "^8.0.1",
-    "element-plus": "^2.7.3",
+    "@wangeditor/editor": "^5.1.23",
+    "@wangeditor/editor-for-vue": "^5.1.12",
     "axios": "^1.6.8",
+    "element-plus": "^2.7.3",
+    "normalize.css": "^8.0.1",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
   },

@@ -35,11 +35,11 @@
             </el-dropdown-menu>
           </template>
         </el-dropdown></el-header>
-      <el-main><Router-view v-slot="{ Component }">
+      <el-main><router-view v-slot="{ Component }">
           <transition name="fade" mode="out-in">
             <component :is="Component" />
           </transition>
-        </Router-view></el-main>
+        </router-view></el-main>
     </el-container>
   </el-container>
 </template>
@@ -54,6 +54,7 @@ const handleCommand = (command) => {
   }
 };
 </script>
+
 <style scoped>
 .platform {
   display: flex;
@@ -69,22 +70,20 @@ const handleCommand = (command) => {
 
 .platform-title {
   position: relative;
-  font-weight: 1000;
-  font-family: Microsoft JhengHei UI, sans-serif;
-  font-size: 22px;
+  font-weight: bolder;
+  font-size: 24px;
   cursor: pointer;
   color: var(--theme--color);
 }
 
 .platform-title::after {
   content: "";
-  width: 0;
+  width: 0%;
   height: 3px;
   background: var(--theme--color);
   position: absolute;
   top: 100%;
   left: 50%;
-  right: 50%;
   transition: all 0.5s;
 }
 
@@ -96,26 +95,26 @@ const handleCommand = (command) => {
 .divider-title :deep(.el-divider__text) {
   line-height: 24px;
   background-color: var(--nav--color);
-  color: rgb(140, 157, 182);
+  color: #8c9db6;
 }
 
 .el-dropdown-link {
-  cursor: pointer;
-  color: var(--el-color-primary);
   display: flex;
   align-items: center;
   margin-left: 1vw;
+  color: var(--el-color-primary);
+  cursor: pointer;
 }
 
 .router-link {
   width: 80%;
-  margin: 22px auto 0;
+  margin: 3vh auto 0;
 }
 
 .link {
   width: 100%;
-  display: block;
-  padding: 10px 0;
+  display: block;  
+  padding: 1.5vh 0;
   text-align: center;
   text-decoration: none;
   border-radius: 10px;
