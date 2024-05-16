@@ -6,14 +6,14 @@
     <div class="editor-container">
       <div class="content">
         <div class="title">
-          <input placeholder="标题...">
+          <input placeholder="输入你的标题">
         </div>
         <Editor class="editor-text-area editor-content-view" v-model="valueHtml" :defaultConfig="editorConfig"
           mode="default" @onCreated="handleCreated" @onChange="handleChange" />
         <div class="word-count">总字数：{{ wordCount }}</div>
       </div>
       <div class="catalog">
-        <h2>目录</h2>
+        <h2 style="color: #555;">目录</h2>
         <div v-for="(item, index) in toc" :key="index" :id="index" :type="item.type" class="toc-item"
           @mousedown="handleMousedown">
           {{ item.text }}
@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import '@wangeditor/editor/dist/css/style.css' // 引入 css
+import "../assets/css/view.css";//在官方样式的基础上自定义样式
 
 import { onBeforeUnmount, ref, shallowRef, onMounted, computed } from 'vue'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
@@ -39,18 +39,29 @@ const valueHtml = ref('<p>hello</p>')
 // 标题列表
 const headers = ref([]);
 
+const toolbarConfig = {
+  excludeKeys: ["fullScreen", "group-video"]
+}
+
+const editorConfig = { placeholder: '请输入内容...' }
+
+const wordCount = computed(() => {
+  const text = valueHtml.value.replace(/<[^>]*>/g, ''); // 去除 HTML 标签
+  return text.length;
+});
+
+const toc = computed(() => {
+  const regex = /<h([1-3])>(.*?)<\/h[1-3]>/g;
+  const matches = [...valueHtml.value.matchAll(regex)];
+  return matches.map((match) => ({ type: "header" + match[1], text: match[2] }));
+});
+
 // 模拟 ajax 异步获取内容
 onMounted(() => {
   setTimeout(() => {
     valueHtml.value = '<h1>标题</h1><h2>标题A</h2><p>文本</p><p>文本</p><p>文本</p><h3>标题A1</h3><p>文本</p><p>文本</p><p>文本</p><h3>标题A2</h3><p>文本</p><p>文本</p><p>文本</p><h2>标题B</h2><p>文本</p><p>文本</p><p>文本</p><h3>标题B1</h3><p>文本</p><p>文本</p><p>文本</p><h3>标题B2</h3><p>文本</p><p>文本</p><p>文本</p>'
   }, 1500)
 })
-
-const toolbarConfig = {
-  excludeKeys: ["fullScreen", "group-video"]
-}
-
-const editorConfig = { placeholder: '请输入内容...' }
 
 // 组件销毁时，也及时销毁编辑器
 onBeforeUnmount(() => {
@@ -72,16 +83,6 @@ const handleCreated = (editor) => {
 const handleChange = (editor) => {
   headers.value = editor.getElemsByTypePrefix('header');
 }
-const wordCount = computed(() => {
-  const text = valueHtml.value.replace(/<[^>]*>/g, ''); // 去除 HTML 标签
-  return text.length;
-});
-
-const toc = computed(() => {
-  const regex = /<h([1-3])>(.*?)<\/h[1-3]>/g;
-  const matches = [...valueHtml.value.matchAll(regex)];
-  return matches.map((match) => ({ type: "header" + match[1], text: match[2] }));
-});
 
 const handleMousedown = (event) => {
   if (event.target.tagName !== 'DIV') return;
@@ -129,6 +130,7 @@ const handleMousedown = (event) => {
   outline: none;
   width: 100%;
   line-height: 1;
+  color: #555;
 }
 
 .catalog {
