@@ -19,7 +19,7 @@
       </div>
     </el-aside>
     <el-container>
-      <el-header class="el-header"><span>文档名</span><el-avatar
+      <el-header class="el-header"><span>开始</span><el-avatar
           src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" size="small"
           style="margin-left: 70vw" />
         <el-dropdown size="large" trigger="click" @command="handleCommand">

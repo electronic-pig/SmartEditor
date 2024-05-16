@@ -19,3 +19,7 @@
   background-color: var(--nav--color);
   color: #606266;
 }
+
+.el-main {
+  padding: 0px;
+}
