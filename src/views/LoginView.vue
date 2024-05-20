@@ -1,9 +1,9 @@
 <template>
   <div class="login">
     <div class="image">
-      <img alt="logo" src="../assets/images/白底logo.png" />
+      <img style="width: 160px;" alt="logo" src="../assets/images/白底logo.png" />
     </div>
-    <p class="logo">Smart Editor</p>
+    <p class="logo">妙笔</p>
     <el-form class="form" :model="loginForm">
       <el-form-item>
         <el-input v-model="loginForm.username" autocomplete="off" placeholder="用户名"><template #prepend>
@@ -81,13 +81,16 @@ const goRegist = () => {
 .image {
   display: flex;
   justify-content: center;
+  margin-top: 24px;
 }
 
 .logo {
-  color: #5d5d5d;
-  font-style: italic;
-  text-transform: uppercase;
-  font-size: 24px;
+  margin: 10px auto;
+  font-weight: bold;
+  background: linear-gradient(135deg, #5DAEFF, #bd34fe);
+  background-clip: text;
+  color: transparent;
+  font-size: 32px;
 }
 
 img {
