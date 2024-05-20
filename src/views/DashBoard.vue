@@ -2,12 +2,8 @@
   <el-container style="height: 100vh">
     <el-aside width="14vw" style="background-color: var(--nav--color)">
       <div class="platform">
-        <router-link to="/">
-          <img class="platform-logo" src="@/assets/images/白底logo.png" alt="logo" />
-        </router-link>
-        <div class="platform-title">
-          <a>Smart Editor</a>
-        </div>
+        <img class="platform-logo" src="@/assets/images/logo.png" alt="logo" />
+        <div class="platform-title">妙 笔</div>
       </div>
       <el-divider class="divider-title">功能区</el-divider>
       <!-- 左侧导航链接 -->
@@ -61,26 +57,28 @@ const handleCommand = (command) => {
   flex-direction: column;
   align-items: center;
   color: var(--theme--color);
-  height: 20vh;
 }
 
 .platform-logo {
-  width: 8vw;
+  width: 7vw;
+  margin: 10px auto;
 }
 
 .platform-title {
   position: relative;
   font-weight: bolder;
-  font-size: 24px;
+  font-size: 28px;
   cursor: pointer;
-  color: var(--theme--color);
+  background: linear-gradient(135deg, #5DAEFF, #bd34fe);
+  background-clip: text;
+  color: transparent;
 }
 
 .platform-title::after {
   content: "";
   width: 0%;
   height: 3px;
-  background: var(--theme--color);
+  background: linear-gradient(135deg, #5DAEFF, #bd34fe);
   position: absolute;
   top: 100%;
   left: 50%;
@@ -113,7 +111,7 @@ const handleCommand = (command) => {
 
 .link {
   width: 100%;
-  display: block;  
+  display: block;
   padding: 1.5vh 0;
   text-align: center;
   text-decoration: none;
