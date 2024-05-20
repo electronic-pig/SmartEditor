@@ -1,7 +1,7 @@
 <template>
   <div class="register">
     <div class="image">
-      <img alt="logo" src="../assets/images/开发经验.svg" />
+      <img alt="logo" src="../assets/images/白底logo.png" />
     </div>
     <p class="logo">Smart Editor</p>
     <el-form class="form" :model="registerForm">

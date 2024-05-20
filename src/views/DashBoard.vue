@@ -3,7 +3,7 @@
     <el-aside width="14vw" style="background-color: var(--nav--color)">
       <div class="platform">
         <router-link to="/">
-          <img class="platform-logo" src="@/assets/images/开发经验.svg" alt="logo" />
+          <img class="platform-logo" src="@/assets/images/白底logo.png" alt="logo" />
         </router-link>
         <div class="platform-title">
           <a>Smart Editor</a>
