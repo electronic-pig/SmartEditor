@@ -6,9 +6,9 @@
     <p class="logo">妙笔</p>
     <el-form class="form" :model="loginForm">
       <el-form-item>
-        <el-input v-model="loginForm.username" autocomplete="off" placeholder="用户名"><template #prepend>
+        <el-input v-model="loginForm.email" autocomplete="off" placeholder="邮箱"><template #prepend>
             <el-icon>
-              <Avatar />
+              <Message />
             </el-icon> </template></el-input>
       </el-form-item>
       <el-form-item>
@@ -17,6 +17,18 @@
             <el-icon>
               <Lock />
             </el-icon> </template></el-input>
+      </el-form-item>
+      <el-form-item>
+        <div class="code-container">
+          <el-input v-model="loginForm.captcha" autocomplete="off" placeholder="验证码">
+            <template #prepend>
+              <el-icon>
+                <Check />
+              </el-icon>
+            </template>
+          </el-input>
+          <img class="captcha" :src="captchaImage" @click="refreshCaptcha" alt="captcha" />
+        </div>
       </el-form-item>
       <div style="text-align: center">
         <el-button type="default" @click="cancel">取消</el-button>
@@ -28,27 +40,52 @@
 </template>
 
 <script setup>
-import { reactive } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { ElLoading, ElMessage } from "element-plus";
+import request from "@/utils/request.js";
 
 const router = useRouter();
 const loginForm = reactive({
-  username: "",
+  email: "",
   password: "",
+  captcha: "",
 });
+const captchaImage = ref("");
 
-const login = () => {
-  if (!loginForm.username || !loginForm.password) {
+const refreshCaptcha = async () => {
+  const response = await request.get("/auth/captcha", { responseType: "blob" });
+  captchaImage.value = URL.createObjectURL(response);
+};
+
+const login = async () => {
+  if (!loginForm.email || !loginForm.password) {
     ElMessage.error("请填写完整的登录信息！");
+    return;
+  }
+  if (!loginForm.captcha) {
+    ElMessage.error("请输入验证码！");
     return;
   }
   const loadingInstance = ElLoading.service({
     fullscreen: true,
     text: "正在加载中...",
   });
-  router.push("/");
-  localStorage.setItem("username", loginForm.username);
+  try {
+    const response = await request.post("/auth/login", loginForm,);
+    if (response.code == 200) {
+      ElMessage.success(response.message);
+      loginForm.email = "";
+      loginForm.password = "";
+      loginForm.captcha = "";
+    } else {
+      ElMessage.error(response.message);
+      refreshCaptcha();
+    }
+  } catch (error) {
+    ElMessage.error(error);
+    refreshCaptcha();
+  }
   loadingInstance.close();
 };
 
@@ -59,6 +96,8 @@ const cancel = () => {
 const goRegist = () => {
   router.push("/register");
 };
+
+onMounted(refreshCaptcha);
 </script>
 
 <style scoped>
@@ -68,12 +107,7 @@ const goRegist = () => {
   align-items: center;
   height: 80vh;
   width: 24vw;
-  margin: auto;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
+  margin: 10vh auto 0;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
   border-radius: 1vw;
 }
@@ -93,12 +127,19 @@ const goRegist = () => {
   font-size: 32px;
 }
 
-img {
-  width: 50%;
-}
-
 .form {
   width: 20vw;
+}
+
+.code-container {
+  display: flex;
+}
+
+.captcha {
+  height: 32px;
+  margin-left: 10px;
+  border: #dcdfe6 solid 1px;
+  border-radius: 4px;
 }
 
 .register {

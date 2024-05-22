@@ -21,7 +21,7 @@
         <div class="code-container">
           <el-input v-model="registerForm.code" autocomplete="off" placeholder="验证码"><template #prepend>
               <el-icon>
-                <Iphone />
+                <Check />
               </el-icon> </template></el-input>
           <el-button type="default" @click="getCode" style="margin-left: 5px">获取验证码</el-button>
         </div>
@@ -111,12 +111,7 @@ const goLogin = () => {
   align-items: center;
   height: 80vh;
   width: 24vw;
-  margin: auto;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
+  margin: 10vh auto 0;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
   border-radius: 1vw;
 }
@@ -142,7 +137,6 @@ img {
 
 .form {
   width: 20vw;
-  /* 你可以根据需要调整这个值 */
 }
 
 .code-container {

@@ -5,6 +5,7 @@ import axios from "axios";
 const service = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_URL, // API的base_url
   timeout: 50000, // 请求超时时间
+  withCredentials: true,
 });
 
 // 请求拦截器
