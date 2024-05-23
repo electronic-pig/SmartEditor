@@ -4,21 +4,21 @@
       <img style="width: 160px;" alt="logo" src="../assets/images/白底logo.png" />
     </div>
     <p class="logo">妙笔</p>
-    <el-form class="form" :model="loginForm">
-      <el-form-item>
+    <el-form class="form" :model="loginForm" :rules="rules" ref="loginFormRef">
+      <el-form-item prop="email">
         <el-input v-model="loginForm.email" autocomplete="off" placeholder="邮箱"><template #prepend>
             <el-icon>
               <Message />
             </el-icon> </template></el-input>
       </el-form-item>
-      <el-form-item>
+      <el-form-item prop="password">
         <el-input type="password" v-model="loginForm.password" autocomplete="off" show-password
           placeholder="密码"><template #prepend>
             <el-icon>
               <Lock />
             </el-icon> </template></el-input>
       </el-form-item>
-      <el-form-item>
+      <el-form-item prop="captcha">
         <div class="code-container">
           <el-input v-model="loginForm.captcha" autocomplete="off" placeholder="验证码">
             <template #prepend>
@@ -43,9 +43,10 @@
 import { ref, reactive, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { ElLoading, ElMessage } from "element-plus";
-import request from "@/utils/request.js";
+import request from "../utils/request.js";
 
 const router = useRouter();
+const loginFormRef = ref();
 const loginForm = reactive({
   email: "",
   password: "",
@@ -53,26 +54,34 @@ const loginForm = reactive({
 });
 const captchaImage = ref("");
 
+const rules = reactive({
+  email: [
+    { required: true, message: '请输入邮箱', trigger: 'blur' },
+    { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
+  ],
+  password: [
+    { required: true, message: '请输入密码', trigger: 'blur' },
+    { min: 6, max: 20, message: '密码长度必须在6到20个字符之间', trigger: 'blur' },
+  ],
+  captcha: [
+    { required: true, message: '请输入验证码', trigger: 'blur' }
+  ],
+});
+
 const refreshCaptcha = async () => {
   const response = await request.get("/auth/captcha", { responseType: "blob" });
   captchaImage.value = URL.createObjectURL(response);
 };
 
 const login = async () => {
-  if (!loginForm.email || !loginForm.password) {
-    ElMessage.error("请填写完整的登录信息！");
-    return;
-  }
-  if (!loginForm.captcha) {
-    ElMessage.error("请输入验证码！");
-    return;
-  }
+  const valid = await loginFormRef.value.validate();
+  if (!valid) return;
   const loadingInstance = ElLoading.service({
     fullscreen: true,
     text: "正在加载中...",
   });
   try {
-    const response = await request.post("/auth/login", loginForm,);
+    const response = await request.post("/auth/login", loginForm);
     if (response.code == 200) {
       ElMessage.success(response.message);
       loginForm.email = "";
