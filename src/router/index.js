@@ -33,17 +33,17 @@ const router = createRouter({
         {
           path: "Apage",
           name: "Apage",
-          component: () => import("../components/A_page.vue"),
+          component: () => import("../components/IndexPage.vue"),
         },
         {
           path: "Bpage",
           name: "Bpage",
-          component: () => import("../components/B_page.vue"),
+          component: () => import("../components/DocumentPage.vue"),
         },
         {
           path: "Cpage",
           name: "Cpage",
-          component: () => import("../components/C_page.vue"),
+          component: () => import("../components/TemplatePage.vue"),
         },
       ],
     },
