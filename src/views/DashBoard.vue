@@ -23,13 +23,18 @@
         <el-dropdown size="large" trigger="click" @command="handleCommand">
           <span class="el-dropdown-link">
             admin
-            <el-icon class="el-icon--right">
-              <arrow-down />
-            </el-icon>
           </span>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item command="logout">退出登录</el-dropdown-item>
+              <el-dropdown-item command="logout"><el-icon>
+                  <User />
+                </el-icon>个人资料</el-dropdown-item>
+              <el-dropdown-item command="logout"><el-icon>
+                  <EditPen />
+                </el-icon>修改密码</el-dropdown-item>
+              <el-dropdown-item command="logout"><el-icon>
+                  <SwitchButton />
+                </el-icon>退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -105,6 +110,7 @@ const handleCommand = (command) => {
   margin-left: 1vw;
   color: var(--el-color-primary);
   cursor: pointer;
+  font-size: 16px;
 }
 
 .router-link {
