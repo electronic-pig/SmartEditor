@@ -32,7 +32,8 @@
               <el-dropdown-item command="logout">退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </template>
-        </el-dropdown></el-header>
+        </el-dropdown>
+      </el-header>
       <el-main><router-view v-slot="{ Component }">
           <transition name="fade" mode="out-in">
             <component :is="Component" />
