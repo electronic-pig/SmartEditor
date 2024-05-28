@@ -8,9 +8,11 @@
       <el-divider class="divider-title">功能区</el-divider>
       <!-- 左侧导航链接 -->
       <div class="router-link">
-        <router-link to="/dashboard/Apage" class="link">开始</router-link>
-        <router-link to="/dashboard/Bpage" class="link">我的文档</router-link>
-        <router-link to="/dashboard/Cpage" class="link">模板库</router-link>
+        <router-link to="/dashboard/IndexPage" class="link">工作台</router-link>
+        <router-link to="/dashboard/DocumentPage" class="link">我的文档</router-link>
+        <router-link to="/dashboard/TemplatePage" class="link">模板库</router-link>
+        <router-link to="/dashboard/StarPage" class="link">我的收藏</router-link>
+        <router-link to="/dashboard/RecyclePage" class="link">回收站</router-link>
         <div class="more">更多</div>
       </div>
     </el-aside>
@@ -137,7 +139,7 @@ const handleCommand = (command) => {
 .more {
   width: 100%;
   padding: 10px 0;
-  margin-top: 50vh;
+  margin-top: 36vh;
   display: block;
   text-align: center;
   text-decoration: none;

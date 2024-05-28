@@ -28,22 +28,32 @@ const router = createRouter({
       children: [
         {
           path: "",
-          redirect: "/dashboard/Apage",
+          redirect: "/dashboard/IndexPage",
         },
         {
-          path: "Apage",
-          name: "Apage",
+          path: "IndexPage",
+          name: "IndexPage",
           component: () => import("../components/IndexPage.vue"),
         },
         {
-          path: "Bpage",
-          name: "Bpage",
+          path: "DocumentPage",
+          name: "DocumentPage",
           component: () => import("../components/DocumentPage.vue"),
         },
         {
-          path: "Cpage",
-          name: "Cpage",
+          path: "TemplatePage",
+          name: "TemplatePage",
           component: () => import("../components/TemplatePage.vue"),
+        },
+        {
+          path: "StarPage",
+          name: "StarPage",
+          component: () => import("../components/StarPage.vue"),
+        },
+        {
+          path: "RecyclePage",
+          name: "RecyclePage",
+          component: () => import("../components/RecyclePage.vue"),
         },
       ],
     },
