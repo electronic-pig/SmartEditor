@@ -33,9 +33,7 @@ onMounted(async () => {
   try {
     const response = await request.get("/document/user/1");
     if (response.code == 200) {
-      console.log(response);
       documents.push(...response.documents);
-      console.log(documents);
     } else {
       ElMessage.error(response.message);
     }
@@ -44,10 +42,9 @@ onMounted(async () => {
   }
 });
 
-
 const handleCommand = (command) => {
-  if (command === "logout") {
-    return
+  if (command === "editDocument") {
+    console.log("Edit document");
   }
 };
 </script>

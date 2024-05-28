@@ -19,20 +19,18 @@
         </template>
       </el-table-column>
       <el-table-column label="操作">
-        <template #default="{ row }">
-          <el-dropdown>
-            <el-icon :size="20">
-              <Setting />
-            </el-icon>
-            <template v-slot:dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item @click="editDocument(row)">编辑</el-dropdown-item>
-                <el-dropdown-item @click="openDocumentInNewTab(row)">新标签打开</el-dropdown-item>
-                <el-dropdown-item @click="deleteDocument(row)">删除</el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
-        </template>
+        <el-dropdown @command="handleCommand">
+          <el-icon :size="20">
+            <Setting />
+          </el-icon>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item command="editDocument">编辑</el-dropdown-item>
+              <el-dropdown-item command="openDocumentInNewTab">新标签打开</el-dropdown-item>
+              <el-dropdown-item command="deleteDocument">删除</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
       </el-table-column>
     </el-table>
   </div>
@@ -78,16 +76,10 @@ onMounted(async () => {
   }
 });
 
-const editDocument = () => {
-  // 编辑文档的代码...
-};
-
-const openDocumentInNewTab = () => {
-  // 在新标签中打开文档的代码...
-};
-
-const deleteDocument = () => {
-  // 删除文档的代码...
+const handleCommand = (command) => {
+  if (command === "editDocument") {
+    console.log("Edit document");
+  }
 };
 </script>
 
