@@ -15,6 +15,7 @@
     "axios": "^1.6.8",
     "element-plus": "^2.7.3",
     "normalize.css": "^8.0.1",
+    "nprogress": "^0.2.0",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
   },

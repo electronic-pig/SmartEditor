@@ -23,3 +23,16 @@
 .el-main {
   padding: 0px;
 }
+
+#nprogress .bar {
+  background: var(--theme--color) !important;
+}
+
+#nprogress .peg {
+  box-shadow: 0 0 10px var(--theme--color), 0 0 5px var(--theme--color) !important;
+}
+
+#nprogress .spinner-icon {
+  border-top-color: var(--theme--color) !important;
+  border-left-color: var(--theme--color) !important;
+}

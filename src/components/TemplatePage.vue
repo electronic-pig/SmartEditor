@@ -26,19 +26,26 @@
 import { reactive, onMounted } from "vue";
 import { ElMessage } from "element-plus";
 import request from "../utils/request.js";
+import NProgress from 'nprogress';
+import 'nprogress/nprogress.css';
 
 const documents = reactive([]);
 
 onMounted(async () => {
   try {
+    NProgress.start();
     const response = await request.get("/document/user/1");
     if (response.code == 200) {
+      console.log(response);
       documents.push(...response.documents);
+      console.log(documents);
     } else {
       ElMessage.error(response.message);
     }
   } catch (error) {
     ElMessage.error(error);
+  } finally {
+    NProgress.done();
   }
 });
 
