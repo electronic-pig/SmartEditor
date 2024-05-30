@@ -24,7 +24,8 @@
         <button @click="start">开始试用</button>
       </div>
       <div class="image">
-        <img style="height: 300px;" alt="logo" src="../assets/images/logo.png" />
+        <div class="img-bg"></div>
+        <img style="height: 250px;" alt="logo" src="../assets/images/圆logo.png" />
       </div>
     </div>
     <div class="features">
@@ -126,7 +127,7 @@ const start = () => {
   font-size: 56px;
   margin: 0;
   font-weight: bold;
-  background: linear-gradient(135deg, #5DAEFF, #bd34fe);
+  background: linear-gradient(135deg, #47caff, #bd34fe);
   background-clip: text;
   color: transparent;
 }
@@ -149,9 +150,21 @@ const start = () => {
 }
 
 .content .image {
+  position: relative;
   flex: 1;
   display: flex;
   justify-content: center;
+}
+
+.content .image .img-bg {
+  position: absolute;
+  top: -25px;
+  width: 300px;
+  height: 300px;
+  background-image: linear-gradient(-45deg, #bd34fe 50%, #47caff 50%);
+  ;
+  border-radius: 50%;
+  filter: blur(110px);
 }
 
 .features {
