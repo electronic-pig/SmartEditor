@@ -1,52 +1,54 @@
 <template>
-  <div class="register">
-    <div class="image">
-      <img style="width: 160px;" alt="logo" src="../assets/images/白底logo.png" />
-    </div>
-    <p class="logo">妙笔</p>
-    <el-form class="form" :model="registerForm" :rules="rules" ref="registerFormRef">
-      <el-form-item prop="username">
-        <el-input v-model="registerForm.username" autocomplete="off" placeholder="用户名"><template #prepend>
-            <el-icon>
-              <Avatar />
-            </el-icon> </template></el-input>
-      </el-form-item>
-      <el-form-item prop="email">
-        <el-input v-model="registerForm.email" autocomplete="off" placeholder="邮箱"><template #prepend>
-            <el-icon>
-              <Message />
-            </el-icon> </template></el-input>
-      </el-form-item>
-      <el-form-item prop="password">
-        <el-input type="password" v-model="registerForm.password" autocomplete="off" show-password
-          placeholder="密码"><template #prepend>
-            <el-icon>
-              <Lock />
-            </el-icon> </template></el-input>
-      </el-form-item>
-      <el-form-item prop="checkPassword">
-        <el-input type="password" v-model="registerForm.checkPassword" autocomplete="off" show-password
-          placeholder="确认密码"><template #prepend>
-            <el-icon>
-              <Lock />
-            </el-icon> </template></el-input>
-      </el-form-item>
-      <el-form-item prop="verification_code">
-        <div class="code-container">
-          <el-input v-model="registerForm.verification_code" autocomplete="off" placeholder="验证码"><template #prepend>
-              <el-icon>
-                <Check />
-              </el-icon> </template></el-input>
-          <el-button :disabled="isButtonDisabled" @click="getCode" style="margin-left: 5px">{{ isButtonDisabled ?
-            `已发送(${countdown}s)` : '发送验证码' }}</el-button>
-        </div>
-      </el-form-item>
-      <div style="text-align: center">
-        <el-button type="default" @click="cancel">取消</el-button>
-        <el-button type="primary" @click="register">注册</el-button>
+  <div class="container">
+    <div class="register">
+      <div class="image">
+        <img style="width: 160px;" alt="logo" src="../assets/images/白底logo.png" />
       </div>
-    </el-form>
-    <p class="login" @click="goLogin">已有账户？立即登录</p>
+      <p class="logo">妙笔</p>
+      <el-form class="form" :model="registerForm" :rules="rules" ref="registerFormRef">
+        <el-form-item prop="username">
+          <el-input v-model="registerForm.username" autocomplete="off" placeholder="用户名"><template #prepend>
+              <el-icon>
+                <Avatar />
+              </el-icon> </template></el-input>
+        </el-form-item>
+        <el-form-item prop="email">
+          <el-input v-model="registerForm.email" autocomplete="off" placeholder="邮箱"><template #prepend>
+              <el-icon>
+                <Message />
+              </el-icon> </template></el-input>
+        </el-form-item>
+        <el-form-item prop="password">
+          <el-input type="password" v-model="registerForm.password" autocomplete="off" show-password
+            placeholder="密码"><template #prepend>
+              <el-icon>
+                <Lock />
+              </el-icon> </template></el-input>
+        </el-form-item>
+        <el-form-item prop="checkPassword">
+          <el-input type="password" v-model="registerForm.checkPassword" autocomplete="off" show-password
+            placeholder="确认密码"><template #prepend>
+              <el-icon>
+                <Lock />
+              </el-icon> </template></el-input>
+        </el-form-item>
+        <el-form-item prop="verification_code">
+          <div class="code-container">
+            <el-input v-model="registerForm.verification_code" autocomplete="off" placeholder="验证码"><template #prepend>
+                <el-icon>
+                  <Check />
+                </el-icon> </template></el-input>
+            <el-button :disabled="isButtonDisabled" @click="getCode" style="margin-left: 5px">{{ isButtonDisabled ?
+              `已发送(${countdown}s)` : '发送验证码' }}</el-button>
+          </div>
+        </el-form-item>
+        <div style="text-align: center">
+          <el-button type="default" @click="cancel">取消</el-button>
+          <el-button type="primary" @click="register">注册</el-button>
+        </div>
+      </el-form>
+      <p class="login" @click="goLogin">已有账户？立即登录</p>
+    </div>
   </div>
 </template>
 
@@ -156,15 +158,23 @@ const goLogin = () => {
 </script>
 
 <style scoped>
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f5f7fa;
+}
+
 .register {
   display: flex;
   flex-direction: column;
   align-items: center;
   height: 80vh;
   width: 24vw;
-  margin: 10vh auto 0;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
   border-radius: 1vw;
+  background-color: #fff;
 }
 
 .image {

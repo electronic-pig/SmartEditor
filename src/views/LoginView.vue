@@ -1,41 +1,44 @@
 <template>
-  <div class="login">
-    <div class="image">
-      <img style="width: 160px;" alt="logo" src="../assets/images/白底logo.png" />
-    </div>
-    <p class="logo">妙笔</p>
-    <el-form class="form" :model="loginForm" :rules="rules" ref="loginFormRef">
-      <el-form-item prop="email">
-        <el-input v-model="loginForm.email" autocomplete="off" placeholder="邮箱"><template #prepend>
-            <el-icon>
-              <Message />
-            </el-icon> </template></el-input>
-      </el-form-item>
-      <el-form-item prop="password">
-        <el-input type="password" v-model="loginForm.password" autocomplete="off" show-password
-          placeholder="密码"><template #prepend>
-            <el-icon>
-              <Lock />
-            </el-icon> </template></el-input>
-      </el-form-item>
-      <el-form-item prop="captcha">
-        <div class="code-container">
-          <el-input v-model="loginForm.captcha" autocomplete="off" placeholder="验证码">
-            <template #prepend>
-              <el-icon>
-                <Check />
-              </el-icon>
-            </template>
-          </el-input>
-          <img class="captcha" :src="captchaImage" @click="refreshCaptcha" alt="captcha" />
-        </div>
-      </el-form-item>
-      <div style="text-align: center">
-        <el-button type="default" @click="cancel">取消</el-button>
-        <el-button type="primary" @click="login">登录</el-button>
+  <div class="container">
+
+    <div class="login">
+      <div class="image">
+        <img style="width: 160px;" alt="logo" src="../assets/images/白底logo.png" />
       </div>
-    </el-form>
-    <p class="register" @click="goRegist">没有账户？立即注册</p>
+      <p class="logo">妙笔</p>
+      <el-form class="form" :model="loginForm" :rules="rules" ref="loginFormRef">
+        <el-form-item prop="email">
+          <el-input v-model="loginForm.email" autocomplete="off" placeholder="邮箱"><template #prepend>
+              <el-icon>
+                <Message />
+              </el-icon> </template></el-input>
+        </el-form-item>
+        <el-form-item prop="password">
+          <el-input type="password" v-model="loginForm.password" autocomplete="off" show-password
+            placeholder="密码"><template #prepend>
+              <el-icon>
+                <Lock />
+              </el-icon> </template></el-input>
+        </el-form-item>
+        <el-form-item prop="captcha">
+          <div class="code-container">
+            <el-input v-model="loginForm.captcha" autocomplete="off" placeholder="验证码">
+              <template #prepend>
+                <el-icon>
+                  <Check />
+                </el-icon>
+              </template>
+            </el-input>
+            <img class="captcha" :src="captchaImage" @click="refreshCaptcha" alt="captcha" />
+          </div>
+        </el-form-item>
+        <div style="text-align: center">
+          <el-button type="default" @click="cancel">取消</el-button>
+          <el-button type="primary" @click="login">登录</el-button>
+        </div>
+      </el-form>
+      <p class="register" @click="goRegist">没有账户？立即注册</p>
+    </div>
   </div>
 </template>
 
@@ -110,15 +113,23 @@ onMounted(refreshCaptcha);
 </script>
 
 <style scoped>
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f5f7fa;
+}
+
 .login {
   display: flex;
   flex-direction: column;
   align-items: center;
   height: 80vh;
   width: 24vw;
-  margin: 10vh auto 0;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
   border-radius: 1vw;
+  background-color: #fff;
 }
 
 .image {
