@@ -161,10 +161,9 @@ const start = () => {
   top: -25px;
   width: 300px;
   height: 300px;
-  background-image: linear-gradient(-45deg, #bd34fe 50%, #47caff 50%);
-  ;
+  background-color: var(--el-color-primary-light-3);
   border-radius: 50%;
-  filter: blur(110px);
+  filter: blur(120px);
 }
 
 .features {
