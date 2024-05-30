@@ -19,31 +19,33 @@
         </template>
       </el-table-column>
       <el-table-column label="操作">
-        <el-dropdown @command="handleCommand">
-          <el-icon :size="20">
-            <Setting />
-          </el-icon>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item command="editDocument">编辑</el-dropdown-item>
-              <el-dropdown-item command="openDocumentInNewTab">新标签打开</el-dropdown-item>
-              <el-dropdown-item command="deleteDocument">删除</el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
+        <template #default="{ row }">
+          <el-dropdown @command="command => handleCommand(command, row)">
+            <el-icon :size="20">
+              <Setting />
+            </el-icon>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item command="editDocument">编辑</el-dropdown-item>
+                <el-dropdown-item command="addFavorite">加入收藏</el-dropdown-item>
+                <el-dropdown-item command="addRecycle">放入回收站</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </template>
       </el-table-column>
     </el-table>
   </div>
 </template>
 
 <script setup>
-import { reactive, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import { ElMessage } from "element-plus";
 import request from "../utils/request.js";
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 
-const documents = reactive([]);
+const documents = ref([]);
 
 const formatDate = (dateString) => {
   const date = new Date(dateString);
@@ -63,14 +65,28 @@ const handleRowClick = (row) => {
   console.log(row);
 };
 
-onMounted(async () => {
+const handleCommand = (command, document) => {
+  switch (command) {
+    case 'editDocument':
+      editDocument(document);
+      break;
+    case 'addFavorite':
+      addFavorite(document);
+      break;
+    case 'addRecycle':
+      addRecycle(document);
+      break;
+    default:
+      break;
+  }
+};
+
+const loadDocuments = async () => {
   try {
     NProgress.start();
-    const response = await request.get("/document/user/1");
+    const response = await request.get("/document/user/3");
     if (response.code == 200) {
-      console.log(response);
-      documents.push(...response.documents);
-      console.log(documents);
+      documents.value = response.documents;
     } else {
       ElMessage.error(response.message);
     }
@@ -79,13 +95,48 @@ onMounted(async () => {
   } finally {
     NProgress.done();
   }
-});
+};
 
-const handleCommand = (command) => {
-  if (command === "editDocument") {
-    console.log("Edit document");
+const editDocument = (document) => {
+  // 编辑文档的代码
+  console.log('Editing document:', document.id);
+};
+
+const addFavorite = async (document) => {
+  try {
+    NProgress.start();
+    const response = await request.put(`/document/favorite/${document.id}`);
+    if (response.code == 200) {
+      ElMessage.success(response.message);
+    } else {
+      ElMessage.error(response.message);
+    }
+  } catch (error) {
+    ElMessage.error(error);
+  } finally {
+    NProgress.done();
   }
 };
+
+const addRecycle = async (document) => {
+  try {
+    NProgress.start();
+    const response = await request.put(`/document/delete/${document.id}`);
+    if (response.code == 200) {
+      ElMessage.success(response.message);
+      loadDocuments();
+    } else {
+      ElMessage.error(response.message);
+    }
+  } catch (error) {
+    ElMessage.error(error);
+  } finally {
+    NProgress.done();
+  }
+};
+
+onMounted(loadDocuments);
+
 </script>
 
 <style scoped>

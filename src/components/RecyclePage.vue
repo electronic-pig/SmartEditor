@@ -19,31 +19,32 @@
         </template>
       </el-table-column>
       <el-table-column label="操作">
-        <el-dropdown @command="handleCommand">
-          <el-icon :size="20">
-            <Setting />
-          </el-icon>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item command="editDocument">编辑</el-dropdown-item>
-              <el-dropdown-item command="openDocumentInNewTab">新标签打开</el-dropdown-item>
-              <el-dropdown-item command="deleteDocument">删除</el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
+        <template #default="{ row }">
+          <el-dropdown @command="command => handleCommand(command, row)">
+            <el-icon :size="20">
+              <Setting />
+            </el-icon>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item command="recoverDocument">恢复文档</el-dropdown-item>
+                <el-dropdown-item command="deleteDocument">彻底删除</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </template>
       </el-table-column>
     </el-table>
   </div>
 </template>
 
 <script setup>
-import { reactive, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import { ElMessage } from "element-plus";
 import request from "../utils/request.js";
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 
-const documents = reactive([]);
+const documents = ref([]);
 
 const formatDate = (dateString) => {
   const date = new Date(dateString);
@@ -63,14 +64,12 @@ const handleRowClick = (row) => {
   console.log(row);
 };
 
-onMounted(async () => {
+const loadDocuments = async () => {
   try {
     NProgress.start();
-    const response = await request.get("/document/user/1");
+    const response = await request.get("/document/deleted/user/3");
     if (response.code == 200) {
-      console.log(response);
-      documents.push(...response.documents);
-      console.log(documents);
+      documents.value = response.documents;
     } else {
       ElMessage.error(response.message);
     }
@@ -79,13 +78,56 @@ onMounted(async () => {
   } finally {
     NProgress.done();
   }
-});
+};
 
-const handleCommand = (command) => {
-  if (command === "editDocument") {
-    console.log("Edit document");
+const handleCommand = (command, document) => {
+  switch (command) {
+    case 'recoverDocument':
+      recoverDocument(document);
+      break;
+    case 'deleteDocument':
+      deleteDocument(document);
+      break;
+    default:
+      break;
   }
 };
+
+const recoverDocument = async (document) => {
+  try {
+    NProgress.start();
+    const response = await request.put(`/document/recover/${document.id}`);
+    if (response.code == 200) {
+      ElMessage.success(response.message);
+      loadDocuments();
+    } else {
+      ElMessage.error(response.message);
+    }
+  } catch (error) {
+    ElMessage.error(error);
+  } finally {
+    NProgress.done();
+  }
+};
+
+const deleteDocument = async (document) => {
+  try {
+    NProgress.start();
+    const response = await request.delete(`/document/${document.id}`);
+    if (response.code == 200) {
+      ElMessage.success(response.message);
+      loadDocuments();
+    } else {
+      ElMessage.error(response.message);
+    }
+  } catch (error) {
+    ElMessage.error(error);
+  } finally {
+    NProgress.done();
+  }
+};
+
+onMounted(loadDocuments);
 </script>
 
 <style scoped>
