@@ -14,7 +14,7 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component);
 }
 app
-  .use(router)
   .use(createPinia())
   .use(ElementPlus, { locale: zhCn })
+  .use(router)
   .mount("#app");

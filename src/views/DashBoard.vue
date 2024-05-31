@@ -22,7 +22,7 @@
           style="margin-left: 70vw" />
         <el-dropdown size="large" trigger="click" @command="handleCommand">
           <span class="el-dropdown-link">
-            admin
+            {{ userStore.username }}
           </span>
           <template #dropdown>
             <el-dropdown-menu>
@@ -50,10 +50,15 @@
 
 <script setup>
 import { useRouter } from "vue-router";
+import { useUserStore } from "../stores/userStore.js";
 
 const router = useRouter();
+const userStore = useUserStore();
+
 const handleCommand = (command) => {
   if (command === "logout") {
+    userStore.removeToken();
+    userStore.removeUsername();
     router.push("/");
   }
 };

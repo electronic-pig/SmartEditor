@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { useUserStore } from '../stores/userStore.js';
 import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
 import RegisterView from "../views/RegisterView.vue";
@@ -24,10 +25,12 @@ const router = createRouter({
     },
     {
       path: "/dashboard",
+      name: "dashboard",
       component: DashBoard,
+      meta: { requiresAuth: true },
       children: [
         {
-          path: "",
+          path: "/",
           redirect: "/dashboard/IndexPage",
         },
         {
@@ -58,6 +61,15 @@ const router = createRouter({
       ],
     },
   ],
+});
+
+router.beforeEach((to, from, next) => {
+  const userStore = useUserStore();
+  if (to.meta.requiresAuth && !userStore.isLoggedIn) {
+    next('/login');
+  } else {
+    next();
+  }
 });
 
 export default router;

@@ -1,17 +1,21 @@
 // request.js
 import axios from "axios";
+import { useUserStore } from "../stores/userStore.js";
 
 // 创建axios实例
 const service = axios.create({
   baseURL: '/api',
   timeout: 50000, // 请求超时时间
-  withCredentials: true,
 });
 
 // 请求拦截器
 service.interceptors.request.use(
   (config) => {
+    const userStore = useUserStore();
     config.headers["Content-Type"] = "application/json;charset=utf-8";
+    if (userStore.token) {
+      config.headers['Authorization'] = `Bearer ${userStore.token}`;
+    }
     return config;
   },
   (error) => {

@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-
     <div class="login">
       <div class="image">
         <img style="width: 160px;" alt="logo" src="../assets/images/白底logo.png" />
@@ -39,10 +38,12 @@ import { ref, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { ElLoading, ElMessage } from "element-plus";
 import { Pointer, CircleCheck } from '@element-plus/icons-vue'
+import { useUserStore } from '../stores/userStore.js';
 import Vcode from "vue3-puzzle-vcode";
 import request from "../utils/request.js";
 
 const router = useRouter();
+const userStore = useUserStore();
 const loginFormRef = ref();
 const isShow = ref(false);
 const isSuccess = ref(false);
@@ -76,8 +77,11 @@ const login = async () => {
     const response = await request.post("/auth/login", loginForm);
     if (response.code == 200) {
       ElMessage.success(response.message);
+      userStore.setToken(response.data.token);
+      userStore.setUsername(response.data.username);
       loginForm.email = "";
       loginForm.password = "";
+      router.push("/dashboard/IndexPage");
     } else {
       ElMessage.error(response.message);
     }

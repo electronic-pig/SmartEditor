@@ -6,22 +6,23 @@ export const useUserStore = defineStore({
     token: null,
     username: null
   }),
+  getters: {
+    isLoggedIn() {
+      return this.token !== null;
+    },
+  },
   actions: {
     setToken(token) {
       this.token = token;
-      localStorage.setItem('token', token);  // 将 token 保存在 localStorage 中
     },
     removeToken() {
       this.token = null;
-      localStorage.removeItem('token');  // 从 localStorage 中移除 token
     },
     setUsername(username) {
       this.username = username;
-      localStorage.setItem('username', username);  // 将 username 保存在 localStorage 中
     },
     removeUsername() {
       this.username = null;
-      localStorage.removeItem('username');  // 从 localStorage 中移除 username
     }
   }
 })
