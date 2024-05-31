@@ -21,7 +21,9 @@
               </el-icon> </template></el-input>
         </el-form-item>
       </el-form>
-      <el-button type="primary" plain :icon="Check" class="varify" @click="onShow">点击按钮开始验证</el-button>
+      <el-button type="primary" plain :icon="Pointer" class="varify" @click="onShow"
+        v-if="!isSuccess">点击按钮进行验证</el-button>
+      <el-button type="success" plain :icon="CircleCheck" class="varify" v-if="isSuccess">验证成功</el-button>
       <Vcode :show="isShow" @success="onSuccess" @close="onClose" />
       <div style="text-align: center">
         <el-button type="default" @click="cancel">取消</el-button>
@@ -33,16 +35,17 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from "vue";
+import { ref, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { ElLoading, ElMessage } from "element-plus";
-import { Check } from '@element-plus/icons-vue'
+import { Pointer, CircleCheck } from '@element-plus/icons-vue'
 import Vcode from "vue3-puzzle-vcode";
 import request from "../utils/request.js";
 
 const router = useRouter();
 const loginFormRef = ref();
 const isShow = ref(false);
+const isSuccess = ref(false);
 const loginForm = reactive({
   email: "",
   password: "",
@@ -61,6 +64,10 @@ const rules = reactive({
 const login = async () => {
   const valid = await loginFormRef.value.validate();
   if (!valid) return;
+  if (!isSuccess.value) {
+    ElMessage.error('请完成滑块验证');
+    return;
+  }
   const loadingInstance = ElLoading.service({
     fullscreen: true,
     text: "正在加载中...",
@@ -83,6 +90,7 @@ const login = async () => {
 const cancel = () => {
   router.push("/");
 };
+
 const onShow = () => {
   isShow.value = true;
 };
@@ -92,8 +100,10 @@ const onClose = () => {
 };
 
 const onSuccess = () => {
-  onClose(); // 验证成功，需要手动关闭模态框
+  isSuccess.value = true;
+  onClose();
 };
+
 const goRegist = () => {
   router.push("/register");
 };
