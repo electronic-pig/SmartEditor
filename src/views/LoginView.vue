@@ -20,23 +20,13 @@
                 <Lock />
               </el-icon> </template></el-input>
         </el-form-item>
-        <el-form-item prop="captcha">
-          <div class="code-container">
-            <el-input v-model="loginForm.captcha" autocomplete="off" placeholder="验证码">
-              <template #prepend>
-                <el-icon>
-                  <Check />
-                </el-icon>
-              </template>
-            </el-input>
-            <img class="captcha" :src="captchaImage" @click="refreshCaptcha" alt="captcha" />
-          </div>
-        </el-form-item>
-        <div style="text-align: center">
-          <el-button type="default" @click="cancel">取消</el-button>
-          <el-button type="primary" @click="login">登录</el-button>
-        </div>
       </el-form>
+      <el-button type="primary" plain :icon="Check" class="varify" @click="onShow">点击按钮开始验证</el-button>
+      <Vcode :show="isShow" @success="onSuccess" @close="onClose" />
+      <div style="text-align: center">
+        <el-button type="default" @click="cancel">取消</el-button>
+        <el-button type="primary" @click="login">登录</el-button>
+      </div>
       <p class="register" @click="goRegist">没有账户？立即注册</p>
     </div>
   </div>
@@ -46,17 +36,17 @@
 import { ref, reactive, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { ElLoading, ElMessage } from "element-plus";
+import { Check } from '@element-plus/icons-vue'
+import Vcode from "vue3-puzzle-vcode";
 import request from "../utils/request.js";
 
 const router = useRouter();
 const loginFormRef = ref();
+const isShow = ref(false);
 const loginForm = reactive({
   email: "",
   password: "",
-  captcha: "",
 });
-const captchaImage = ref("");
-
 const rules = reactive({
   email: [
     { required: true, message: '请输入邮箱', trigger: 'blur' },
@@ -66,15 +56,7 @@ const rules = reactive({
     { required: true, message: '请输入密码', trigger: 'blur' },
     { min: 6, max: 20, message: '密码长度必须在6到20个字符之间', trigger: 'blur' },
   ],
-  captcha: [
-    { required: true, message: '请输入验证码', trigger: 'blur' }
-  ],
 });
-
-const refreshCaptcha = async () => {
-  const response = await request.get("/auth/captcha", { responseType: "blob" });
-  captchaImage.value = URL.createObjectURL(response);
-};
 
 const login = async () => {
   const valid = await loginFormRef.value.validate();
@@ -89,14 +71,11 @@ const login = async () => {
       ElMessage.success(response.message);
       loginForm.email = "";
       loginForm.password = "";
-      loginForm.captcha = "";
     } else {
       ElMessage.error(response.message);
-      refreshCaptcha();
     }
   } catch (error) {
     ElMessage.error(error);
-    refreshCaptcha();
   }
   loadingInstance.close();
 };
@@ -104,12 +83,21 @@ const login = async () => {
 const cancel = () => {
   router.push("/");
 };
+const onShow = () => {
+  isShow.value = true;
+};
 
+const onClose = () => {
+  isShow.value = false;
+};
+
+const onSuccess = () => {
+  onClose(); // 验证成功，需要手动关闭模态框
+};
 const goRegist = () => {
   router.push("/register");
 };
 
-onMounted(refreshCaptcha);
 </script>
 
 <style scoped>
@@ -155,11 +143,10 @@ onMounted(refreshCaptcha);
   display: flex;
 }
 
-.captcha {
-  height: 32px;
-  margin-left: 10px;
-  border: #dcdfe6 solid 1px;
-  border-radius: 4px;
+.varify {
+  width: 20vw;
+  height: 5vh;
+  margin-bottom: 20px;
 }
 
 .register {
