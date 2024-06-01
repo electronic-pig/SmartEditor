@@ -4,7 +4,8 @@ export const useUserStore = defineStore({
   id: 'user',
   state: () => ({
     token: null,
-    username: null
+    username: null,
+    email: null,
   }),
   getters: {
     isLoggedIn() {
@@ -23,6 +24,12 @@ export const useUserStore = defineStore({
     },
     removeUsername() {
       this.username = null;
-    }
+    },
+    setEmail(email) {
+      this.email = email;
+    },
+    removeEmail() {
+      this.email = null;
+    },
   }
 })

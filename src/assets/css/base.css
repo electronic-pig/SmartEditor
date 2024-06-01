@@ -36,3 +36,9 @@
   border-top-color: var(--theme--color) !important;
   border-left-color: var(--theme--color) !important;
 }
+
+.reset-dialog .el-dialog__body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

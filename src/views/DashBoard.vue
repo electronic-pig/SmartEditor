@@ -26,10 +26,7 @@
           </span>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item command="logout"><el-icon>
-                  <User />
-                </el-icon>个人资料</el-dropdown-item>
-              <el-dropdown-item command="logout"><el-icon>
+              <el-dropdown-item command="reset_password"><el-icon>
                   <EditPen />
                 </el-icon>修改密码</el-dropdown-item>
               <el-dropdown-item command="logout"><el-icon>
@@ -39,28 +36,39 @@
           </template>
         </el-dropdown>
       </el-header>
-      <el-main><router-view v-slot="{ Component }">
+      <el-main>
+        <router-view v-slot="{ Component }">
           <transition name="fade" mode="out-in">
             <component :is="Component" />
           </transition>
-        </router-view></el-main>
+        </router-view>
+        <ResetPassword :signal="toggle"/>
+      </el-main>
     </el-container>
   </el-container>
 </template>
 
 <script setup>
+import { ref } from "vue";
 import router from "../router";
 import { useUserStore } from "../stores/userStore.js";
+import ResetPassword from "../components/ResetPassword.vue";
 
 const userStore = useUserStore();
+const toggle = ref(false);  // 控制重置密码对话框的显示
 
 const handleCommand = (command) => {
   if (command === "logout") {
     userStore.removeToken();
     userStore.removeUsername();
+    userStore.removeEmail();
     localStorage.removeItem("token");
     localStorage.removeItem("username");
+    localStorage.removeItem("email");
     router.push("/");
+  }
+  if (command === "reset_password") {
+    toggle.value = !toggle.value;
   }
 };
 </script>

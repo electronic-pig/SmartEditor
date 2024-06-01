@@ -95,31 +95,6 @@ const rules = reactive({
 const countdown = ref(60);
 const isButtonDisabled = ref(false);
 
-const register = async () => {
-  const valid = await registerFormRef.value.validate();
-  if (!valid) return;
-  const loadingInstance = ElLoading.service({
-    fullscreen: true,
-    text: "正在加载中...",
-  });
-  try {
-    const response = await request.post("/auth/register", registerForm);
-    if (response.code == 200) {
-      ElMessage.success(response.message);
-      registerForm.username = "";
-      registerForm.email = "";
-      registerForm.password = "";
-      registerForm.checkPassword = "";
-      registerForm.verification_code = "";
-    } else {
-      ElMessage.error(response.message);
-    }
-  } catch (error) {
-    ElMessage.error(error);
-  }
-  loadingInstance.close();
-};
-
 const getCode = async () => {
   const valid = await registerFormRef.value.validate();
   if (!valid) return;
@@ -143,7 +118,31 @@ const getCode = async () => {
   } catch (error) {
     ElMessage.error(error);
   }
+};
 
+const register = async () => {
+  const valid = await registerFormRef.value.validate();
+  if (!valid) return;
+  const loadingInstance = ElLoading.service({
+    fullscreen: true,
+    text: "正在加载中...",
+  });
+  try {
+    const response = await request.post("/auth/register", registerForm);
+    if (response.code == 200) {
+      ElMessage.success(response.message);
+      registerForm.username = "";
+      registerForm.email = "";
+      registerForm.password = "";
+      registerForm.checkPassword = "";
+      registerForm.verification_code = "";
+    } else {
+      ElMessage.error(response.message);
+    }
+  } catch (error) {
+    ElMessage.error(error);
+  }
+  loadingInstance.close();
 };
 
 const cancel = () => {

@@ -21,10 +21,12 @@ app
 
 const token = localStorage.getItem("token");
 const username = localStorage.getItem("username");
+const email = localStorage.getItem("email");
 if (token) {
   const userStore = useUserStore();
   userStore.setToken(token);
   userStore.setUsername(username);
+  userStore.setEmail(email);
   router.push("/dashboard/IndexPage");
 } 
 app.mount("#app");
