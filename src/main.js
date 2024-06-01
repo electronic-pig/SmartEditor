@@ -8,6 +8,7 @@ import * as ElementPlusIconsVue from "@element-plus/icons-vue";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 import "normalize.css";
 import "./assets/css/base.css";
+import { useUserStore } from './stores/userStore';
 
 const app = createApp(App);
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
@@ -17,4 +18,12 @@ app
   .use(createPinia())
   .use(ElementPlus, { locale: zhCn })
   .use(router)
-  .mount("#app");
+
+const token = localStorage.getItem("token");
+if (token) {
+  const userStore = useUserStore();
+  userStore.setToken(token);
+  userStore.setUsername(localStorage.getItem("username"));
+  router.push("/dashboard/IndexPage");
+} 
+app.mount("#app");

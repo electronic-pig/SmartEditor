@@ -1,6 +1,7 @@
 // request.js
 import axios from "axios";
 import { useUserStore } from "../stores/userStore.js";
+import { useRouter } from "vue-router";
 
 // 创建axios实例
 const service = axios.create({
@@ -45,6 +46,14 @@ service.interceptors.response.use(
   },
   (error) => {
     // 处理请求错误
+    if (error.response && error.response.status === 401) {
+      // 清除 token
+      const userStore = useUserStore();
+      userStore.setToken(null);
+      // 跳转到登录页面
+      const router = useRouter();
+      router.push('/login');
+    }
     console.error("响应拦截器错误：", error); // for debug
     return Promise.reject(error);
   }

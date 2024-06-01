@@ -79,6 +79,8 @@ const login = async () => {
       ElMessage.success(response.message);
       userStore.setToken(response.data.access_token);
       userStore.setUsername(response.data.username);
+      localStorage.setItem("token", response.data.access_token);
+      localStorage.setItem("username", response.data.username);
       loginForm.email = "";
       loginForm.password = "";
       router.push("/dashboard/IndexPage");
