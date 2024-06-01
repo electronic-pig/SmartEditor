@@ -84,7 +84,7 @@ const handleCommand = (command, document) => {
 const loadDocuments = async () => {
   try {
     NProgress.start();
-    const response = await request.get("/document/user/3");
+    const response = await request.get("/document/user");
     if (response.code == 200) {
       documents.value = response.documents;
     } else {

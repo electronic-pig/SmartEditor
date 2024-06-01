@@ -23,21 +23,20 @@
 </template>
 
 <script setup>
-import { reactive, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import { ElMessage } from "element-plus";
 import request from "../utils/request.js";
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 
-const documents = reactive([]);
+const documents = ref([]);
 
 onMounted(async () => {
   try {
     NProgress.start();
-    const response = await request.get("/document/user/1");
+    const response = await request.get("/document/template");
     if (response.code == 200) {
-      console.log(response);
-      documents.push(...response.documents);
+      documents.value = response.document;
       console.log(documents);
     } else {
       ElMessage.error(response.message);

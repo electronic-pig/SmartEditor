@@ -77,7 +77,7 @@ const login = async () => {
     const response = await request.post("/auth/login", loginForm);
     if (response.code == 200) {
       ElMessage.success(response.message);
-      userStore.setToken(response.data.token);
+      userStore.setToken(response.data.access_token);
       userStore.setUsername(response.data.username);
       loginForm.email = "";
       loginForm.password = "";
