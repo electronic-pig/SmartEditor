@@ -49,16 +49,17 @@
 </template>
 
 <script setup>
-import { useRouter } from "vue-router";
+import router from "../router";
 import { useUserStore } from "../stores/userStore.js";
 
-const router = useRouter();
 const userStore = useUserStore();
 
 const handleCommand = (command) => {
   if (command === "logout") {
     userStore.removeToken();
     userStore.removeUsername();
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
     router.push("/");
   }
 };

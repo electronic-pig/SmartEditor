@@ -49,9 +49,8 @@
 </template>
 
 <script setup>
-import { useRouter } from "vue-router";
+import router from "../router";
 
-const router = useRouter();
 const start = () => {
   router.push("/dashboard");
 };

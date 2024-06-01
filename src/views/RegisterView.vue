@@ -54,11 +54,9 @@
 
 <script setup>
 import { ref, reactive } from "vue";
-import { useRouter } from "vue-router";
+import router from "../router";
 import { ElLoading, ElMessage } from "element-plus";
 import request from "../utils/request.js";
-
-const router = useRouter();
 const registerFormRef = ref();
 const registerForm = reactive({
   username: "",

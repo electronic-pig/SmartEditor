@@ -35,14 +35,13 @@
 
 <script setup>
 import { ref, reactive } from "vue";
-import { useRouter } from "vue-router";
 import { ElLoading, ElMessage } from "element-plus";
 import { Pointer, CircleCheck } from '@element-plus/icons-vue'
 import { useUserStore } from '../stores/userStore.js';
 import Vcode from "vue3-puzzle-vcode";
 import request from "../utils/request.js";
+import router from "../router";
 
-const router = useRouter();
 const userStore = useUserStore();
 const loginFormRef = ref();
 const isShow = ref(false);

@@ -20,10 +20,11 @@ app
   .use(router)
 
 const token = localStorage.getItem("token");
+const username = localStorage.getItem("username");
 if (token) {
   const userStore = useUserStore();
   userStore.setToken(token);
-  userStore.setUsername(localStorage.getItem("username"));
+  userStore.setUsername(username);
   router.push("/dashboard/IndexPage");
 } 
 app.mount("#app");
