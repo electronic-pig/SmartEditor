@@ -17,32 +17,42 @@
       </div>
     </el-aside>
     <el-container>
-      <el-header class="el-header"><span>开始</span><el-avatar
-          src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" size="small"
-          style="margin-left: 70vw" />
+      <el-header class="header"><span>开始</span>
+        <el-autocomplete v-model="search" :fetch-suggestions="querySearchAsync" :trigger-on-focus="false" value-key="title"
+          @select="handleSelect" placeholder="通过文档名搜索文档" clearable style="width: 40vw;margin-left: 15vw">
+          <template #prefix>
+            <el-icon>
+              <Search />
+            </el-icon>
+          </template>
+        </el-autocomplete>
+        <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" size="small"
+          style="margin-left: 15vw" />
         <el-dropdown size="large" trigger="click" @command="handleCommand">
           <span class="el-dropdown-link">
             {{ userStore.username }}
           </span>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item command="reset_password"><el-icon>
+              <el-dropdown-item command="reset_password">
+                <el-icon>
                   <EditPen />
                 </el-icon>修改密码</el-dropdown-item>
-              <el-dropdown-item command="logout"><el-icon>
+              <el-dropdown-item command="logout">
+                <el-icon>
                   <SwitchButton />
                 </el-icon>退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
       </el-header>
-      <el-main>
+      <el-main class="main">
         <router-view v-slot="{ Component }">
           <transition name="fade" mode="out-in">
             <component :is="Component" />
           </transition>
         </router-view>
-        <ResetPassword :signal="toggle"/>
+        <ResetPassword :signal="toggle" />
       </el-main>
     </el-container>
   </el-container>
@@ -53,9 +63,12 @@ import { ref } from "vue";
 import router from "../router";
 import { useUserStore } from "../stores/userStore.js";
 import ResetPassword from "../components/ResetPassword.vue";
+import request from "../utils/request.js";
+import { ElMessage } from "element-plus";
 
 const userStore = useUserStore();
 const toggle = ref(false);  // 控制重置密码对话框的显示
+let search = ref('');
 
 const handleCommand = (command) => {
   if (command === "logout") {
@@ -70,6 +83,24 @@ const handleCommand = (command) => {
   if (command === "reset_password") {
     toggle.value = !toggle.value;
   }
+};
+
+const querySearchAsync = async (queryString, cb) => {
+  try {
+    const response = await request.get("/document/search/" + queryString);
+    if (response.code == 200) {
+      cb(response.documents);
+    } else {
+      cb([]);
+      ElMessage.info(response.message);
+    }
+  } catch (error) {
+    ElMessage.error(error);
+  }
+};
+
+const handleSelect = (item) => {
+  console.log(item);
 };
 </script>
 
@@ -173,5 +204,18 @@ const handleCommand = (command) => {
 .more:hover {
   background-color: var(--el-color-primary-light-5);
   color: #eee;
+}
+
+.header {
+  height: 6vh;
+  box-shadow: 0 0 2rem 0 rgba(41, 48, 66, 0.1);
+  display: flex;
+  align-items: center;
+  background-color: var(--nav--color);
+  color: #606266;
+}
+
+.main {
+  padding: 0px;
 }
 </style>

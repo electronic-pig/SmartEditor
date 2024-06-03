@@ -11,18 +11,6 @@
   --nav--color: #f2f3f5;
 }
 
-.el-header {
-  height: 6vh;
-  box-shadow: 0 0 2rem 0 rgba(41, 48, 66, 0.1);
-  display: flex;
-  align-items: center;
-  background-color: var(--nav--color);
-  color: #606266;
-}
-
-.el-main {
-  padding: 0px;
-}
 
 #nprogress .bar {
   background: var(--theme--color) !important;
