@@ -13,9 +13,36 @@ body,
   height: 100vh;
 }
 
+.name {
+  font-size: 56px;
+  font-weight: bold;
+  background: linear-gradient(135deg, #47caff, #bd34fe);
+  background-clip: text;
+  color: transparent;
+}
+
+.loading {
+  width: 35px;
+  height: 35px;
+  border: 3px solid #6c63ff;
+  border-top-color: transparent;
+  border-radius: 100%;
+  animation: circle infinite 0.75s linear;
+}
+
 .load_title {
   color: #6c63ff;
-  font-size: 36px;
+  font-size: 24px;
   width: 100%;
   text-align: center;
+}
+
+@keyframes circle {
+  0% {
+    transform: rotate(0);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }

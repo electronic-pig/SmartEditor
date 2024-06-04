@@ -13,7 +13,7 @@
         <router-link to="/dashboard/TemplatePage" class="link">模板库</router-link>
         <router-link to="/dashboard/StarPage" class="link">我的收藏</router-link>
         <router-link to="/dashboard/RecyclePage" class="link">回收站</router-link>
-        <div class="more">更多</div>
+        <div class="more" @click="change">更多</div>
       </div>
     </el-aside>
     <el-container>
@@ -171,6 +171,11 @@ const handleSelect = (item) => {
   text-decoration: none;
   border-radius: 10px;
   color: var(--el-color-primary-light-3);
+}
+
+.link:hover {
+  background-color: var(--el-color-primary-light-5);
+  color: #eee;
 }
 
 .fade-enter-active,
