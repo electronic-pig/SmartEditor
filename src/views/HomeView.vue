@@ -52,7 +52,7 @@
 import router from "../router";
 
 const start = () => {
-  router.push("/dashboard");
+  router.push("/edit");
 };
 </script>
 
