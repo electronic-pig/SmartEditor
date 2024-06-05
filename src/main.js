@@ -9,6 +9,8 @@ import * as ElementPlusIconsVue from "@element-plus/icons-vue";
 import zhCn from "element-plus/es/locale/lang/zh-cn";
 import "normalize.css";
 import "./assets/css/base.css";
+import "./assets/css/editor.scss";
+import 'remixicon/fonts/remixicon.css'
 import { useUserStore } from './stores/userStore';
 
 const app = createApp(App);

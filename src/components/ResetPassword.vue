@@ -40,7 +40,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, defineProps, watch, computed } from "vue";
+import { ref, reactive, watch, computed } from "vue";
 import { ElLoading, ElMessage } from "element-plus";
 import { useUserStore } from "../stores/userStore.js";
 import request from "../utils/request.js";
