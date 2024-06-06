@@ -28,7 +28,7 @@ const router = createRouter({
       path: "/edit",
       name: "edit",
       component: EditView,
-      // meta: { requiresAuth: true },
+      meta: { requiresAuth: true },
     },
     {
       path: "/dashboard",
@@ -72,10 +72,21 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const userStore = useUserStore();
-  if (to.meta.requiresAuth && !userStore.isLoggedIn) {
-    next('/login');
-  } else {
-    next();
+  //  如果用户登陆过
+  if (userStore.isLoggedIn) {
+    // 如果用户再次访问首页，直接跳转
+    if (to.path === '/')
+      next('/dashboard/DocumentPage');
+    else
+      next();
+  }
+  // 如果用户没有登陆过
+  else {
+    // 如果用户访问需要登陆的页面，跳转到登陆页面
+    if (to.meta.requiresAuth)
+      next('/login');
+    else
+      next();
   }
 });
 

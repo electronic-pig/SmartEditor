@@ -30,6 +30,5 @@ if (token) {
   userStore.setToken(token);
   userStore.setUsername(username);
   userStore.setEmail(email);
-  // router.push("/dashboard/DocumentPage");
 } 
 app.mount("#app");
