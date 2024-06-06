@@ -28,6 +28,7 @@ const router = createRouter({
       path: "/edit",
       name: "edit",
       component: EditView,
+      // meta: { requiresAuth: true },
     },
     {
       path: "/dashboard",
@@ -37,13 +38,13 @@ const router = createRouter({
       children: [
         {
           path: "/",
-          redirect: "/dashboard/IndexPage",
+          redirect: "/dashboard/DocumentPage",
         },
-        {
-          path: "IndexPage",
-          name: "IndexPage",
-          component: () => import("../components/IndexPage.vue"),
-        },
+        // {
+        //   path: "IndexPage",
+        //   name: "IndexPage",
+        //   component: () => import("../components/IndexPage.vue"),
+        // },
         {
           path: "DocumentPage",
           name: "DocumentPage",

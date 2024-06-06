@@ -8,7 +8,6 @@
       <el-divider class="divider-title">功能区</el-divider>
       <!-- 左侧导航链接 -->
       <div class="router-link">
-        <router-link to="/dashboard/IndexPage" class="link">工作台</router-link>
         <router-link to="/dashboard/DocumentPage" class="link">我的文档</router-link>
         <router-link to="/dashboard/TemplatePage" class="link">模板库</router-link>
         <router-link to="/dashboard/StarPage" class="link">我的收藏</router-link>
@@ -18,8 +17,9 @@
     </el-aside>
     <el-container>
       <el-header class="header"><span>开始</span>
-        <el-autocomplete v-model="search" :fetch-suggestions="querySearchAsync" :trigger-on-focus="false" value-key="title"
-          @select="handleSelect" placeholder="通过文档名搜索文档" clearable style="width: 40vw;margin-left: 15vw">
+        <el-autocomplete v-model="search" :fetch-suggestions="querySearchAsync" :trigger-on-focus="false"
+          value-key="title" @select="handleSelect" placeholder="通过文档名搜索文档" clearable
+          style="width: 40vw;margin-left: 15vw">
           <template #prefix>
             <el-icon>
               <Search />

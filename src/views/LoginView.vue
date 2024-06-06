@@ -84,7 +84,7 @@ const login = async () => {
       localStorage.setItem("email", loginForm.email);
       loginForm.email = "";
       loginForm.password = "";
-      router.push("/dashboard/IndexPage");
+      router.push("/dashboard/");
     } else {
       ElMessage.error(response.message);
     }

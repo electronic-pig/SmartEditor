@@ -136,6 +136,7 @@ const register = async () => {
       registerForm.password = "";
       registerForm.checkPassword = "";
       registerForm.verification_code = "";
+      router.push("/login");
     } else {
       ElMessage.error(response.message);
     }

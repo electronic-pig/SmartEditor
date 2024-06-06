@@ -42,6 +42,7 @@
 import { ref, onMounted } from "vue";
 import { ElMessage } from "element-plus";
 import request from "../utils/request.js";
+import router from "../router";
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 
@@ -62,7 +63,7 @@ const formatDate = (dateString) => {
 };
 
 const handleRowClick = (row) => {
-  console.log(row);
+  router.push({ name: 'edit', query: { id: row.id } });
 };
 
 const handleCommand = (command, document) => {

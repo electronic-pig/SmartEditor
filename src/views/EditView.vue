@@ -1,6 +1,28 @@
 <template>
   <el-container class="container">
-    <el-header class="header">Header</el-header>
+    <el-header class="header">
+      <el-button @click="returnHome" class="icon">
+        <el-icon :size="22">
+          <HomeFilled />
+        </el-icon>
+      </el-button>
+      <el-button class="icon">
+        <el-icon :size="22">
+          <Plus />
+        </el-icon>
+      </el-button>
+      <el-divider direction="vertical" />
+      <el-button class="icon">
+        <el-icon :size="22">
+          <MoreFilled />
+        </el-icon>
+      </el-button>
+      <span style="margin: 0 auto;">文件名</span>
+      <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" size="small"
+        style="margin-right: 2px" />
+      <span style="margin-right: 3vw">电子笨蛋</span>
+
+    </el-header>
     <el-main class="main">
       <div v-if="editor" class="fixed-menu">
         <button @click="editor.chain().focus().undo().run()" :disabled="!editor.can().chain().focus().undo().run()">
@@ -87,6 +109,13 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue';
+import { ElMessage } from "element-plus";
+import request from "../utils/request.js";
+import router from "../router";
+import NProgress from 'nprogress';
+import 'nprogress/nprogress.css';
+
 import { useEditor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 import { Underline } from '@tiptap/extension-underline'
@@ -94,40 +123,36 @@ import { TextAlign } from '@tiptap/extension-text-align'
 import { Superscript } from '@tiptap/extension-superscript'
 import { Subscript } from '@tiptap/extension-subscript'
 
-
 const editor = useEditor({
-  content: `
-        <h2>
-          Hi there,
-        </h2>
-        <p>
-          this is a <em>basic</em> example of <strong>tiptap</strong>. Sure, there are all kind of basic text styles you’d probably expect from a text editor. But wait until you see the lists:
-        </p>
-        <ul>
-          <li>
-            That’s a bullet list with one …
-          </li>
-          <li>
-            … or two list items.
-          </li>
-        </ul>
-        <p>
-          Isn’t that great? And all of that is editable. But wait, there’s more. Let’s try a code block:
-        </p>
-        <pre><code class="language-css">body {
-  display: none;
-}</code></pre>
-        <p>
-          I know, I know, this is impressive. It’s only the tip of the iceberg though. Give it a try and click a little bit around. Don’t forget to check the other examples too.
-        </p>
-        <blockquote>
-          Wow, that’s amazing. Good work, boy! 👏
-          <br />
-          — Mom
-        </blockquote>
-      `,
+  content: '',
   extensions: [StarterKit, Underline, TextAlign, Superscript, Subscript],
 })
+
+const returnHome = () => {
+  router.push('/dashboard/DocumentPage')
+}
+
+const loadDocument = async () => {
+  try {
+    NProgress.start();
+    const response = await request.get("/document/"+router.currentRoute.value.query.id);
+    if (response.code == 200) {
+      editor.value.commands.setContent(response.document.content);
+    } else {
+      ElMessage.error(response.message);
+    }
+  } catch (error) {
+    ElMessage.error(error);
+    console.error(error);
+  } finally {
+    NProgress.done();
+  }
+};
+
+onMounted(() => {
+  console.log(router.currentRoute.value.query.id);
+  loadDocument();
+});
 </script>
 
 <style scoped>
@@ -143,6 +168,15 @@ const editor = useEditor({
   align-items: center;
   background-color: var(--nav--color);
   color: #606266;
+}
+
+.icon {
+  padding: 2px 3px;
+  margin: 0 4px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: transparent;
 }
 
 .main {
