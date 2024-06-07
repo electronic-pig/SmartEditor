@@ -82,16 +82,81 @@
         &.is-active {
             background-color: #f0f0f0;
         }
-
     }
 }
 
-.editor-content {
-    height: 70vh;
-    margin-top: 10px;
-    padding: 2rem;
+.editor-container {
+    display: flex;
+    margin-top: 1vh;
+    height: 82vh;
+
+    .docs {
+        width: 16vw;
+        background-color: #fff;
+        border-right: 1px solid #f0f0f0;
+        border-radius: 10px 0 0 0;
+
+        .doc {
+            height: 10vh;
+            margin: 6px;
+            color: #666;
+            background-color: #f0f0f0;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+    }
+
+    .content {
+        flex: 1;
+
+        .editor-content {
+            height: 74vh;
+            padding: 2rem;
+            background-color: #fff;
+            overflow-y: auto;
+        }
+    }
+
+    .catalog {
+        width: 18vw;
+        padding-left: 40px;
+        background-color: #fff;
+        border-radius: 10px 0 0 0;
+    }
+
+}
+
+.word-count {
+    font-size: 18px;
+    color: #888;
     background-color: #fff;
-    border: 1px solid #fff;
-    border-radius: 10px;
-    overflow-y: auto;
+    padding-bottom: 8px;
+    padding-left: 2vw;
+    border-radius: 0 0 10px 10px;
+}
+
+.toc-item {
+    cursor: pointer;
+    padding: 10px 0;
+    color: #666;
+}
+
+.toc-item:hover {
+    color: #000;
+}
+
+.toc-item[type="header1"] {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.toc-item[type="header2"] {
+    font-size: 16px;
+    padding-left: 15px;
+    font-weight: bold;
+}
+
+.toc-item[type="header3"] {
+    font-size: 14px;
+    padding-left: 30px;
 }

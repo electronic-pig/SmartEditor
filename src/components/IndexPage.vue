@@ -72,7 +72,6 @@ onBeforeUnmount(() => {
 
 const handleCreated = (editor) => {
   editorRef.value = editor // 记录 editor 实例，重要！
-  console.log('created', editor)
   setTimeout(() => {
     const toolbar = DomEditor.getToolbar(editor)
     const curToolbarConfig = toolbar?.getConfig();
