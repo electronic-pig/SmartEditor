@@ -1,4 +1,3 @@
-// request.js
 import axios from "axios";
 import { useUserStore } from "../stores/userStore.js";
 
