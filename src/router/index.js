@@ -24,7 +24,7 @@ const router = createRouter({
     {
       path: "/edit",
       component: EditView,
-      meta: { requiresAuth: true },
+      // meta: { requiresAuth: true },
     },
     {
       path: "/dashboard",

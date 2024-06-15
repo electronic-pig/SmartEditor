@@ -66,7 +66,7 @@
     border: 1px solid #fff;
     border-radius: 10px;
 
-    button {
+    button:not(.el-button) {
         margin: 0 1px;
         padding: 8px 10px;
         border: none;
@@ -83,6 +83,13 @@
             background-color: #f0f0f0;
         }
     }
+
+    .el-button {
+        margin: 0 1px;
+        padding: 8px 10px;
+        border-radius: 5px;
+        background-color: #fff;
+    }
 }
 
 .editor-container {
@@ -97,7 +104,7 @@
         border-radius: 10px 0 0 0;
 
         .doc {
-            height: 10vh;
+            height: 7vh;
             margin: 6px;
             color: #666;
             background-color: #f0f0f0;

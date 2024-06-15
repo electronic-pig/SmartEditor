@@ -13,11 +13,12 @@
       </el-button>
       <el-divider direction="vertical" />
       <el-button class="icon">
-        <el-icon :size="22">
-          <MoreFilled />
-        </el-icon>
+        <i style="font-size: 22px;" class="ri-save-line"></i>
       </el-button>
-      <span style="margin: 0 auto;">文件名</span>
+      <el-button class="icon">
+        <i style="font-size: 22px;" class="ri-export-line"></i>
+      </el-button>
+      <span style="font-size: 20px; margin: 0 auto;">文件名</span>
       <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" size="small"
         style="margin-right: 2px" />
       <span style="margin-right: 3vw">电子笨蛋</span>
@@ -25,15 +26,21 @@
     </el-header>
     <el-main class="main">
       <div v-if="editor" class="fixed-menu">
-        <button @click="editor.chain().focus().undo().run()" :disabled="!editor.can().chain().focus().undo().run()">
-          <i class="ri-arrow-go-back-line"></i>
-        </button>
-        <button @click="editor.chain().focus().redo().run()" :disabled="!editor.can().chain().focus().redo().run()">
-          <i class="ri-arrow-go-forward-line"></i>
-        </button>
-        <button @click="editor.chain().focus().clearNodes().unsetAllMarks().run()">
-          <i class="ri-delete-bin-line"></i>
-        </button>
+        <el-tooltip content="撤回" :hide-after="0">
+          <button @click="editor.chain().focus().undo().run()" :disabled="!editor.can().chain().focus().undo().run()">
+            <i class="ri-arrow-go-back-line"></i>
+          </button>
+        </el-tooltip>
+        <el-tooltip content="取消撤回" :hide-after="0">
+          <button @click="editor.chain().focus().redo().run()" :disabled="!editor.can().chain().focus().redo().run()">
+            <i class="ri-arrow-go-forward-line"></i>
+          </button>
+        </el-tooltip>
+        <el-tooltip content="清除样式" :hide-after="0">
+          <button @click="editor.chain().focus().clearNodes().unsetAllMarks().run()">
+            <i class="ri-delete-bin-line"></i>
+          </button>
+        </el-tooltip>
         <el-divider direction="vertical" />
         <el-select v-model="header" @change="handleHeader" style="width: 72px">
           <el-option :key="0" label="正文" :value="0">
@@ -43,78 +50,117 @@
             <i :class="`ri-h-${i}`" :style="{ fontSize: `${28 - i * 2}px` }"></i>
           </el-option>
         </el-select>
-        <button @click="editor.chain().focus().toggleBold().run()"
-          :disabled="!editor.can().chain().focus().toggleBold().run()"
-          :class="{ 'is-active': editor.isActive('bold') }">
-          <i class="ri-bold"></i>
-        </button>
-        <button @click="editor.chain().focus().toggleItalic().run()"
-          :disabled="!editor.can().chain().focus().toggleItalic().run()"
-          :class="{ 'is-active': editor.isActive('italic') }">
-          <i class="ri-italic"></i>
-        </button>
-        <button @click="editor.chain().focus().toggleUnderline().run()"
-          :disabled="!editor.can().chain().focus().toggleUnderline().run()"
-          :class="{ 'is-active': editor.isActive('underline') }">
-          <i class="ri-underline"></i>
-        </button>
-        <button @click="editor.chain().focus().toggleStrike().run()"
-          :disabled="!editor.can().chain().focus().toggleStrike().run()"
-          :class="{ 'is-active': editor.isActive('strike') }">
-          <i class="ri-strikethrough"></i>
-        </button>
-        <button @click="editor.chain().focus().toggleCode().run()"
-          :disabled="!editor.can().chain().focus().toggleCode().run()"
-          :class="{ 'is-active': editor.isActive('code') }">
-          <i class="ri-code-line"></i>
-        </button>
-        <button @click="editor.chain().focus().toggleCodeBlock().run()"
-          :class="{ 'is-active': editor.isActive('codeBlock') }">
-          <i class="ri-code-box-line"></i>
-        </button>
-        <button @click="editor.chain().focus().toggleSuperscript().run()"
-          :disabled="!editor.can().chain().focus().toggleSuperscript().run()"
-          :class="{ 'is-active': editor.isActive('superscript') }">
-          <i class="ri-superscript"></i>
-        </button>
-        <button @click="editor.chain().focus().toggleSubscript().run()"
-          :disabled="!editor.can().chain().focus().toggleSubscript().run()"
-          :class="{ 'is-active': editor.isActive('subscript') }">
-          <i class="ri-subscript"></i>
-        </button>
+        <el-tooltip content="加粗" :hide-after="0">
+          <button @click="editor.chain().focus().toggleBold().run()"
+            :disabled="!editor.can().chain().focus().toggleBold().run()"
+            :class="{ 'is-active': editor.isActive('bold') }">
+            <i class="ri-bold"></i>
+          </button>
+        </el-tooltip>
+        <el-tooltip content="斜体" :hide-after="0">
+          <button @click="editor.chain().focus().toggleItalic().run()"
+            :disabled="!editor.can().chain().focus().toggleItalic().run()"
+            :class="{ 'is-active': editor.isActive('italic') }">
+            <i class="ri-italic"></i>
+          </button>
+        </el-tooltip>
+        <el-tooltip content="下划线" :hide-after="0">
+          <button @click="editor.chain().focus().toggleUnderline().run()"
+            :disabled="!editor.can().chain().focus().toggleUnderline().run()"
+            :class="{ 'is-active': editor.isActive('underline') }">
+            <i class="ri-underline"></i>
+          </button>
+        </el-tooltip>
+        <el-tooltip content="删除线" :hide-after="0">
+          <button @click="editor.chain().focus().toggleStrike().run()"
+            :disabled="!editor.can().chain().focus().toggleStrike().run()"
+            :class="{ 'is-active': editor.isActive('strike') }">
+            <i class="ri-strikethrough"></i>
+          </button>
+        </el-tooltip>
+        <el-tooltip content="代码" :hide-after="0">
+          <button @click="editor.chain().focus().toggleCode().run()"
+            :disabled="!editor.can().chain().focus().toggleCode().run()"
+            :class="{ 'is-active': editor.isActive('code') }">
+            <i class="ri-code-line"></i>
+          </button>
+        </el-tooltip>
+        <el-tooltip content="代码块" :hide-after="0">
+          <button @click="editor.chain().focus().toggleCodeBlock().run()"
+            :class="{ 'is-active': editor.isActive('codeBlock') }">
+            <i class="ri-code-box-line"></i>
+          </button>
+        </el-tooltip>
+        <el-tooltip content="上标" :hide-after="0">
+          <button @click="editor.chain().focus().toggleSuperscript().run()"
+            :disabled="!editor.can().chain().focus().toggleSuperscript().run()"
+            :class="{ 'is-active': editor.isActive('superscript') }">
+            <i class="ri-superscript"></i>
+          </button>
+        </el-tooltip>
+        <el-tooltip content="下标" :hide-after="0">
+          <button @click="editor.chain().focus().toggleSubscript().run()"
+            :disabled="!editor.can().chain().focus().toggleSubscript().run()"
+            :class="{ 'is-active': editor.isActive('subscript') }">
+            <i class="ri-subscript"></i>
+          </button>
+        </el-tooltip>
         <el-divider direction="vertical" />
-        <button @click="editor.chain().focus().toggleBulletList().run()"
-          :class="{ 'is-active': editor.isActive('bulletList') }">
-          <i class="ri-list-unordered"></i>
-        </button>
-        <button @click="editor.chain().focus().toggleOrderedList().run()"
-          :class="{ 'is-active': editor.isActive('orderedList') }">
-          <i class="ri-list-ordered-2"></i>
-        </button>
-        <button @click="editor.chain().focus().setTextAlign('left').run()"
-          :class="{ 'is-active': editor.isActive('textAlign', { align: 'left' }) }">
-          <i class="ri-align-left"></i>
-        </button>
-        <button @click="editor.chain().focus().setTextAlign('center').run()"
-          :class="{ 'is-active': editor.isActive('textAlign', { align: 'center' }) }">
-          <i class="ri-align-center"></i>
-        </button>
-        <button @click="editor.chain().focus().setTextAlign('right').run()"
-          :class="{ 'is-active': editor.isActive('textAlign', { align: 'right' }) }">
-          <i class="ri-align-right"></i>
-        </button>
-        <button @click="editor.chain().focus().toggleBlockquote().run()"
-          :class="{ 'is-active': editor.isActive('blockquote') }">
-          <i class="ri-double-quotes-l"></i> </button>
+        <el-tooltip content="无序列表" :hide-after="0">
+          <button @click="editor.chain().focus().toggleBulletList().run()"
+            :class="{ 'is-active': editor.isActive('bulletList') }">
+            <i class="ri-list-unordered"></i>
+          </button>
+        </el-tooltip>
+        <el-tooltip content="有序列表" :hide-after="0">
+          <button @click="editor.chain().focus().toggleOrderedList().run()"
+            :class="{ 'is-active': editor.isActive('orderedList') }">
+            <i class="ri-list-ordered-2"></i>
+          </button>
+        </el-tooltip>
+        <el-tooltip content="左对齐" :hide-after="0">
+          <button @click="editor.chain().focus().setTextAlign('left').run()"
+            :class="{ 'is-active': editor.isActive('textAlign', { align: 'left' }) }">
+            <i class="ri-align-left"></i>
+          </button>
+        </el-tooltip>
+        <el-tooltip content="居中对齐" :hide-after="0">
+          <button @click="editor.chain().focus().setTextAlign('center').run()"
+            :class="{ 'is-active': editor.isActive('textAlign', { align: 'center' }) }">
+            <i class="ri-align-center"></i>
+          </button>
+        </el-tooltip>
+        <el-tooltip content="右对齐" :hide-after="0">
+          <button @click="editor.chain().focus().setTextAlign('right').run()"
+            :class="{ 'is-active': editor.isActive('textAlign', { align: 'right' }) }">
+            <i class="ri-align-right"></i>
+          </button>
+        </el-tooltip>
+        <el-tooltip content="引用" :hide-after="0">
+          <button @click="editor.chain().focus().toggleBlockquote().run()"
+            :class="{ 'is-active': editor.isActive('blockquote') }">
+            <i class="ri-double-quotes-l"></i>
+          </button>
+        </el-tooltip>
+        <el-divider direction="vertical" />
+        <el-button type="primary" text bg>OCR</el-button>
+        <el-dropdown trigger="click">
+          <el-button type="primary" text bg><i class="ri-bard-line"></i>AI</el-button>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item>帮我写</el-dropdown-item>
+              <el-dropdown-item>帮我改</el-dropdown-item>
+              <el-dropdown-item>帮我写</el-dropdown-item>
+              <el-dropdown-item>全文总结</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
       </div>
       <div class="editor-container">
         <div class="docs">
           <h2 style="color: #555;margin-left: 5vw">我的文档</h2>
-          <div class="doc"></div>
-          <div class="doc"></div>
-          <div class="doc"></div>
-          <div class="doc"></div>
-          <div class="doc"></div>
+          <div class="doc" v-for="i in 5">
+          </div>
         </div>
         <div class="content">
           <editor-content :editor="editor" class="editor-content" />
