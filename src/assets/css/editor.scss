@@ -167,3 +167,21 @@
     font-size: 14px;
     padding-left: 30px;
 }
+
+.border_black {
+    border: 1px solid rgba(0, 0, 0, 0.6) !important;
+}
+
+.color-box {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.color-item {
+    width: 20px;
+    height: 20px;
+    margin: 4px;
+    border-radius: 10px;
+    cursor: pointer;
+}

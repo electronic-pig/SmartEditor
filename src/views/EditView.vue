@@ -38,7 +38,7 @@
         </el-tooltip>
         <el-tooltip content="清除样式" :hide-after="0">
           <button @click="editor.chain().focus().clearNodes().unsetAllMarks().run()">
-            <i class="ri-delete-bin-line"></i>
+            <i class="ri-eraser-fill"></i>
           </button>
         </el-tooltip>
         <el-divider direction="vertical" />
@@ -77,6 +77,19 @@
             :class="{ 'is-active': editor.isActive('strike') }">
             <i class="ri-strikethrough"></i>
           </button>
+        </el-tooltip>
+        <el-tooltip content="文字颜色" :hide-after="0">
+          <span>
+            <el-popover trigger="click" width="250">
+              <div class="color-box">
+                <div class="color-item" v-for="color in colorList" :key="color"
+                  @click="editor.chain().focus().setColor(color).run()" :style="{ backgroundColor: color }"></div>
+              </div>
+              <template #reference>
+                <button><i class="ri-font-color"></i></button>
+              </template>
+            </el-popover>
+          </span>
         </el-tooltip>
         <el-tooltip content="代码" :hide-after="0">
           <button @click="editor.chain().focus().toggleCode().run()"
@@ -184,14 +197,17 @@ import { ElMessage } from "element-plus";
 import request from "../utils/request.js";
 import router from "../router";
 import NProgress from 'nprogress';
+import colorList from "../utils/colors.js"
 import 'nprogress/nprogress.css';
 
 import { useEditor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
+import TextStyle from '@tiptap/extension-text-style'
 import { Underline } from '@tiptap/extension-underline'
 import { TextAlign } from '@tiptap/extension-text-align'
 import { Superscript } from '@tiptap/extension-superscript'
 import { Subscript } from '@tiptap/extension-subscript'
+import { Color } from '@tiptap/extension-color'
 
 // 标题列表
 const headers = ref([]);
@@ -212,7 +228,7 @@ const toc = computed(() => {
 
 const editor = useEditor({
   content: valueHtml.value,
-  extensions: [StarterKit, Underline, TextAlign, Superscript, Subscript],
+  extensions: [StarterKit, Underline, TextAlign, Superscript, Subscript, TextStyle, Color,],
 })
 
 const returnHome = () => {
