@@ -22,6 +22,7 @@ const colorList = [
     '#CCCCCC',
     '#D5D5D4',
     '#E8E8E8',
-    '#EEEEEE']
+    '#EEEEEE'
+]
 
 export default colorList

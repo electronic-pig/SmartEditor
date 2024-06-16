@@ -50,7 +50,23 @@
             <i :class="`ri-h-${i}`" :style="{ fontSize: `${28 - i * 2}px` }"></i>
           </el-option>
         </el-select>
-        <el-tooltip content="加粗" :hide-after="0">
+        <el-tooltip content="字体" :hide-after="0">
+          <el-dropdown trigger="click">
+            <button>
+              <i class="ri-font-family"></i>
+            </button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item @click="editor.chain().focus().unsetFontFamily().run()">默认</el-dropdown-item>
+                <el-dropdown-item v-for="font in fontFamily" :key="font"
+                  @click="editor.chain().focus().setFontFamily(font).run()">
+                  <div :style="{ fontFamily: font }">{{ font }}</div>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </el-tooltip>
+        <el-tooltip content=" 加粗" :hide-after="0">
           <button @click="editor.chain().focus().toggleBold().run()"
             :disabled="!editor.can().chain().focus().toggleBold().run()"
             :class="{ 'is-active': editor.isActive('bold') }">
@@ -198,11 +214,13 @@ import request from "../utils/request.js";
 import router from "../router";
 import NProgress from 'nprogress';
 import colorList from "../utils/colors.js"
+import fontFamily from "../utils/fontFamily.js"
 import 'nprogress/nprogress.css';
 
 import { useEditor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 import TextStyle from '@tiptap/extension-text-style'
+import FontFamily from '@tiptap/extension-font-family'
 import { Underline } from '@tiptap/extension-underline'
 import { TextAlign } from '@tiptap/extension-text-align'
 import { Superscript } from '@tiptap/extension-superscript'
@@ -213,7 +231,7 @@ import { Color } from '@tiptap/extension-color'
 const headers = ref([]);
 
 // 内容 HTML
-const valueHtml = ref('<h1>标题</h1><h2>标题A</h2><p>文本</p><p>文本</p><p>文本</p><h3>标题A1</h3><p>文本</p><p>文本</p><p>文本</p><h3>标题A2</h3><p>文本</p><p>文本</p><p>文本</p><h2>标题B</h2><p>文本</p><p>文本</p><p>文本</p><h3>标题B1</h3><p>文本</p><p>文本</p><p>文本</p><h3>标题B2</h3><p>文本</p><p>文本</p><p>文本</p>')
+const valueHtml = ref('<h1>标题</h1><h2>标题A</h2><p>The cool kids can apply monospace fonts aswell.</p><p>文本</p><p>文本</p><h3>标题A1</h3><p>文本</p><p>文本</p><p>文本</p><h3>标题A2</h3><p>文本</p><p>文本</p><p>文本</p><h2>标题B</h2><p>文本</p><p>文本</p><p>文本</p><h3>标题B1</h3><p>文本</p><p>文本</p><p>文本</p><h3>标题B2</h3><p>文本</p><p>文本</p><p>文本</p>')
 
 const wordCount = computed(() => {
   const text = valueHtml.value.replace(/<[^>]*>/g, ''); // 去除 HTML 标签
@@ -228,7 +246,7 @@ const toc = computed(() => {
 
 const editor = useEditor({
   content: valueHtml.value,
-  extensions: [StarterKit, Underline, TextAlign, Superscript, Subscript, TextStyle, Color,],
+  extensions: [StarterKit, Underline, TextAlign, Superscript, Subscript, TextStyle, Color, FontFamily,],
 })
 
 const returnHome = () => {

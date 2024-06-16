@@ -176,12 +176,12 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-}
 
-.color-item {
-    width: 20px;
-    height: 20px;
-    margin: 4px;
-    border-radius: 10px;
-    cursor: pointer;
+    .color-item {
+        width: 20px;
+        height: 20px;
+        margin: 4px;
+        border-radius: 10px;
+        cursor: pointer;
+    }
 }
