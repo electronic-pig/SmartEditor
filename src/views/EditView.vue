@@ -202,7 +202,7 @@
           </div>
         </div>
       </div>
-      <div class="word-count">总字数：{{ wordCount }}</div>
+      <div class="word-count">总字符数：{{ editor?.storage.characterCount.characters() }}</div>
     </el-main>
   </el-container>
 </template>
@@ -221,33 +221,28 @@ import { useEditor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 import TextStyle from '@tiptap/extension-text-style'
 import FontFamily from '@tiptap/extension-font-family'
+import CharacterCount from '@tiptap/extension-character-count'
 import { Underline } from '@tiptap/extension-underline'
 import { TextAlign } from '@tiptap/extension-text-align'
 import { Superscript } from '@tiptap/extension-superscript'
 import { Subscript } from '@tiptap/extension-subscript'
 import { Color } from '@tiptap/extension-color'
 
+const editor = useEditor({
+  content: valueHtml.value,
+  extensions: [StarterKit, Underline, TextAlign, Superscript, Subscript, TextStyle, Color, FontFamily, CharacterCount],
+})
 // 标题列表
 const headers = ref([]);
 
 // 内容 HTML
 const valueHtml = ref('<h1>标题</h1><h2>标题A</h2><p>The cool kids can apply monospace fonts aswell.</p><p>文本</p><p>文本</p><h3>标题A1</h3><p>文本</p><p>文本</p><p>文本</p><h3>标题A2</h3><p>文本</p><p>文本</p><p>文本</p><h2>标题B</h2><p>文本</p><p>文本</p><p>文本</p><h3>标题B1</h3><p>文本</p><p>文本</p><p>文本</p><h3>标题B2</h3><p>文本</p><p>文本</p><p>文本</p>')
 
-const wordCount = computed(() => {
-  const text = valueHtml.value.replace(/<[^>]*>/g, ''); // 去除 HTML 标签
-  return text.length;
-});
-
 const toc = computed(() => {
   const regex = /<h([1-3])>(.*?)<\/h[1-3]>/g;
   const matches = [...valueHtml.value.matchAll(regex)];
   return matches.map((match) => ({ type: "header" + match[1], text: match[2] }));
 });
-
-const editor = useEditor({
-  content: valueHtml.value,
-  extensions: [StarterKit, Underline, TextAlign, Superscript, Subscript, TextStyle, Color, FontFamily,],
-})
 
 const returnHome = () => {
   router.push('/dashboard/DocumentPage')

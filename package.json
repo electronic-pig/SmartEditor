@@ -10,6 +10,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@tiptap/extension-character-count": "^2.4.0",
     "@tiptap/extension-color": "^2.4.0",
     "@tiptap/extension-font-family": "^2.4.0",
     "@tiptap/extension-subscript": "^2.4.0",
