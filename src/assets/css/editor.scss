@@ -55,6 +55,14 @@
         border-top: 2px solid rgba(#0D0D0D, 0.1);
         margin: 2rem 0;
     }
+
+    p.is-editor-empty:first-child::before {
+        color: #555;
+        content: attr(data-placeholder);
+        float: left;
+        height: 0;
+        pointer-events: none;
+    }
 }
 
 .fixed-menu {
@@ -142,28 +150,28 @@
     border-radius: 0 0 10px 10px;
 }
 
-.toc-item {
+.outline-item {
     cursor: pointer;
     padding: 10px 0;
     color: #666;
 }
 
-.toc-item:hover {
+.outline-item:hover {
     color: #000;
 }
 
-.toc-item[type="header1"] {
+.outline-item[level="1"] {
     font-size: 20px;
     font-weight: bold;
 }
 
-.toc-item[type="header2"] {
+.outline-item[level="2"] {
     font-size: 16px;
     padding-left: 15px;
     font-weight: bold;
 }
 
-.toc-item[type="header3"] {
+.outline-item[level="3"] {
     font-size: 14px;
     padding-left: 30px;
 }
