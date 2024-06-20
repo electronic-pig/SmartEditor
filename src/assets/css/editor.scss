@@ -63,6 +63,22 @@
         height: 0;
         pointer-events: none;
     }
+
+    mark {
+        background-color: #FAF594;
+        border-radius: 0.4rem;
+        box-decoration-break: clone;
+        padding: 0.1rem 0.3rem;
+    }
+
+    a {
+        color: #6A00F5;
+        cursor: pointer;
+
+        &:hover {
+            color: #5800CC;
+        }
+    }
 }
 
 .fixed-menu {

@@ -114,6 +114,12 @@
             <i class="ri-code-line"></i>
           </button>
         </el-tooltip>
+        <el-tooltip content="文本高亮" :hide-after="0">
+          <button @click="editor.chain().focus().toggleHighlight().run()"
+            :class="{ 'is-active': editor.isActive('highlight') }">
+            <i class="ri-mark-pen-line"></i>
+          </button>
+        </el-tooltip>
         <el-tooltip content="代码块" :hide-after="0">
           <button @click="editor.chain().focus().toggleCodeBlock().run()"
             :class="{ 'is-active': editor.isActive('codeBlock') }">
@@ -132,6 +138,16 @@
             :disabled="!editor.can().chain().focus().toggleSubscript().run()"
             :class="{ 'is-active': editor.isActive('subscript') }">
             <i class="ri-subscript"></i>
+          </button>
+        </el-tooltip>
+        <el-tooltip content="链接" :hide-after="0">
+          <button @click="setLink()" :class="{ 'is-active': editor.isActive('link') }">
+            <i class="ri-link"></i>
+          </button>
+        </el-tooltip>
+        <el-tooltip content="取消链接" :hide-after="0">
+          <button @click="editor.chain().focus().unsetLink().run()" :disabled="!editor.isActive('link')">
+            <i class="ri-link-unlink"></i>
           </button>
         </el-tooltip>
         <el-divider direction="vertical" />
@@ -222,21 +238,23 @@ import StarterKit from '@tiptap/starter-kit'
 import TextStyle from '@tiptap/extension-text-style'
 import FontFamily from '@tiptap/extension-font-family'
 import CharacterCount from '@tiptap/extension-character-count'
+import Highlight from '@tiptap/extension-highlight'
 import Placeholder from '@tiptap/extension-placeholder'
+import Link from '@tiptap/extension-link'
 import { Underline } from '@tiptap/extension-underline'
 import { TextAlign } from '@tiptap/extension-text-align'
 import { Superscript } from '@tiptap/extension-superscript'
 import { Subscript } from '@tiptap/extension-subscript'
 import { Color } from '@tiptap/extension-color'
-
+const header = ref(0);
 // 内容 HTML
 const valueHtml = ref('<h1>标题</h1><h2>标题A</h2><p>The cool kids can apply monospace fonts aswell.</p><p>文本</p><p>文本</p><h3>标题A1</h3><p>文本</p><p>文本</p><p>文本</p><h3>标题A2</h3><p>文本</p><p>文本</p><p>文本</p><h2>标题B</h2><p>文本</p><p>文本</p><p>文本</p><h3>标题B1</h3><p>文本</p><p>文本</p><p>文本</p><h3>标题B2</h3><p>文本</p><p>文本</p><p>文本</p>')
 
 const editor = useEditor({
   content: valueHtml.value,
-  extensions: [StarterKit, Underline, TextAlign, Superscript, Subscript, TextStyle, Color, FontFamily, CharacterCount, Placeholder.configure({ placeholder: '开始输入 …' })],
+  extensions: [StarterKit, Underline, TextAlign, Superscript, Subscript, TextStyle, Color, FontFamily, CharacterCount, Highlight, Link, Placeholder.configure({ placeholder: '开始输入 …' })],
 })
-
+// 计算大纲
 const outline = computed(() => {
   const matches = []
   editor.value?.state.doc.descendants((node, pos) => {
@@ -250,14 +268,11 @@ const outline = computed(() => {
   })
   return matches
 });
-
+// 跳转到大纲
 const goToHeading = (item) => {
   editor.value.commands.focus(item.end + 1)
 }
-
 // 正文或列表
-const header = ref(0);
-
 const handleHeader = (value) => {
   if (value === 0) {
     editor.value.chain().focus().setParagraph().run();
@@ -265,6 +280,17 @@ const handleHeader = (value) => {
     editor.value.chain().focus().toggleHeading({ level: value }).run();
   }
 }
+// 设置链接
+const setLink = () => {
+  const previousUrl = editor.value.getAttributes('link').href
+  const url = window.prompt('URL', previousUrl)
+  if (url === null) return // Abort if the user cancels
+  if (url === '') {
+    editor.value.chain().focus().extendMarkRange('link').unsetLink().run()
+    return
+  }
+  editor.value.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
+};
 
 const loadDocument = async () => {
   try {
@@ -286,9 +312,9 @@ const loadDocument = async () => {
 const returnHome = () => {
   router.push('/dashboard/DocumentPage')
 }
+
 onMounted(() => {
   // loadDocument();
-  console.log(outline.value);
 });
 
 onBeforeUnmount(() => {
