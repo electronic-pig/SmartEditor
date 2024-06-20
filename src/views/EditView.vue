@@ -18,7 +18,7 @@
       <el-button class="icon">
         <i style="font-size: 22px;" class="ri-export-line"></i>
       </el-button>
-      <span style="font-size: 20px; margin: 0 auto;">文件名</span>
+      <span style="font-size: 20px; margin: 0 auto;">示例文本</span>
       <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" size="small"
         style="margin-right: 2px" />
       <span style="margin-right: 3vw">电子笨蛋</span>
@@ -107,17 +107,17 @@
             </el-popover>
           </span>
         </el-tooltip>
+        <el-tooltip content="文本高亮" :hide-after="0">
+          <button @click="editor.chain().focus().toggleHighlight().run()"
+            :class="{ 'is-active': editor.isActive('highlight') }">
+            <i class="ri-mark-pen-line"></i>
+          </button>
+        </el-tooltip>
         <el-tooltip content="代码" :hide-after="0">
           <button @click="editor.chain().focus().toggleCode().run()"
             :disabled="!editor.can().chain().focus().toggleCode().run()"
             :class="{ 'is-active': editor.isActive('code') }">
             <i class="ri-code-line"></i>
-          </button>
-        </el-tooltip>
-        <el-tooltip content="文本高亮" :hide-after="0">
-          <button @click="editor.chain().focus().toggleHighlight().run()"
-            :class="{ 'is-active': editor.isActive('highlight') }">
-            <i class="ri-mark-pen-line"></i>
           </button>
         </el-tooltip>
         <el-tooltip content="代码块" :hide-after="0">
@@ -161,6 +161,12 @@
           <button @click="editor.chain().focus().toggleOrderedList().run()"
             :class="{ 'is-active': editor.isActive('orderedList') }">
             <i class="ri-list-ordered-2"></i>
+          </button>
+        </el-tooltip>
+        <el-tooltip content="任务列表" :hide-after="0">
+          <button @click="editor.chain().focus().toggleTaskList().run()"
+            :class="{ 'is-active': editor.isActive('taskList') }">
+            <i class="ri-task-line"></i>
           </button>
         </el-tooltip>
         <el-tooltip content="左对齐" :hide-after="0">
@@ -231,28 +237,39 @@ import router from "../router";
 import NProgress from 'nprogress';
 import colorList from "../utils/colors.js"
 import fontFamily from "../utils/fontFamily.js"
+import valueHtml from '../utils/valueHtml.js';
 import 'nprogress/nprogress.css';
 
 import { useEditor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 import TextStyle from '@tiptap/extension-text-style'
 import FontFamily from '@tiptap/extension-font-family'
+import TaskList from '@tiptap/extension-task-list'
+import TaskItem from '@tiptap/extension-task-item'
 import CharacterCount from '@tiptap/extension-character-count'
 import Highlight from '@tiptap/extension-highlight'
 import Placeholder from '@tiptap/extension-placeholder'
 import Link from '@tiptap/extension-link'
+import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
+import css from 'highlight.js/lib/languages/css'
+import js from 'highlight.js/lib/languages/javascript'
+import ts from 'highlight.js/lib/languages/typescript'
+import html from 'highlight.js/lib/languages/xml'
+import { createLowlight } from 'lowlight'
 import { Underline } from '@tiptap/extension-underline'
 import { TextAlign } from '@tiptap/extension-text-align'
 import { Superscript } from '@tiptap/extension-superscript'
 import { Subscript } from '@tiptap/extension-subscript'
 import { Color } from '@tiptap/extension-color'
-const header = ref(0);
-// 内容 HTML
-const valueHtml = ref('<h1>标题</h1><h2>标题A</h2><p>The cool kids can apply monospace fonts aswell.</p><p>文本</p><p>文本</p><h3>标题A1</h3><p>文本</p><p>文本</p><p>文本</p><h3>标题A2</h3><p>文本</p><p>文本</p><p>文本</p><h2>标题B</h2><p>文本</p><p>文本</p><p>文本</p><h3>标题B1</h3><p>文本</p><p>文本</p><p>文本</p><h3>标题B2</h3><p>文本</p><p>文本</p><p>文本</p>')
 
+const lowlight = createLowlight()
+lowlight.register({ html, ts, css, js })
+const header = ref(0);
+// 创建编辑器实例
 const editor = useEditor({
-  content: valueHtml.value,
-  extensions: [StarterKit, Underline, TextAlign, Superscript, Subscript, TextStyle, Color, FontFamily, CharacterCount, Highlight, Link, Placeholder.configure({ placeholder: '开始输入 …' })],
+  content: valueHtml,
+  extensions: [StarterKit.configure({ codeBlock: false }), Underline, TextAlign, Superscript, Subscript, TextStyle, Color, FontFamily, TaskList,
+    TaskItem, CharacterCount, Highlight, Link, Placeholder.configure({ placeholder: '开始输入 …' }), CodeBlockLowlight.configure({ lowlight })],
 })
 // 计算大纲
 const outline = computed(() => {
@@ -268,6 +285,7 @@ const outline = computed(() => {
   })
   return matches
 });
+
 // 跳转到大纲
 const goToHeading = (item) => {
   editor.value.commands.focus(item.end + 1)
