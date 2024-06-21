@@ -1,7 +1,7 @@
 <template>
   <el-container class="container">
     <el-header class="header">
-      <el-button @click="returnHome" class="icon">
+      <el-button @click="returnHome()" class="icon">
         <el-icon :size="22">
           <HomeFilled />
         </el-icon>
@@ -12,16 +12,19 @@
         </el-icon>
       </el-button>
       <el-divider direction="vertical" />
-      <el-button class="icon">
+      <el-button @click="save()" class="icon">
         <i style="font-size: 22px;" class="ri-save-line"></i>
       </el-button>
       <el-button class="icon">
         <i style="font-size: 22px;" class="ri-export-line"></i>
       </el-button>
-      <span style="font-size: 20px; margin: 0 auto;">示例文本</span>
+      <el-button class="icon">
+        <i style="font-size: 22px;" class="ri-printer-line"></i>
+      </el-button>
+      <span style="font-size: 20px; margin: 0 auto;">编辑器介绍</span>
       <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" size="small"
         style="margin-right: 2px" />
-      <span style="margin-right: 3vw">电子笨蛋</span>
+      <span style="margin-right: 6vw">电子笨蛋</span>
 
     </el-header>
     <el-main class="main">
@@ -54,6 +57,7 @@
           <el-dropdown trigger="click">
             <button>
               <i class="ri-font-family"></i>
+              <i class="ri-arrow-drop-down-fill"></i>
             </button>
             <template #dropdown>
               <el-dropdown-menu>
@@ -102,7 +106,10 @@
                   @click="editor.chain().focus().setColor(color).run()" :style="{ backgroundColor: color }"></div>
               </div>
               <template #reference>
-                <button><i class="ri-font-color"></i></button>
+                <button>
+                  <i class="ri-font-color"></i>
+                  <i class="ri-arrow-drop-down-fill"></i>
+                </button>
               </template>
             </el-popover>
           </span>
@@ -275,6 +282,7 @@ import { useEditor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 import TextStyle from '@tiptap/extension-text-style'
 import FontFamily from '@tiptap/extension-font-family'
+import Typography from '@tiptap/extension-typography'
 import TaskList from '@tiptap/extension-task-list'
 import TaskItem from '@tiptap/extension-task-item'
 import CharacterCount from '@tiptap/extension-character-count'
@@ -304,8 +312,8 @@ const header = ref(0);
 // 创建编辑器实例
 const editor = useEditor({
   content: valueHtml,
-  extensions: [StarterKit.configure({ codeBlock: false }), Underline, TextAlign, Superscript, Subscript, TextStyle, Color, FontFamily, TaskList,
-    TaskItem, CharacterCount, Highlight, Link, Image, Table.configure({ resizable: true }), TableRow, TableHeader, TableCell, Placeholder.configure({ placeholder: '开始输入 …' }), CodeBlockLowlight.configure({ lowlight })],
+  extensions: [StarterKit.configure({ codeBlock: false }), Underline, TextAlign.configure({ types: ['heading', 'paragraph'] }), Superscript, Subscript, TextStyle, Color, FontFamily, Typography, TaskList,
+    TaskItem, CharacterCount, Highlight.configure({ multicolor: true }), Link, Image, Table.configure({ resizable: true }), TableRow, TableHeader, TableCell, Placeholder.configure({ placeholder: '开始输入 …' }), CodeBlockLowlight.configure({ lowlight })],
 })
 // 计算大纲
 const outline = computed(() => {
@@ -324,7 +332,13 @@ const outline = computed(() => {
 
 // 跳转到大纲
 const goToHeading = (item) => {
-  editor.value.commands.focus(item.end + 1)
+  const selection = { from: item.start, to: item.end + 1 };
+  editor.value.chain().setTextSelection(selection).setHighlight({ color: '#dedcff' }).run();
+  editor.value.commands.focus(item.end + 1);
+  setTimeout(() => {
+    editor.value.chain().setTextSelection(selection).unsetHighlight().run();
+    editor.value.commands.focus(item.end + 1);
+  }, 800);
 }
 // 正文或列表
 const handleHeader = (value) => {
@@ -373,6 +387,9 @@ const returnHome = () => {
   router.push('/dashboard/DocumentPage')
 }
 
+const save = () => {
+  console.log(editor.value.getHTML());
+}
 onMounted(() => {
   // loadDocument();
 });

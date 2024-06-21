@@ -1,4 +1,8 @@
 const fontFamily = [
+    '宋体',
+    '黑体',
+    '楷体',
+    '仿宋',
     'Arial',
     'Arial Black',
     'Comic Sans MS',
@@ -6,12 +10,9 @@ const fontFamily = [
     'Georgia',
     'Impact',
     'Lucida Console',
-    'Lucida Sans Unicode',
     'Palatino Linotype',
     'Tahoma',
     'Times New Roman',
-    'Trebuchet MS',
-    'Verdana'
 ]
 
 export default fontFamily
