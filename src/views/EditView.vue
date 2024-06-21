@@ -150,6 +150,32 @@
             <i class="ri-link-unlink"></i>
           </button>
         </el-tooltip>
+        <el-tooltip content="插入图片" :hide-after="0">
+          <button @click="addImage">
+            <i class="ri-image-add-line"></i>
+          </button>
+        </el-tooltip>
+        <el-tooltip content="表格" :hide-after="0">
+          <span>
+            <el-dropdown trigger="click">
+              <button><i class="ri-table-2"></i></button>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item
+                    @click="editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()">插入表格</el-dropdown-item>
+                  <el-dropdown-item divided @click="editor.chain().focus().addRowAfter().run()">添加行</el-dropdown-item>
+                  <el-dropdown-item @click="editor.chain().focus().deleteRow().run()">删除行</el-dropdown-item>
+                  <el-dropdown-item divided
+                    @click="editor.chain().focus().addColumnAfter().run()">添加列</el-dropdown-item>
+                  <el-dropdown-item @click="editor.chain().focus().deleteColumn().run()">删除列</el-dropdown-item>
+                  <el-dropdown-item divided @click="editor.chain().focus().mergeCells().run()">合并单元格</el-dropdown-item>
+                  <el-dropdown-item @click="editor.chain().focus().splitCell().run()">拆分单元格</el-dropdown-item>
+                  <el-dropdown-item @click="editor.chain().focus().deleteTable().run()">删除表格</el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+          </span>
+        </el-tooltip>
         <el-divider direction="vertical" />
         <el-tooltip content="无序列表" :hide-after="0">
           <button @click="editor.chain().focus().toggleBulletList().run()"
@@ -193,6 +219,11 @@
             <i class="ri-double-quotes-l"></i>
           </button>
         </el-tooltip>
+        <el-tooltip content="分隔线" :hide-after="0">
+          <button @click="editor.chain().focus().setHorizontalRule().run()">
+            <i class="ri-separator"></i>
+          </button>
+        </el-tooltip>
         <el-divider direction="vertical" />
         <el-button type="primary" text bg>OCR</el-button>
         <el-dropdown trigger="click">
@@ -217,7 +248,7 @@
           <editor-content :editor="editor" class="editor-content" />
         </div>
         <div class="catalog">
-          <h2 style="color: #555;">目录</h2>
+          <h2 style="color: #555;">大纲</h2>
           <div v-for="(item, index) in outline" :key="index" :level="item.level" class="outline-item"
             @click="goToHeading(item)">
             {{ item.text }}
@@ -250,6 +281,11 @@ import CharacterCount from '@tiptap/extension-character-count'
 import Highlight from '@tiptap/extension-highlight'
 import Placeholder from '@tiptap/extension-placeholder'
 import Link from '@tiptap/extension-link'
+import Image from '@tiptap/extension-image'
+import Table from '@tiptap/extension-table'
+import TableCell from '@tiptap/extension-table-cell'
+import TableHeader from '@tiptap/extension-table-header'
+import TableRow from '@tiptap/extension-table-row'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 import css from 'highlight.js/lib/languages/css'
 import js from 'highlight.js/lib/languages/javascript'
@@ -269,7 +305,7 @@ const header = ref(0);
 const editor = useEditor({
   content: valueHtml,
   extensions: [StarterKit.configure({ codeBlock: false }), Underline, TextAlign, Superscript, Subscript, TextStyle, Color, FontFamily, TaskList,
-    TaskItem, CharacterCount, Highlight, Link, Placeholder.configure({ placeholder: '开始输入 …' }), CodeBlockLowlight.configure({ lowlight })],
+    TaskItem, CharacterCount, Highlight, Link, Image, Table.configure({ resizable: true }), TableRow, TableHeader, TableCell, Placeholder.configure({ placeholder: '开始输入 …' }), CodeBlockLowlight.configure({ lowlight })],
 })
 // 计算大纲
 const outline = computed(() => {
@@ -309,6 +345,12 @@ const setLink = () => {
   }
   editor.value.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
 };
+//添加图片
+const addImage = () => {
+  const url = window.prompt('URL')
+  if (url === null) return // Abort if the user cancels
+  editor.value.chain().focus().setImage({ src: url }).run()
+}
 
 const loadDocument = async () => {
   try {

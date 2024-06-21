@@ -13,7 +13,7 @@
         <div class="word-count">总字数：{{ wordCount }}</div>
       </div>
       <div class="catalog">
-        <h2 style="color: #555;">目录</h2>
+        <h2 style="color: #555;">大纲</h2>
         <div v-for="(item, index) in toc" :key="index" :id="index" :type="item.type" class="toc-item"
           @mousedown="handleMousedown">
           {{ item.text }}
