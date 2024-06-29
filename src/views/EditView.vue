@@ -232,7 +232,7 @@
           </button>
         </el-tooltip>
         <el-divider direction="vertical" />
-        <el-button type="primary" text bg>OCR</el-button>
+        <el-button type="primary" text bg @click="dialogVisible = true">OCR</el-button>
         <el-dropdown trigger="click">
           <el-button type="primary" text bg><i class="ri-bard-line"></i>AI</el-button>
           <template #dropdown>
@@ -263,19 +263,34 @@
         </div>
       </div>
       <div class="word-count">总字符数：{{ editor?.storage.characterCount.characters() }}</div>
+      <el-dialog v-model="dialogVisible" width="500" title="上传图片">
+        <el-upload ref="upload" drag action="http://127.0.0.1:5000/function/ocr" accept=".jpg, .jpeg, .png" :limit="1"
+          :on-exceed="handleExceed" :before-upload="beforeUpload" :auto-upload="false" :on-success="handleSuccess">
+          <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+          <div class="el-upload__text">
+            将图片拖到此处或 <em>点击上传</em>
+          </div>
+        </el-upload>
+        <template #footer>
+          <div class="dialog-footer">
+            <el-button @click="dialogVisible = false">取消</el-button>
+            <el-button type="primary" @click="submitUpload">确认</el-button>
+          </div>
+        </template>
+      </el-dialog>
     </el-main>
   </el-container>
 </template>
 
 <script setup>
 import { ref, onMounted, computed, onBeforeUnmount } from 'vue';
-import { ElMessage } from "element-plus";
+import { ElMessage, genFileId } from "element-plus";
 import request from "../utils/request.js";
 import router from "../router";
-import NProgress from 'nprogress';
 import colorList from "../utils/colors.js"
 import fontFamily from "../utils/fontFamily.js"
 import valueHtml from '../utils/valueHtml.js';
+import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 
 import { useEditor, EditorContent } from '@tiptap/vue-3'
@@ -308,7 +323,13 @@ import { Color } from '@tiptap/extension-color'
 
 const lowlight = createLowlight()
 lowlight.register({ html, ts, css, js })
-const header = ref(0);
+const header = ref(0); //标题级别
+const dialogVisible = ref(false); //OCR弹窗
+const upload = ref(null); // 上传图片
+// 返回文档页面
+const returnHome = () => {
+  router.push('/dashboard/DocumentPage')
+}
 // 创建编辑器实例
 const editor = useEditor({
   content: valueHtml,
@@ -359,13 +380,42 @@ const setLink = () => {
   }
   editor.value.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
 };
-//添加图片
+// 添加图片
 const addImage = () => {
   const url = window.prompt('URL')
   if (url === null) return // Abort if the user cancels
   editor.value.chain().focus().setImage({ src: url }).run()
 }
-
+// 检查上传文件格式
+const beforeUpload = (file) => {
+  const fileSuffix = file.name.substring(file.name.lastIndexOf(".") + 1);
+  const whiteList = ["jpg", "jpeg","png"];
+  if (whiteList.indexOf(fileSuffix) === -1) {
+    ElMessage.error("上传文件只能是jpg, png格式");
+    return false;
+  }
+};
+// 处理超出文件
+const handleExceed = (files) => {
+  upload.value.clearFiles()
+  const file = files[0]
+  file.uid = genFileId()
+  upload.value.handleStart(file)
+}
+// 提交上传
+const submitUpload = () => {
+  upload.value.submit();
+}
+// 上传成功
+const handleSuccess = (response) => {
+  if (response.code !== 200) {
+    ElMessage.error(response.message);
+    return;
+  }
+  ElMessage.success("上传成功");
+  dialogVisible.value = false;
+};
+// 加载文档
 const loadDocument = async () => {
   try {
     NProgress.start();
@@ -382,11 +432,7 @@ const loadDocument = async () => {
     NProgress.done();
   }
 };
-
-const returnHome = () => {
-  router.push('/dashboard/DocumentPage')
-}
-
+// 保存文档
 const save = () => {
   console.log(editor.value.getHTML());
 }
