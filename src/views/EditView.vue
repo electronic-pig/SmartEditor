@@ -25,7 +25,6 @@
       <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" size="small"
         style="margin-right: 2px" />
       <span style="margin-right: 6vw">电子笨蛋</span>
-
     </el-header>
     <el-main class="main">
       <div v-if="editor" class="fixed-menu">
@@ -245,11 +244,50 @@
           </template>
         </el-dropdown>
       </div>
+      <bubble-menu :editor="editor" :tippy-options="{ duration: 100 }" v-if="editor">
+        <div class="bubble-menu">
+          <button @click="editor.chain().focus().toggleBold().run()" :class="{ 'is-active': editor.isActive('bold') }">
+            <i class="ri-bold"></i>
+          </button>
+          <button @click="editor.chain().focus().toggleItalic().run()"
+            :class="{ 'is-active': editor.isActive('italic') }">
+            <i class="ri-italic"></i>
+          </button>
+          <button @click="editor.chain().focus().toggleUnderline().run()"
+            :class="{ 'is-active': editor.isActive('underline') }">
+            <i class="ri-underline"></i>
+          </button>
+          <button @click="editor.chain().focus().toggleStrike().run()"
+            :class="{ 'is-active': editor.isActive('strike') }">
+            <i class="ri-strikethrough"></i>
+          </button>
+          <button @click="editor.chain().focus().toggleHighlight().run()"
+            :class="{ 'is-active': editor.isActive('highlight') }">
+            <i class="ri-mark-pen-line"></i>
+          </button>
+          <button @click="editor.chain().focus().toggleSuperscript().run()"
+            :disabled="!editor.can().chain().focus().toggleSuperscript().run()"
+            :class="{ 'is-active': editor.isActive('superscript') }">
+            <i class="ri-superscript"></i>
+          </button>
+          <button @click="editor.chain().focus().toggleSubscript().run()"
+            :disabled="!editor.can().chain().focus().toggleSubscript().run()"
+            :class="{ 'is-active': editor.isActive('subscript') }">
+            <i class="ri-subscript"></i>
+          </button>
+          <button @click="editor.chain().focus().toggleBlockquote().run()"
+            :class="{ 'is-active': editor.isActive('blockquote') }">
+            <i class="ri-double-quotes-l"></i>
+          </button>
+          <button @click="editor.chain().focus().setHorizontalRule().run()">
+            <i class="ri-separator"></i>
+          </button>
+        </div>
+      </bubble-menu>
       <div class="editor-container">
         <div class="docs">
           <h2 style="color: #555;margin-left: 5vw">我的文档</h2>
-          <div class="doc" v-for="i in 5" :key="i">
-          </div>
+          <!-- <div class="doc" v-for="i in 5" :key="i"></div> -->
         </div>
         <div class="content">
           <editor-content :editor="editor" class="editor-content" />
@@ -293,7 +331,7 @@ import valueHtml from '../utils/valueHtml.js';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 
-import { useEditor, EditorContent } from '@tiptap/vue-3'
+import { BubbleMenu, useEditor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 import TextStyle from '@tiptap/extension-text-style'
 import FontFamily from '@tiptap/extension-font-family'
@@ -389,7 +427,7 @@ const addImage = () => {
 // 检查上传文件格式
 const beforeUpload = (file) => {
   const fileSuffix = file.name.substring(file.name.lastIndexOf(".") + 1);
-  const whiteList = ["jpg", "jpeg","png"];
+  const whiteList = ["jpg", "jpeg", "png"];
   if (whiteList.indexOf(fileSuffix) === -1) {
     ElMessage.error("上传文件只能是jpg, png格式");
     return false;

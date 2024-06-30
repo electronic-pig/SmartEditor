@@ -252,6 +252,42 @@
     }
 }
 
+/* Bubble menu */
+.bubble-menu {
+    background-color: #fff;
+    border: 1px solid rgba(61, 37, 20, .05);
+    border-radius: 0.7rem;
+    box-shadow: 0px 12px 33px 0px rgba(0, 0, 0, .06),
+        0px 3.618px 9.949px 0px rgba(0, 0, 0, .04);
+    display: flex;
+    padding: 0.2rem;
+
+    button:not(.el-button) {
+        margin: 0 1px;
+        padding: 8px 10px;
+        border: none;
+        border-radius: 5px;
+        background-color: #fff;
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        &:hover {
+            background-color: #f0f0f0;
+        }
+
+        &.is-active {
+            background-color: #f0f0f0;
+        }
+    }
+
+    .el-button {
+        margin: 0 1px;
+        padding: 8px 10px;
+        border-radius: 5px;
+        background-color: #fff;
+    }
+}
+
 .fixed-menu {
     height: 6vh;
     display: flex;
