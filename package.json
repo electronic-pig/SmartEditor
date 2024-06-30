@@ -33,6 +33,7 @@
     "@tiptap/extension-underline": "^2.4.0",
     "@tiptap/pm": "^2.4.0",
     "@tiptap/starter-kit": "^2.4.0",
+    "@tiptap/suggestion": "^2.4.0",
     "@tiptap/vue-3": "^2.4.0",
     "@wangeditor/editor": "^5.1.23",
     "@wangeditor/editor-for-vue": "^5.1.12",
@@ -44,6 +45,7 @@
     "nprogress": "^0.2.0",
     "pinia": "^2.1.7",
     "remixicon": "^4.3.0",
+    "tippy.js": "^6.3.7",
     "vue": "^3.4.31",
     "vue-router": "^4.4.0",
     "vue3-puzzle-vcode": "^1.1.7"

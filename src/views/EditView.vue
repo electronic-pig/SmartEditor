@@ -321,7 +321,6 @@
 </template>
 
 <script setup>
-import VueComponent from '../utils/Extension.js'
 import { ref, onMounted, computed, onBeforeUnmount } from 'vue';
 import { ElMessage, genFileId } from "element-plus";
 import request from "../utils/request.js";
@@ -359,6 +358,9 @@ import { TextAlign } from '@tiptap/extension-text-align'
 import { Superscript } from '@tiptap/extension-superscript'
 import { Subscript } from '@tiptap/extension-subscript'
 import { Color } from '@tiptap/extension-color'
+import VueComponent from '../utils/Extension.js'
+import Commands from '../utils/commands.js'
+import suggestion from '../utils/suggestion.js'
 
 const lowlight = createLowlight()
 lowlight.register({ html, ts, css, js })
@@ -372,8 +374,37 @@ const returnHome = () => {
 // 创建编辑器实例
 const editor = useEditor({
   content: valueHtml,
-  extensions: [StarterKit.configure({ codeBlock: false }), Underline, TextAlign.configure({ types: ['heading', 'paragraph'] }), Superscript, Subscript, TextStyle, Color, FontFamily, Typography, TaskList,
-    TaskItem, CharacterCount, Highlight.configure({ multicolor: true }), Link, Image, Table.configure({ resizable: true }), TableRow, TableHeader, TableCell, Placeholder.configure({ placeholder: '开始输入 …' }), CodeBlockLowlight.configure({ lowlight }), VueComponent],
+  extensions: [
+    StarterKit.configure({ codeBlock: false }),
+    Underline,
+    TextAlign.configure({ types: ['heading', 'paragraph'] }),
+    Superscript,
+    Subscript,
+    TextStyle,
+    Color,
+    FontFamily,
+    Typography,
+    TaskList,
+    TaskItem,
+    CharacterCount,
+    Highlight.configure({ multicolor: true }),
+    Link,
+    Image,
+    Table.configure({ resizable: true }),
+    TableRow,
+    TableHeader,
+    TableCell,
+    Placeholder.configure({
+      placeholder: ({ node }) => {
+        if (node.type.name === 'paragraph' && node.childCount === 0) {
+          return '键入 / 以唤起AI助手...';
+        }
+        return '开始输入...'
+      },
+    }),
+    CodeBlockLowlight.configure({ lowlight }),
+    VueComponent,
+    Commands.configure({ suggestion }),],
 })
 // 计算大纲
 const outline = computed(() => {
