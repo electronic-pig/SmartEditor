@@ -321,6 +321,7 @@
 </template>
 
 <script setup>
+import VueComponent from '../utils/Extension.js'
 import { ref, onMounted, computed, onBeforeUnmount } from 'vue';
 import { ElMessage, genFileId } from "element-plus";
 import request from "../utils/request.js";
@@ -372,7 +373,7 @@ const returnHome = () => {
 const editor = useEditor({
   content: valueHtml,
   extensions: [StarterKit.configure({ codeBlock: false }), Underline, TextAlign.configure({ types: ['heading', 'paragraph'] }), Superscript, Subscript, TextStyle, Color, FontFamily, Typography, TaskList,
-    TaskItem, CharacterCount, Highlight.configure({ multicolor: true }), Link, Image, Table.configure({ resizable: true }), TableRow, TableHeader, TableCell, Placeholder.configure({ placeholder: '开始输入 …' }), CodeBlockLowlight.configure({ lowlight })],
+    TaskItem, CharacterCount, Highlight.configure({ multicolor: true }), Link, Image, Table.configure({ resizable: true }), TableRow, TableHeader, TableCell, Placeholder.configure({ placeholder: '开始输入 …' }), CodeBlockLowlight.configure({ lowlight }), VueComponent],
 })
 // 计算大纲
 const outline = computed(() => {

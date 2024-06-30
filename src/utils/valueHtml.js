@@ -46,7 +46,7 @@ const valueHtml = `<h1>一、编辑器介绍</h1>
     <p>———— WILLIAM SHAKESPEARE.</p>
 </blockquote>
 <h3>图片</h3>
-<img src="https://pss.bdstatic.com/static/superman/img/logo/bd_logo1-66368c33f8.png" alt="img"/>
+<img src="https://placehold.co/800x600" alt="img"/>
 <h3>表格</h3>
 <table>
   <tbody>
@@ -62,6 +62,9 @@ const valueHtml = `<h1>一、编辑器介绍</h1>
     </tr>
   </tbody>
 </table>
+<vue-component>
+  <p>This is editable.</p>
+</vue-component>
 `;
 
 export default valueHtml
