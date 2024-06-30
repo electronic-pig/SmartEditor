@@ -41,41 +41,22 @@ export default {
 	methods: {
 		onKeyDown({ event }) {
 			if (event.key === 'ArrowUp') {
-				this.upHandler()
+				this.selectedIndex = ((this.selectedIndex + this.items.length) - 1) % this.items.length
 				return true
 			}
 
 			if (event.key === 'ArrowDown') {
-				this.downHandler()
+				this.selectedIndex = (this.selectedIndex + 1) % this.items.length
 				return true
 			}
 
 			if (event.key === 'Enter') {
-				this.enterHandler()
+				const item = this.items[this.selectedIndex]
+				this.command(item)
 				return true
 			}
 
 			return false
-		},
-
-		upHandler() {
-			this.selectedIndex = ((this.selectedIndex + this.items.length) - 1) % this.items.length
-		},
-
-		downHandler() {
-			this.selectedIndex = (this.selectedIndex + 1) % this.items.length
-		},
-
-		enterHandler() {
-			this.selectItem(this.selectedIndex)
-		},
-
-		selectItem(index) {
-			const item = this.items[index]
-
-			if (item) {
-				this.command(item)
-			}
 		},
 	},
 }

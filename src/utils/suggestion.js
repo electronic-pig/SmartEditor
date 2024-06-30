@@ -7,34 +7,40 @@ export default {
 	items: ({ query }) => {
 		return [
 			{
-				title: 'Heading 1',
-				command: ({ editor, range }) => {
-					editor.chain().focus().deleteRange(range)
-						.setNode('heading', { level: 1 }).run()
+				title: '文心助手',
+				command: ({ editor }) => {
+					editor.chain().focus().insertContent('<vue-component />').run()
 				},
 			},
 			{
-				title: 'Heading 2',
-				command: ({ editor, range }) => {
-					editor.chain().focus().deleteRange(range)
-						.setNode('heading', { level: 2 }).run()
+				title: '智能排版',
+				command: async ({ editor }) => {
+					const content = await editor.getHTML();
+					console.log(content);
 				},
 			},
 			{
-				title: 'Bold',
-				command: ({ editor, range }) => {
-					editor.chain().focus().deleteRange(range)
-						.setMark('bold').run()
+				title: '全文总结',
+				command: async ({ editor }) => {
+					const content = await editor.getHTML();
+					console.log(content);
 				},
 			},
 			{
-				title: 'Italic',
-				command: ({ editor, range }) => {
-					editor.chain().focus().deleteRange(range)
-						.setMark('italic').run()
+				title: '摘要提取',
+				command: async ({ editor }) => {
+					const content = await editor.getHTML();
+					console.log(content);
 				},
 			},
-		].filter(item => item.title.toLowerCase().startsWith(query.toLowerCase())).slice(0, 10)
+			{
+				title: '全文翻译',
+				command: async ({ editor }) => {
+					const content = await editor.getHTML();
+					console.log(content);
+				},
+			},
+		].filter(item => item.title.startsWith(query))
 	},
 
 	render: () => {

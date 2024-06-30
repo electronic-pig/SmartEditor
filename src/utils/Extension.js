@@ -4,25 +4,25 @@ import { VueNodeViewRenderer } from '@tiptap/vue-3'
 import Component from '../components/Component.vue'
 
 export default Node.create({
-    name: 'vueComponent',
+	name: 'vueComponent',
 
-    group: 'block',
+	group: 'block',
 
-    content: 'inline*',
+	atom: true,
 
-    parseHTML() {
-        return [
-            {
-                tag: 'vue-component',
-            },
-        ]
-    },
+	parseHTML() {
+		return [
+			{
+				tag: 'vue-component',
+			},
+		]
+	},
 
-    renderHTML({ HTMLAttributes }) {
-        return ['vue-component', mergeAttributes(HTMLAttributes), 0]
-    },
+	renderHTML({ HTMLAttributes }) {
+		return ['vue-component', mergeAttributes(HTMLAttributes)]
+	},
 
-    addNodeView() {
-        return VueNodeViewRenderer(Component)
-    },
+	addNodeView() {
+		return VueNodeViewRenderer(Component)
+	},
 })

@@ -62,9 +62,7 @@ const valueHtml = `<h1>一、编辑器介绍</h1>
     </tr>
   </tbody>
 </table>
-<vue-component>
-  <p>This is editable.</p>
-</vue-component>
+<vue-component />
 `;
 
 export default valueHtml

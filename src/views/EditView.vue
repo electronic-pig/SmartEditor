@@ -236,10 +236,10 @@
           <el-button type="primary" text bg><i class="ri-bard-line"></i>AI</el-button>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item>帮我写</el-dropdown-item>
-              <el-dropdown-item>帮我改</el-dropdown-item>
-              <el-dropdown-item>帮我写</el-dropdown-item>
-              <el-dropdown-item>全文总结</el-dropdown-item>
+              <el-dropdown-item>AI 续写</el-dropdown-item>
+              <el-dropdown-item>AI 润色</el-dropdown-item>
+              <el-dropdown-item>AI 校对</el-dropdown-item>
+              <el-dropdown-item>AI 翻译</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
