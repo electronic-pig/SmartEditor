@@ -236,7 +236,7 @@
           <el-button type="primary" text bg><i class="ri-bard-line"></i>AI</el-button>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item>AI 续写</el-dropdown-item>
+              <el-dropdown-item @click="handleAIContinue">AI 续写</el-dropdown-item>
               <el-dropdown-item>AI 润色</el-dropdown-item>
               <el-dropdown-item>AI 校对</el-dropdown-item>
               <el-dropdown-item>AI 翻译</el-dropdown-item>
@@ -302,17 +302,20 @@
       </div>
       <div class="word-count">总字符数：{{ editor?.storage.characterCount.characters() }}</div>
       <el-dialog v-model="dialogVisible" width="500" title="上传图片">
-        <el-upload ref="upload" drag action="http://127.0.0.1:5000/function/ocr" accept=".jpg, .jpeg, .png" :limit="1"
-          :on-exceed="handleExceed" :before-upload="beforeUpload" :auto-upload="false" :on-success="handleSuccess">
+        <el-upload v-if="!uploadSuccess" ref="upload" drag action="http://127.0.0.1:5000/function/ocr"
+          accept=".jpg, .jpeg, .png" :limit="1" :on-exceed="handleExceed" :before-upload="beforeUpload"
+          :auto-upload="false" :on-success="handleSuccess">
           <el-icon class="el-icon--upload"><upload-filled /></el-icon>
           <div class="el-upload__text">
             将图片拖到此处或 <em>点击上传</em>
           </div>
         </el-upload>
+        <p v-if="uploadSuccess">{{ uploadResult }}</p>
         <template #footer>
           <div class="dialog-footer">
             <el-button @click="dialogVisible = false">取消</el-button>
-            <el-button type="primary" @click="submitUpload">确认</el-button>
+            <el-button v-if="!uploadSuccess" type="primary" @click="submitUpload">上传</el-button>
+            <el-button v-if="uploadSuccess" type="primary" @click="dialogVisible = false">确认</el-button>
           </div>
         </template>
       </el-dialog>
@@ -322,7 +325,7 @@
 
 <script setup>
 import { ref, onMounted, computed, onBeforeUnmount } from 'vue';
-import { ElMessage, genFileId } from "element-plus";
+import { ElMessage, genFileId, ElLoading } from "element-plus";
 import request from "../utils/request.js";
 import router from "../router";
 import colorList from "../utils/colors.js"
@@ -359,13 +362,15 @@ import { Superscript } from '@tiptap/extension-superscript'
 import { Subscript } from '@tiptap/extension-subscript'
 import { Color } from '@tiptap/extension-color'
 import VueComponent from '../utils/Extension.js'
-import Commands from '../utils/commands.js'
+import slash from '../utils/slash.js'
 import suggestion from '../utils/suggestion.js'
 
 const lowlight = createLowlight()
 lowlight.register({ html, ts, css, js })
 const header = ref(0); //标题级别
 const dialogVisible = ref(false); //OCR弹窗
+const uploadSuccess = ref(false); //上传成功
+const uploadResult = ref(''); //上传结果
 const upload = ref(null); // 上传图片
 // 返回文档页面
 const returnHome = () => {
@@ -404,7 +409,7 @@ const editor = useEditor({
     }),
     CodeBlockLowlight.configure({ lowlight }),
     VueComponent,
-    Commands.configure({ suggestion }),],
+    slash.configure({ suggestion }),],
 })
 // 计算大纲
 const outline = computed(() => {
@@ -482,8 +487,8 @@ const handleSuccess = (response) => {
     ElMessage.error(response.message);
     return;
   }
-  ElMessage.success("上传成功");
-  dialogVisible.value = false;
+  uploadSuccess.value = true;
+  uploadResult.value = response.message;
 };
 // 加载文档
 const loadDocument = async () => {
@@ -497,19 +502,42 @@ const loadDocument = async () => {
     }
   } catch (error) {
     ElMessage.error(error);
-    console.error(error);
   } finally {
     NProgress.done();
   }
 };
+// AI续写
+const handleAIContinue = async () => {
+  const { from, to } = editor.value.state.selection;
+  const selectedText = editor.value.state.doc.textBetween(from, to, ' ');
+  const loadingInstance = ElLoading.service({
+    fullscreen: true,
+    text: "正在生成内容...",
+  });
+  try {
+    const response = await request.post('/function/aiTest', { text: selectedText });
+    if (response.code == 200) {
+      const transaction = editor.value.state.tr.insertText(response.message, from, to);
+      editor.value.view.dispatch(transaction);
+    } else {
+      ElMessage.error(response.message);
+    }
+  } catch (error) {
+    console.log(error);
+    ElMessage.error(error);
+  } finally {
+    loadingInstance.close();
+  }
+}
 // 保存文档
 const save = () => {
   console.log(editor.value.getHTML());
 }
+
 onMounted(() => {
   // loadDocument();
 });
-
+// 销毁编辑器
 onBeforeUnmount(() => {
   editor.value?.destroy();
 });
