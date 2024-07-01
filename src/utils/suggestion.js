@@ -1,7 +1,9 @@
-import { VueRenderer } from '@tiptap/vue-3'
-import tippy from 'tippy.js'
+import { VueRenderer } from '@tiptap/vue-3';
+import tippy from 'tippy.js';
 
-import CommandsList from '../components/CommandsList.vue'
+import CommandsList from '../components/CommandsList.vue';
+import request from "../utils/request.js";
+import { ElMessage, ElLoading } from "element-plus";
 
 export default {
 	items: ({ query }) => {
@@ -15,8 +17,22 @@ export default {
 			{
 				title: '智能排版',
 				command: async ({ editor }) => {
-					const content = await editor.getHTML();
-					console.log(content);
+					const loadingInstance = ElLoading.service({
+						fullscreen: true,
+						text: "正在生成内容...",
+					});
+					try {
+						const response = await request.post('/function/aiTest', { text: editor.getText() });
+						if (response.code == 200) {
+							ElMessage.success(response.message);
+						} else {
+							ElMessage.error(response.message);
+						}
+					} catch (error) {
+						ElMessage.error(error);
+					} finally {
+						loadingInstance.close();
+					}
 				},
 			},
 			{

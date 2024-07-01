@@ -225,6 +225,11 @@
             <i class="ri-double-quotes-l"></i>
           </button>
         </el-tooltip>
+        <el-tooltip content="强制换行" :hide-after="0">
+          <button @click="editor.chain().focus().setHardBreak().run()">
+            <i class="ri-text-wrap"></i>
+          </button>
+        </el-tooltip>
         <el-tooltip content="分隔线" :hide-after="0">
           <button @click="editor.chain().focus().setHorizontalRule().run()">
             <i class="ri-separator"></i>
