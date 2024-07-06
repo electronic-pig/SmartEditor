@@ -1,30 +1,44 @@
 <template>
   <el-container class="container">
     <el-header class="header">
-      <el-button @click="returnHome()" class="icon">
-        <el-icon :size="22">
-          <HomeFilled />
-        </el-icon>
-      </el-button>
-      <el-button class="icon">
-        <el-icon :size="22">
-          <Plus />
-        </el-icon>
-      </el-button>
-      <el-divider direction="vertical" />
-      <el-button @click="save()" class="icon">
-        <i style="font-size: 22px;" class="ri-save-line"></i>
-      </el-button>
-      <el-button class="icon">
-        <i style="font-size: 22px;" class="ri-export-line"></i>
-      </el-button>
-      <el-button class="icon">
-        <i style="font-size: 22px;" class="ri-printer-line"></i>
-      </el-button>
-      <span style="font-size: 20px; margin: 0 auto;">编辑器介绍</span>
-      <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" size="small"
-        style="margin-right: 2px" />
-      <span style="margin-right: 6vw">电子笨蛋</span>
+      <div class="button-group">
+        <el-tooltip content="回到首页" :hide-after="0">
+          <el-button @click="returnHome()" class="icon">
+            <el-icon :size="22">
+              <HomeFilled />
+            </el-icon>
+          </el-button>
+        </el-tooltip>
+        <el-tooltip content="添加文档" :hide-after="0">
+          <el-button class="icon">
+            <el-icon :size="22">
+              <Plus />
+            </el-icon>
+          </el-button>
+        </el-tooltip>
+        <el-divider direction="vertical" />
+        <el-tooltip content="保存" :hide-after="0">
+          <el-button @click="save()" class="icon">
+            <i style="font-size: 22px;" class="ri-save-line"></i>
+          </el-button>
+        </el-tooltip>
+        <el-tooltip content="下载" :hide-after="0">
+          <el-button @click="download()" class="icon">
+            <i style="font-size: 22px;" class="ri-export-line"></i>
+          </el-button>
+        </el-tooltip>
+        <el-tooltip content="打印" :hide-after="0">
+          <el-button @click="print()" class="icon">
+            <i style="font-size: 22px;" class="ri-printer-line"></i>
+          </el-button>
+        </el-tooltip>
+      </div>
+      <span style="font-size: 20px;">编辑器介绍</span>
+      <div class="avatar">
+        <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" size="small"
+          style="margin-right: 2px" />
+        <span>电子笨蛋</span>
+      </div>
     </el-header>
     <el-main class="main">
       <div v-if="editor" class="fixed-menu">
@@ -292,9 +306,12 @@
       <div class="editor-container">
         <div class="docs">
           <h2 style="color: #555;margin-left: 5vw">我的文档</h2>
-          <!-- <div class="doc" v-for="i in 5" :key="i"></div> -->
+          <div class="doc" v-for="i in 10" :key="i">
+            <h3>文档标题</h3>
+            <p>这是一段文本实例，这是一段文本实例，这是一段文本实例...</p>
+          </div>
         </div>
-        <div class="content">
+        <div class="content" id="content">
           <editor-content :editor="editor" class="editor-content" />
         </div>
         <div class="catalog">
@@ -538,7 +555,28 @@ const handleAIContinue = async () => {
 const save = () => {
   console.log(editor.value.getHTML());
 }
+// 打印文档
+const print = () => {
+  // 这里我们是对局部打印做的演示
+  // 首先获取局部html，也就是打印的区域
+  const printHTML = document.querySelector('#content').innerHTML;
+  // 将打印的区域赋值，进行打印
+  window.document.body.innerHTML = printHTML;
+  window.print(); // 调用window打印方法
+  window.location.reload(); // 打印完成后重新加载页面
 
+}
+// 下载文档
+const download = () => {
+  const content = editor.value.getHTML();
+  const blob = new Blob([content], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'document.html';
+  a.click();
+  URL.revokeObjectURL(url);
+}
 onMounted(() => {
   // loadDocument();
 });
@@ -558,6 +596,7 @@ onBeforeUnmount(() => {
   height: 6vh;
   box-shadow: 0 0 2rem 0 rgba(41, 48, 66, 0.1);
   display: flex;
+  justify-content: space-between;
   align-items: center;
   background-color: var(--nav--color);
   color: #606266;

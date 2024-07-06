@@ -354,14 +354,22 @@
 		background-color: var(--white);
 		border-right: 1px solid #f0f0f0;
 		border-radius: 10px 0 0 0;
+		overflow-y: scroll;
 
 		.doc {
-			height: 7vh;
-			margin: 6px;
+			height: 9vh;
 			color: #666;
-			background-color: #f0f0f0;
-			border-radius: 6px;
+			background-color: #fff;
 			cursor: pointer;
+			border: 1px solid #f0f0f0;
+			&:hover {
+				background-color: #f0f0f0;
+			}
+
+			h3, p{
+				margin: 1vh 1vw;
+			}
+
 		}
 	}
 
@@ -369,7 +377,7 @@
 		flex: 1;
 
 		.editor-content {
-			height: 74vh;
+			height: 93%;
 			padding: 2rem;
 			background-color: var(--white);
 			overflow-y: auto;
