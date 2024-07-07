@@ -30,13 +30,8 @@
             <i style="font-size: 22px;" class="ri-save-3-line"></i>
           </el-button>
         </el-tooltip>
-        <el-tooltip content="另存为模板" :hide-after="0">
-          <el-button @click="saveAsTemp()" class="icon">
-            <i style="font-size: 22px;" class="ri-bookmark-2-fill"></i>
-          </el-button>
-        </el-tooltip>
         <el-tooltip content="下载" :hide-after="0">
-          <el-button @click="download()" class="icon">
+          <el-button @click="download(title)" class="icon">
             <i style="font-size: 22px;" class="ri-download-2-line"></i>
           </el-button>
         </el-tooltip>
@@ -321,7 +316,8 @@
       <div class="editor-container">
         <div class="docs">
           <h2 style="color: #555;margin-left: 5vw">我的文档</h2>
-          <div class="doc" v-for="doc in documents" :key="doc.id">
+          <div class="doc" :class="{ 'doc-active': doc.id == router.currentRoute.value.params.id }"
+            v-for="doc in documents" :key="doc.id" @click="handleDocClick(doc.id)">
             <h3>{{ doc.title }}</h3>
             <p>{{ doc.content.replace(/<[^>]*>/g, " ").slice(0, 40) }}...</p>
           </div>
@@ -566,15 +562,35 @@ const handleAIContinue = async () => {
       ElMessage.error(response.message);
     }
   } catch (error) {
-    console.log(error);
     ElMessage.error(error);
   } finally {
     loadingInstance.close();
   }
 }
+// 处理文档点击
+const handleDocClick = (id) => {
+  router.push({ name: 'edit', params: { id: id } });
+  loadDocument();
+};
 // 保存文档
-const save = () => {
-  console.log(editor.value.getHTML());
+const save = async () => {
+  const loadingInstance = ElLoading.service({
+    fullscreen: true,
+    text: "正在保存...",
+  });
+  try {
+    const response = await request.put('/document/' + router.currentRoute.value.params.id, { title: title.value, content: editor.value.getHTML() });
+    if (response.code == 200) {
+      ElMessage.success("保存成功！");
+      loadDocument();
+    } else {
+      ElMessage.error(response.message);
+    }
+  } catch (error) {
+    ElMessage.error(error);
+  } finally {
+    loadingInstance.close();
+  }
 }
 // 打印文档
 const print = () => {
@@ -585,14 +601,13 @@ const print = () => {
   window.document.body.innerHTML = printHTML;
   window.print(); // 调用window打印方法
   window.location.reload(); // 打印完成后重新加载页面
-
 }
 // 下载文档
-const download = (name) => {
-  var fileName = '编辑器介绍'
+const download = (fileName) => {
   const fileList = document.getElementById('content')   // 很重要
   htmlPdf(fileName, document.querySelector('#content'), fileList)
 }
+// 初次挂载
 onMounted(() => {
   loadDocument();
 });
