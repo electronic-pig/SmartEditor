@@ -63,7 +63,7 @@ const formatDate = (dateString) => {
 };
 
 const handleRowClick = (row) => {
-  router.push({ name: 'edit', query: { id: row.id } });
+  router.push({ name: 'edit', params: { id: row.id } });
 };
 
 const handleCommand = (command, document) => {

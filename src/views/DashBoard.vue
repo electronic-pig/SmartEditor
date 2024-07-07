@@ -5,13 +5,36 @@
         <img class="platform-logo" src="@/assets/images/logo.png" alt="logo" />
         <div class="platform-title">妙 笔</div>
       </div>
+      <div class="add-container">
+        <button class="add"><i class="ri-add-line"></i>&nbsp;新建文档</button>
+      </div>
       <el-divider class="divider-title">功能区</el-divider>
       <!-- 左侧导航链接 -->
       <div class="router-link">
-        <router-link to="/dashboard/DocumentPage" class="link">我的文档</router-link>
-        <router-link to="/dashboard/TemplatePage" class="link">模板库</router-link>
-        <router-link to="/dashboard/StarPage" class="link">我的收藏</router-link>
-        <router-link to="/dashboard/RecyclePage" class="link">回收站</router-link>
+        <router-link to="/dashboard/DocumentPage" class="link">
+          &nbsp;&nbsp;&nbsp;
+          <i class="ri-folder-2-line"></i>
+          &nbsp;&nbsp;
+          我的文档
+        </router-link>
+        <router-link to="/dashboard/TemplatePage" class="link">
+          &nbsp;&nbsp;&nbsp;
+          <i class="ri-folder-cloud-line"></i>
+          &nbsp;&nbsp;
+          模板库
+        </router-link>
+        <router-link to="/dashboard/StarPage" class="link">
+          &nbsp;&nbsp;&nbsp;
+          <i class="ri-star-line"></i>
+          &nbsp;&nbsp;
+          我的收藏
+        </router-link>
+        <router-link to="/dashboard/RecyclePage" class="link">
+          &nbsp;&nbsp;&nbsp;
+          <i class="ri-delete-bin-line"></i>
+          &nbsp;&nbsp;
+          回收站
+        </router-link>
         <div class="more" @click="change">更多</div>
       </div>
     </el-aside>
@@ -143,6 +166,23 @@ const handleSelect = (item) => {
   width: 100%;
 }
 
+.add-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 3vh 0;
+}
+
+.add{
+  width: 80%;
+  border: none;
+  padding: 1.5vh 0;
+  border-radius: 10px;
+  background-color: var(--el-color-primary);
+  color: #eee;
+  cursor: pointer;
+}
+
 .divider-title :deep(.el-divider__text) {
   line-height: 24px;
   background-color: var(--nav--color);
@@ -167,15 +207,14 @@ const handleSelect = (item) => {
   width: 100%;
   display: block;
   padding: 1.5vh 0;
-  text-align: center;
   text-decoration: none;
   border-radius: 10px;
-  color: var(--el-color-primary-light-3);
+  color: var(--el-color-primary);
 }
 
 .link:hover {
-  background-color: var(--el-color-primary-light-5);
-  color: #eee;
+  background-color: #DCDFE6;
+  color: var(--el-color-primary);
 }
 
 .fade-enter-active,
@@ -202,7 +241,7 @@ const handleSelect = (item) => {
   text-decoration: none;
   border-radius: 10px;
   color: var(--el-color-primary-light-3);
-  background-color: #ebedf0;
+  background-color: #DCDFE6;
   cursor: pointer;
 }
 

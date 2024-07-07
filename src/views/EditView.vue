@@ -46,7 +46,9 @@
           </el-button>
         </el-tooltip>
       </div>
-      <span style="font-size: 20px;">编辑器介绍</span>
+      <span style="font-size: 20px;">
+        <input type="text" v-model="title" style="background: none; border: 0px; outline: none" />
+      </span>
       <div class="avatar">
         <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" size="small"
           style="margin-right: 2px" />
@@ -319,9 +321,9 @@
       <div class="editor-container">
         <div class="docs">
           <h2 style="color: #555;margin-left: 5vw">我的文档</h2>
-          <div class="doc" v-for="i in 10" :key="i">
-            <h3>文档标题</h3>
-            <p>这是一段文本实例，这是一段文本实例...</p>
+          <div class="doc" v-for="doc in documents" :key="doc.id">
+            <h3>{{ doc.title }}</h3>
+            <p>{{ doc.content.replace(/<[^>]*>/g, " ").slice(0, 40) }}...</p>
           </div>
         </div>
         <div class="content" id="content">
@@ -403,6 +405,8 @@ import suggestion from '../utils/suggestion.js'
 
 const lowlight = createLowlight()
 lowlight.register({ html, ts, css, js })
+const title = ref('');
+const documents = ref([]);
 const header = ref(0); //标题级别
 const dialogVisible = ref(false); //OCR弹窗
 const uploadSuccess = ref(false); //上传成功
@@ -529,14 +533,18 @@ const handleSuccess = (response) => {
 const loadDocument = async () => {
   try {
     NProgress.start();
-    const response = await request.get("/document/" + router.currentRoute.value.query.id);
+    const response = await request.get("/document/user");
     if (response.code == 200) {
-      editor.value.commands.setContent(response.document.content);
+      documents.value = response.documents;
+      let doc = documents.value.find(doc => doc.id == router.currentRoute.value.params.id);
+      editor.value.commands.setContent(doc.content);
+      title.value = doc.title;
     } else {
       ElMessage.error(response.message);
     }
   } catch (error) {
     ElMessage.error(error);
+    console.log(error);
   } finally {
     NProgress.done();
   }
@@ -586,7 +594,7 @@ const download = (name) => {
   htmlPdf(fileName, document.querySelector('#content'), fileList)
 }
 onMounted(() => {
-  // loadDocument();
+  loadDocument();
 });
 // 销毁编辑器
 onBeforeUnmount(() => {
