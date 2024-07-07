@@ -2,9 +2,9 @@
   <div class="container">
     <h2 class="title">模板库</h2>
     <div class="documents-grid">
-      <div v-for="(document, index) in documents" :key="index" class="document-card">
+      <div v-for="(doc, index) in documents" :key="index" class="document-card" @click="handleClick(doc.id)">
         <img src="../assets/images/docs.png" alt="Document" class="document-logo">
-        <div class="document-title">{{ document.title }}</div>
+        <div class="document-title">{{ doc.title }}</div>
         <el-dropdown class="document-dropdown" @command="handleCommand">
           <el-icon :size="18">
             <Setting />
@@ -26,6 +26,7 @@
 import { ref, onMounted } from "vue";
 import { ElMessage } from "element-plus";
 import request from "../utils/request.js";
+import router from "../router";
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 
@@ -52,6 +53,10 @@ const handleCommand = (command) => {
   if (command === "editDocument") {
     console.log("Edit document");
   }
+};
+
+const handleClick = (id) => {
+  router.push({ name: 'edit', params: { id: id } });
 };
 </script>
 

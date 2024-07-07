@@ -265,10 +265,10 @@
           <el-button type="primary" text bg><i class="ri-bard-line"></i>AI</el-button>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item @click="handleAIContinue">AI 续写</el-dropdown-item>
-              <el-dropdown-item>AI 润色</el-dropdown-item>
-              <el-dropdown-item>AI 校对</el-dropdown-item>
-              <el-dropdown-item>AI 翻译</el-dropdown-item>
+              <el-dropdown-item @click="AIfunc('续写')">AI 续写</el-dropdown-item>
+              <el-dropdown-item @click="AIfunc('润色')">AI 润色</el-dropdown-item>
+              <el-dropdown-item @click="AIfunc('校对')">AI 校对</el-dropdown-item>
+              <el-dropdown-item @click="AIfunc('翻译')">AI 翻译</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -546,7 +546,7 @@ const loadDocument = async () => {
   }
 };
 // AI续写
-const handleAIContinue = async () => {
+const AIfunc = async (command) => {
   const { from, to } = editor.value.state.selection;
   const selectedText = editor.value.state.doc.textBetween(from, to, ' ');
   const loadingInstance = ElLoading.service({
@@ -554,7 +554,7 @@ const handleAIContinue = async () => {
     text: "正在生成内容...",
   });
   try {
-    const response = await request.post('/function/aiTest', { text: selectedText });
+    const response = await request.post('/function/AIFunc', { text: selectedText, command: command });
     if (response.code == 200) {
       const transaction = editor.value.state.tr.insertText(response.message, from, to);
       editor.value.view.dispatch(transaction);
@@ -594,8 +594,6 @@ const save = async () => {
 }
 // 打印文档
 const print = () => {
-  // 这里我们是对局部打印做的演示
-  // 首先获取局部html，也就是打印的区域
   const printHTML = document.querySelector('#content').innerHTML;
   // 将打印的区域赋值，进行打印
   window.document.body.innerHTML = printHTML;
