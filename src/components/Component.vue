@@ -15,8 +15,7 @@
 			</el-select>
 			<div class="buttons">
 				<el-button v-if="replySuccess" type="primary" :icon="Check" round plain @click="copyToClipboard">复制</el-button>
-				<el-button type="primary" @click="send">发送</el-button>
-				<el-button v-if="replySuccess" type="primary" @click="send">发送</el-button>
+				<el-button type="primary" @click="send">{{ replySuccess ? '重新' : '' }}发送</el-button>
 			</div>
 		</div>
 	</node-view-wrapper>

@@ -40,6 +40,8 @@
     "axios": "^1.7.2",
     "element-plus": "^2.7.6",
     "highlight.js": "^11.9.0",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.1",
     "lowlight": "^3.1.0",
     "normalize.css": "^8.0.1",
     "nprogress": "^0.2.0",

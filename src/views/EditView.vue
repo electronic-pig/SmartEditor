@@ -9,22 +9,35 @@
             </el-icon>
           </el-button>
         </el-tooltip>
-        <el-tooltip content="添加文档" :hide-after="0">
-          <el-button class="icon">
-            <el-icon :size="22">
-              <Plus />
-            </el-icon>
-          </el-button>
+        <el-tooltip content="创建文档" :hide-after="0">
+          <el-dropdown trigger="click">
+            <el-button class="icon">
+              <el-icon :size="22">
+                <Plus />
+              </el-icon>
+            </el-button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item>创建空白文档</el-dropdown-item>
+                <el-dropdown-item>从模板创建</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
         </el-tooltip>
         <el-divider direction="vertical" />
         <el-tooltip content="保存" :hide-after="0">
           <el-button @click="save()" class="icon">
-            <i style="font-size: 22px;" class="ri-save-line"></i>
+            <i style="font-size: 22px;" class="ri-save-3-line"></i>
+          </el-button>
+        </el-tooltip>
+        <el-tooltip content="另存为模板" :hide-after="0">
+          <el-button @click="saveAsTemp()" class="icon">
+            <i style="font-size: 22px;" class="ri-bookmark-2-fill"></i>
           </el-button>
         </el-tooltip>
         <el-tooltip content="下载" :hide-after="0">
           <el-button @click="download()" class="icon">
-            <i style="font-size: 22px;" class="ri-export-line"></i>
+            <i style="font-size: 22px;" class="ri-download-2-line"></i>
           </el-button>
         </el-tooltip>
         <el-tooltip content="打印" :hide-after="0">
@@ -308,7 +321,7 @@
           <h2 style="color: #555;margin-left: 5vw">我的文档</h2>
           <div class="doc" v-for="i in 10" :key="i">
             <h3>文档标题</h3>
-            <p>这是一段文本实例，这是一段文本实例，这是一段文本实例...</p>
+            <p>这是一段文本实例，这是一段文本实例...</p>
           </div>
         </div>
         <div class="content" id="content">
@@ -353,6 +366,7 @@ import router from "../router";
 import colorList from "../utils/colors.js"
 import fontFamily from "../utils/fontFamily.js"
 import valueHtml from '../utils/valueHtml.js';
+import { htmlPdf } from '../utils/htmlToPDF.js'
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 
@@ -447,7 +461,6 @@ const outline = computed(() => {
   })
   return matches
 });
-
 // 跳转到大纲
 const goToHeading = (item) => {
   const selection = { from: item.start, to: item.end + 1 };
@@ -567,15 +580,10 @@ const print = () => {
 
 }
 // 下载文档
-const download = () => {
-  const content = editor.value.getHTML();
-  const blob = new Blob([content], { type: 'text/html' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'document.html';
-  a.click();
-  URL.revokeObjectURL(url);
+const download = (name) => {
+  var fileName = '编辑器介绍'
+  const fileList = document.getElementById('content')   // 很重要
+  htmlPdf(fileName, document.querySelector('#content'), fileList)
 }
 onMounted(() => {
   // loadDocument();
@@ -600,6 +608,12 @@ onBeforeUnmount(() => {
   align-items: center;
   background-color: var(--nav--color);
   color: #606266;
+
+  .avatar {
+    display: flex;
+    align-items: center;
+    margin-right: 8vw;
+  }
 }
 
 .icon {
