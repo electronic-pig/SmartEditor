@@ -33,7 +33,7 @@ const reply = ref('')
 const tone = ref('')
 const replySuccess = ref(false)
 
-const options = ["写实", "学术"];
+const options = ["写实", "学术", '恐怖'];
 // 定义 props
 const props = defineProps(nodeViewProps)
 
@@ -44,7 +44,7 @@ const send = async () => {
 		text: "正在生成内容...",
 	});
 	try {
-		const response = await request.post('/function/aiTest', { text: prompt.value });
+		const response = await request.post('/function/AIFunc', { command: '', text: '', prompt: prompt.value, tone: tone.value });
 		if (response.code == 200) {
 			reply.value = response.message;
 			replySuccess.value = true;

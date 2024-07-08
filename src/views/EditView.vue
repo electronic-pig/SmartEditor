@@ -555,7 +555,7 @@ const AIfunc = async (command) => {
   const loadingInstance = ElLoading.service({
     fullscreen: true,
     text: "正在生成内容...",
-  });
+  }); 
   try {
     const response = await request.post('/function/AIFunc', { text: selectedText, command: command });
     if (response.code == 200) {

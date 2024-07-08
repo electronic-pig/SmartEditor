@@ -21,7 +21,7 @@
         <h1>一个基于大小模型的</h1>
         <h1>在线文档富文本编辑器</h1>
         <p>在线编辑、AI辅助、文档管理</p>
-        <button @click="start">开始试用</button>
+        <button @click="start()">开始试用</button>
       </div>
       <div class="image">
         <div class="img-bg"></div>
@@ -52,7 +52,7 @@
 import router from "../router";
 
 const start = () => {
-  router.push("/edit");
+  router.push("/login");
 };
 </script>
 
