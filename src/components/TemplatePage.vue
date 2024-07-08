@@ -78,7 +78,7 @@ const handleClick = (id) => {
 
 .document-card {
   width: 10%;
-  margin: 0 1.5vw;
+  margin: 3vh 1.5vw;
   margin-bottom: 10px;
   position: relative;
   cursor: pointer;

@@ -319,7 +319,7 @@
           <div class="doc" :class="{ 'doc-active': doc.id == router.currentRoute.value.params.id }"
             v-for="doc in documents" :key="doc.id" @click="handleDocClick(doc.id)">
             <h3>{{ doc.title }}</h3>
-            <p>{{ doc.content.replace(/<[^>]*>/g, " ").slice(0, 40) }}...</p>
+            <p>{{ doc.content.replace(/<[^>]*>/g, " ").slice(0, 28) }}...</p>
           </div>
         </div>
         <div class="content" id="content">
@@ -363,7 +363,6 @@ import request from "../utils/request.js";
 import router from "../router";
 import colorList from "../utils/colors.js"
 import fontFamily from "../utils/fontFamily.js"
-import valueHtml from '../utils/valueHtml.js';
 import { htmlPdf } from '../utils/htmlToPDF.js'
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
@@ -410,11 +409,11 @@ const uploadResult = ref(''); //上传结果
 const upload = ref(null); // 上传图片
 // 返回文档页面
 const returnHome = () => {
-  router.push('/dashboard/DocumentPage')
+  router.go(-1);
 }
 // 创建编辑器实例
 const editor = useEditor({
-  content: valueHtml,
+  content: "",
   extensions: [
     StarterKit.configure({ codeBlock: false }),
     Underline,
@@ -526,15 +525,19 @@ const handleSuccess = (response) => {
   uploadResult.value = response.message;
 };
 // 加载文档
-const loadDocument = async () => {
+const loadDocuments = async () => {
   try {
     NProgress.start();
-    const response = await request.get("/document/user");
+    let response = await request.get("/document/user");
     if (response.code == 200) {
       documents.value = response.documents;
-      let doc = documents.value.find(doc => doc.id == router.currentRoute.value.params.id);
-      editor.value.commands.setContent(doc.content);
-      title.value = doc.title;
+    } else {
+      ElMessage.error(response.message);
+    }
+    response = await request.get("/document/" + router.currentRoute.value.params.id);
+    if (response.code == 200) {
+      editor.value.commands.setContent(response.document.content);
+      title.value = response.document.title;
     } else {
       ElMessage.error(response.message);
     }
@@ -545,7 +548,7 @@ const loadDocument = async () => {
     NProgress.done();
   }
 };
-// AI续写
+// AI功能
 const AIfunc = async (command) => {
   const { from, to } = editor.value.state.selection;
   const selectedText = editor.value.state.doc.textBetween(from, to, ' ');
@@ -570,7 +573,7 @@ const AIfunc = async (command) => {
 // 处理文档点击
 const handleDocClick = (id) => {
   router.push({ name: 'edit', params: { id: id } });
-  loadDocument();
+  loadDocuments();
 };
 // 保存文档
 const save = async () => {
@@ -582,7 +585,7 @@ const save = async () => {
     const response = await request.put('/document/' + router.currentRoute.value.params.id, { title: title.value, content: editor.value.getHTML() });
     if (response.code == 200) {
       ElMessage.success("保存成功！");
-      loadDocument();
+      loadDocuments();
     } else {
       ElMessage.error(response.message);
     }
@@ -606,9 +609,7 @@ const download = (fileName) => {
   htmlPdf(fileName, document.querySelector('#content'), fileList)
 }
 // 初次挂载
-onMounted(() => {
-  loadDocument();
-});
+onMounted(loadDocuments);
 // 销毁编辑器
 onBeforeUnmount(() => {
   editor.value?.destroy();

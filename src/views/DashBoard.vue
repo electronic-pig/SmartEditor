@@ -6,7 +6,7 @@
         <div class="platform-title">妙 笔</div>
       </div>
       <div class="add-container">
-        <button class="add"><i class="ri-add-line"></i>&nbsp;新建文档</button>
+        <button class="add" @click="createDoc()"><i class="ri-add-line"></i>&nbsp;新建文档</button>
       </div>
       <el-divider class="divider-title">功能区</el-divider>
       <!-- 左侧导航链接 -->
@@ -87,7 +87,7 @@ import router from "../router";
 import { useUserStore } from "../stores/userStore.js";
 import ResetPassword from "../components/ResetPassword.vue";
 import request from "../utils/request.js";
-import { ElMessage } from "element-plus";
+import { ElMessage, ElLoading } from "element-plus";
 
 const userStore = useUserStore();
 const toggle = ref(false);  // 控制重置密码对话框的显示
@@ -119,6 +119,27 @@ const querySearchAsync = async (queryString, cb) => {
     }
   } catch (error) {
     ElMessage.error(error);
+  }
+};
+
+// 新建文档
+const createDoc = async () => {
+  const loadingInstance = ElLoading.service({
+    fullscreen: true,
+    text: "正在新建文档...",
+  });
+  try {
+    const response = await request.post('/document');
+    if (response.code == 200) {
+      ElMessage.success('新建文档成功!');
+      router.push({ name: 'edit', params: { id: response.id } });
+    } else {
+      ElMessage.error(response.message);
+    }
+  } catch (error) {
+    ElMessage.error(error);
+  } finally {
+    loadingInstance.close();
   }
 };
 

@@ -1,9 +1,10 @@
 // valueHtml.js
-const valueHtml = `<h1>一、编辑器介绍</h1>
+const valueHtml = `
+<h1>一、编辑器介绍</h1>
 <h2>1.1 文字类</h2>
 <h3>文字</h3><p>默认<span style="font-family: 宋体"> 宋体 </span><span style="font-family: 黑体">黑体 </span><span style="font-family: 楷体">楷体 </span><span style="font-family: Arial">Arial  </span><span style="font-family: Comic\ Sans\ MS">Comic Sans MS </span><span style="font-family: Times\ New\ Roman">Times New Roman</span></p><p><strong><span style="font-family: Times\ New\ Roman">粗体</span></strong><em><span style="font-family: Times\ New\ Roman">  斜体</span></em><span style="font-family: Times\ New\ Roman">   </span><strong><em><span style="font-family: Times\ New\ Roman">粗斜体 </span></em></strong></p><h3>标记</h3><p><strong><em><span style="font-family: Times\ New\ Roman"> </span></em></strong><u><span style="font-family: Times\ New\ Roman">下划线</span></u><span style="font-family: Times\ New\ Roman">     </span><s><span style="font-family: Times\ New\ Roman">删除线</span></s><span style="font-family: Times\ New\ Roman">     </span><span style="color: #f44336; font-family: Times\ New\ Roman">红色</span><span style="font-family: Times\ New\ Roman">    </span><span style="color: #2196f3; font-family: Times\ New\ Roman">蓝色</span><span style="font-family: Times\ New\ Roman">     </span><span style="color: #4caf50; font-family: Times\ New\ Roman">绿色   </span><span style="color: #999999; font-family: Times\ New\ Roman">灰色</span></p>
 
-<p>这是一段文本，其中包含了<mark>文本高亮 </mark>，一段行内代码<code>print(hello world!)</code>，包含了上标e<sup>x</sup> 和下标x<sub>0</sub>，以及包含了一个<a target="_blank" rel="noopener noreferrer nofollow" href="https://www.baidu.com/">百度</a>的链接，同时下面存在一条分隔线，最后是一个emoji表情🤓</p><hr>
+<p>这是一段文本，其中包含了<mark>文本高亮 </mark>，一段行内代码<code>print(hello world!)</code>，包含了上标e<sup>x</sup> 和下标x<sub>0</sub>，以及包含了一个<a target="_blank" rel="noopener noreferrer nofollow" href="https://www.baidu.com/">百度</a>的链接，同时下面存在一条分隔线</p><hr>
 
 <h3>无序列表</h3>
 <ul>

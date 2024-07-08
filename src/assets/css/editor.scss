@@ -354,7 +354,17 @@
 		background-color: var(--white);
 		border-right: 1px solid #f0f0f0;
 		border-radius: 10px 0 0 0;
-		overflow-y: scroll;
+		overflow-y: auto;
+		// 隐藏滚动条但仍然保持滚动功能
+		scrollbar-width: none; // Firefox
+
+		-ms-overflow-style: none; // Internet Explorer 10+
+
+		&::-webkit-scrollbar {
+			// WebKit 
+			width: 0;
+			height: 0;
+		}
 
 		.doc {
 			height: 11vh;
@@ -362,11 +372,13 @@
 			background-color: #fff;
 			cursor: pointer;
 			border: 1px solid #f0f0f0;
+
 			&:hover {
 				background-color: #f0f0f0;
 			}
 
-			h3, p{
+			h3,
+			p {
 				margin: 1vh 1vw;
 			}
 
@@ -393,6 +405,17 @@
 		padding-left: 40px;
 		background-color: var(--white);
 		border-radius: 0 10px 0 0;
+		overflow-y: auto;
+		// 隐藏滚动条但仍然保持滚动功能
+		scrollbar-width: none; // Firefox
+
+		-ms-overflow-style: none; // Internet Explorer 10+
+
+		&::-webkit-scrollbar {
+			// WebKit 
+			width: 0;
+			height: 0;
+		}
 	}
 
 }

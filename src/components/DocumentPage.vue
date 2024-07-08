@@ -137,7 +137,6 @@ const addRecycle = async (document) => {
 };
 
 onMounted(loadDocuments);
-
 </script>
 
 <style scoped>
