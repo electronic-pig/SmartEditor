@@ -1,7 +1,7 @@
 <template>
   <el-container class="container">
     <el-header class="header">
-      <div class="button-group">
+      <div class="left-group">
         <el-tooltip content="回到首页" :hide-after="0">
           <el-button @click="returnHome()" class="icon">
             <el-icon :size="22">
@@ -41,13 +41,30 @@
           </el-button>
         </el-tooltip>
       </div>
-      <span style="font-size: 20px;">
+      <div style="font-size: 20px;">
         <input type="text" v-model="title" style="background: none; border: 0px; outline: none" />
-      </span>
-      <div class="avatar">
-        <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" size="small"
-          style="margin-right: 2px" />
-        <span>电子笨蛋</span>
+      </div>
+      <div class="right-group2">
+        <el-tooltip content="字符识别" :hide-after="0">
+          <el-button @click="dialogVisible = true" class="icon">
+            <i style="font-size: 22px;" class="ri-character-recognition-line"></i>
+          </el-button>
+        </el-tooltip>
+        <el-tooltip content="语音识别" :hide-after="0">
+          <el-button @click="dialogVisible = true" class="icon">
+            <i style="font-size: 22px;" class="ri-voice-recognition-line"></i>
+          </el-button>
+        </el-tooltip>
+        <el-tooltip content="视频总结" :hide-after="0">
+          <el-button @click="dialogVisible = true" class="icon">
+            <i style="font-size: 22px;" class="ri-youtube-line"></i>
+          </el-button>
+        </el-tooltip>
+        <el-tooltip content="生成思维导图" :hide-after="0">
+          <el-button @click="createMindMap()" class="icon">
+            <i style="font-size: 22px;" class="ri-mind-map"></i>
+          </el-button>
+        </el-tooltip>
       </div>
     </el-header>
     <el-main class="main">
@@ -260,7 +277,6 @@
           </button>
         </el-tooltip>
         <el-divider direction="vertical" />
-        <el-button type="primary" text bg @click="dialogVisible = true">OCR</el-button>
         <el-dropdown trigger="click">
           <el-button type="primary" text bg><i class="ri-bard-line"></i>AI</el-button>
           <template #dropdown>
@@ -352,6 +368,20 @@
           </div>
         </template>
       </el-dialog>
+      <el-drawer v-model="drawer" size="40%">
+        <template #header>
+          <h2>思维导图</h2>
+        </template>
+        <template #default>
+          <MindMap :htmlContent="MindMapContent" />
+        </template>
+        <template #footer>
+          <div style="flex: auto">
+            <el-button>取消</el-button>
+            <el-button type="primary">保存</el-button>
+          </div>
+        </template>
+      </el-drawer>
     </el-main>
   </el-container>
 </template>
@@ -397,6 +427,7 @@ import { Color } from '@tiptap/extension-color'
 import VueComponent from '../utils/Extension.js'
 import slash from '../utils/slash.js'
 import suggestion from '../utils/suggestion.js'
+import MindMap from '../components/MindMap.vue';
 
 const lowlight = createLowlight()
 lowlight.register({ html, ts, css, js })
@@ -407,6 +438,8 @@ const dialogVisible = ref(false); //OCR弹窗
 const uploadSuccess = ref(false); //上传成功
 const uploadResult = ref(''); //上传结果
 const upload = ref(null); // 上传图片
+const drawer = ref(false);
+const MindMapContent = ref('');
 // 返回文档页面
 const returnHome = () => {
   router.go(-1);
@@ -524,6 +557,11 @@ const handleSuccess = (response) => {
   uploadSuccess.value = true;
   uploadResult.value = response.message;
 };
+// 创建思维导图
+const createMindMap = () => {
+  MindMapContent.value = editor.value.getHTML();
+  drawer.value = true;
+}
 // 加载文档
 const loadDocuments = async () => {
   try {
@@ -555,7 +593,7 @@ const AIfunc = async (command) => {
   const loadingInstance = ElLoading.service({
     fullscreen: true,
     text: "正在生成内容...",
-  }); 
+  });
   try {
     const response = await request.post('/function/AIFunc', { text: selectedText, command: command });
     if (response.code == 200) {
