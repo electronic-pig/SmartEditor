@@ -5,18 +5,6 @@
       <div v-for="(doc, index) in documents" :key="index" class="document-card" @click="handleClick(doc.id)">
         <img src="../assets/images/docs.png" alt="Document" class="document-logo">
         <div class="document-title">{{ doc.title }}</div>
-        <el-dropdown class="document-dropdown" @command="handleCommand">
-          <el-icon :size="18">
-            <Setting />
-          </el-icon>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item command="editDocument">编辑</el-dropdown-item>
-              <el-dropdown-item command="openDocumentInNewTab">新标签打开</el-dropdown-item>
-              <el-dropdown-item command="deleteDocument">删除</el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
       </div>
     </div>
   </div>
@@ -48,12 +36,6 @@ onMounted(async () => {
     NProgress.done();
   }
 });
-
-const handleCommand = (command) => {
-  if (command === "editDocument") {
-    console.log("Edit document");
-  }
-};
 
 const handleClick = (id) => {
   router.push({ name: 'edit', params: { id: id } });
@@ -98,16 +80,5 @@ const handleClick = (id) => {
   font-family: Arial, sans-serif;
   color: #555;
   font-weight: bold;
-}
-
-.document-dropdown {
-  position: absolute;
-  top: 4px;
-  right: 4px;
-  visibility: hidden;
-}
-
-.document-card:hover .document-dropdown {
-  visibility: visible
 }
 </style>

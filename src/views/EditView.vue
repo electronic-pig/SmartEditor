@@ -10,19 +10,11 @@
           </el-button>
         </el-tooltip>
         <el-tooltip content="创建文档" :hide-after="0">
-          <el-dropdown trigger="click">
-            <el-button class="icon">
-              <el-icon :size="22">
-                <Plus />
-              </el-icon>
-            </el-button>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item>创建空白文档</el-dropdown-item>
-                <el-dropdown-item>从模板创建</el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
+          <el-button @click="createDoc()" class="icon">
+            <el-icon :size="22">
+              <Plus />
+            </el-icon>
+          </el-button>
         </el-tooltip>
         <el-divider direction="vertical" />
         <el-tooltip content="保存" :hide-after="0">
@@ -436,7 +428,7 @@ const drawer = ref(false);
 const MindMapContent = ref('');
 // 返回文档页面
 const returnHome = () => {
-  router.go(-1);
+  router.push('/dashboard/DocumentPage');
 }
 // 创建编辑器实例
 const editor = useEditor({
@@ -556,6 +548,27 @@ const createMindMap = () => {
   MindMapContent.value = editor.value.getHTML();
   drawer.value = true;
 }
+// 新建文档
+const createDoc = async () => {
+  const loadingInstance = ElLoading.service({
+    fullscreen: true,
+    text: "正在新建文档...",
+  });
+  try {
+    const response = await request.post('/document');
+    if (response.code == 200) {
+      ElMessage.success('新建文档成功!');
+      router.push({ name: 'edit', params: { id: response.id } });
+      loadDocuments();
+    } else {
+      ElMessage.error(response.message);
+    }
+  } catch (error) {
+    ElMessage.error(error);
+  } finally {
+    loadingInstance.close();
+  }
+};
 // 加载文档
 const loadDocuments = async () => {
   try {

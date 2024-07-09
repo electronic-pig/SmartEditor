@@ -17,17 +17,23 @@
           &nbsp;&nbsp;
           我的文档
         </router-link>
-        <router-link to="/dashboard/TemplatePage" class="link">
+        <router-link to="/dashboard/MyTemplate" class="link">
           &nbsp;&nbsp;&nbsp;
-          <i class="ri-folder-cloud-line"></i>
+          <i class="ri-folder-open-line"></i>
           &nbsp;&nbsp;
-          模板库
+          我的模板
         </router-link>
         <router-link to="/dashboard/StarPage" class="link">
           &nbsp;&nbsp;&nbsp;
           <i class="ri-star-line"></i>
           &nbsp;&nbsp;
           我的收藏
+        </router-link>
+        <router-link to="/dashboard/TemplateRepo" class="link">
+          &nbsp;&nbsp;&nbsp;
+          <i class="ri-folder-cloud-line"></i>
+          &nbsp;&nbsp;
+          模板库
         </router-link>
         <router-link to="/dashboard/RecyclePage" class="link">
           &nbsp;&nbsp;&nbsp;
@@ -39,7 +45,8 @@
       </div>
     </el-aside>
     <el-container>
-      <el-header class="header"><span>开始</span>
+      <el-header class="header">
+        <span><i style="font-size: 22px;" class="ri-edit-2-fill"></i></span>
         <el-autocomplete v-model="search" :fetch-suggestions="querySearchAsync" :trigger-on-focus="false"
           value-key="title" @select="handleSelect" placeholder="通过文档名搜索文档" clearable
           style="width: 40vw;margin-left: 15vw">
@@ -194,7 +201,7 @@ const handleSelect = (item) => {
   margin: 3vh 0;
 }
 
-.add{
+.add {
   width: 80%;
   border: none;
   padding: 1.5vh 0;
@@ -256,7 +263,7 @@ const handleSelect = (item) => {
 .more {
   width: 100%;
   padding: 10px 0;
-  margin-top: 36vh;
+  margin-top: 26vh;
   display: block;
   text-align: center;
   text-decoration: none;
