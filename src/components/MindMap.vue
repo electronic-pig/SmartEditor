@@ -4,8 +4,8 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
-import "jsmind/style/jsmind.css";
-import JsMind from "jsmind";
+import jsMind from 'jsmind'
+import 'jsmind/style/jsmind.css'
 
 const props = defineProps({
   htmlContent: {
@@ -19,64 +19,92 @@ const jsmindContainer = ref(null);
 const parseHtmlToMindMap = (html) => {
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, 'text/html');
-  const headings = doc.querySelectorAll('h1, h2, h3, h4, h5, h6');
+  const mindData = [];
 
-  const nodes = Array.from(headings).map((heading, index) => {
-    const level = parseInt(heading.tagName.slice(1)); // 获取标签的级别
-    const content = heading.textContent; // 获取标签的内容
+  const stack = [];
 
-    return {
-      id: index,
-      parent: level === 1 ? null : index - 1, // 如果级别是 1，那么这个节点没有父节点
-      topic: content,
-      direction: level === 1 ? 'right' : undefined, // 如果级别是 1，那么这个节点的方向是 'right'
-    };
-  });
+  const parseNode = (node, parentId = null) => {
+    const nodeName = node.nodeName.toLowerCase();
+    if (['h1', 'h2', 'h3'].includes(nodeName)) {
+      const nodeId = `node${mindData.length + 1}`;
+      const mindNode = {
+        id: nodeId,
+        parentid: parentId,
+        topic: node.textContent.trim()
+      };
 
-  return nodes;
-};
+      if (parentId === null) {
+        mindNode.isroot = true;
+      }
 
-onMounted(() => {
-  // const mind = parseHtmlToMindMap(props.htmlContent);
-  const mind = {
-    meta: {
-      name: 'jsmind demo',
-      author: 'jsmind',
-      version: '0.0.1'
-    },
-    format: 'node_tree',
-    data: {
-      id: 'root1',
-      topic: 'jsMind',
-      children: [
-        {
-          id: 'root2',
-          topic: 'jsMind1',
-        },
-        {
-          id: 'root3',
-          topic: 'jsMind2',
-        },
-        {
-          id: 'root4',
-          topic: 'jsMind3',
-        },
-        {
-          id: 'root5',
-          topic: 'jsMind4',
+      mindData.push(mindNode);
+      stack.push({ level: parseInt(nodeName[1]), id: nodeId });
+
+      let nextNode = node.nextElementSibling;
+      while (nextNode && !['h1', 'h2', 'h3'].includes(nextNode.nodeName.toLowerCase())) {
+        nextNode = nextNode.nextElementSibling;
+      }
+
+      if (nextNode) {
+        const nextLevel = parseInt(nextNode.nodeName[1]);
+        while (stack.length && stack[stack.length - 1].level >= nextLevel) {
+          stack.pop();
         }
-      ]
+        parseNode(nextNode, stack.length ? stack[stack.length - 1].id : null);
+      }
     }
   };
 
-  const options = {
-    container: jsmindContainer.value,
-    editable: false,
-    theme: 'primary'
+  const processNode = (node) => {
+    parseNode(node);
+    let sibling = node.nextElementSibling;
+    while (sibling) {
+      parseNode(sibling);
+      sibling = sibling.nextElementSibling;
+    }
   };
 
-  const jm = new JsMind(options);
-  jm.show(mind);
+  Array.from(doc.body.children).forEach(processNode);
+  return mindData;
+};
+
+onMounted(() => {
+  if (jsmindContainer.value) {
+    const nodes = parseHtmlToMindMap(props.htmlContent);
+    const mind = {
+      /* 元数据，定义思维导图的名称、作者、版本等信息 */
+      "meta": {
+        "name": "妙笔mindMap",
+        "author": "2234333815@qq.com",
+        "version": "0.1"
+      },
+      /* 数据格式声明 */
+      "format": "node_array",
+      /* 数据内容 */
+      "data": [
+        { "id": "root", "isroot": true, "topic": "jsmind" },
+
+        { "id": "open", "parentid": "root", "topic": "Open Source"},
+        { "id": "powerful", "parentid": "root", "topic": "Powerful" },
+        
+        { "id": "open1", "parentid": "open", "topic": "on GitHub" },
+        { "id": "open2", "parentid": "open", "topic": "BSD License" },
+
+        { "id": "powerful1", "parentid": "powerful", "topic": "Base on Javascript" },
+        { "id": "powerful2", "parentid": "powerful", "topic": "Base on HTML5" },
+        { "id": "powerful3", "parentid": "powerful", "topic": "Depends on you" },
+      ]
+    };
+
+    const options = {
+      container: jsmindContainer.value,
+      editable: false,
+      theme: 'primary',
+    };
+
+    const jm = new jsMind(options);
+    jm.show(mind);
+  }
 });
 </script>
 

@@ -44,7 +44,7 @@
       <div style="font-size: 20px;">
         <input type="text" v-model="title" style="background: none; border: 0px; outline: none" />
       </div>
-      <div class="right-group2">
+      <div class="right-group2" style="margin-right: 1vw;">
         <el-tooltip content="字符识别" :hide-after="0">
           <el-button @click="dialogVisible = true" class="icon">
             <i style="font-size: 22px;" class="ri-character-recognition-line"></i>
@@ -374,12 +374,6 @@
         </template>
         <template #default>
           <MindMap :htmlContent="MindMapContent" />
-        </template>
-        <template #footer>
-          <div style="flex: auto">
-            <el-button>取消</el-button>
-            <el-button type="primary">保存</el-button>
-          </div>
         </template>
       </el-drawer>
     </el-main>
