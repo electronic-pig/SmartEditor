@@ -41,7 +41,7 @@
           &nbsp;&nbsp;
           回收站
         </router-link>
-        <div class="more" @click="change">更多</div>
+        <div class="more" @click="getMore()">更多</div>
       </div>
     </el-aside>
     <el-container>
@@ -61,6 +61,9 @@
         <el-dropdown size="large" trigger="click" @command="handleCommand">
           <span class="el-dropdown-link">
             {{ userStore.username }}
+            <el-icon class="el-icon--right">
+              <arrow-down />
+            </el-icon>
           </span>
           <template #dropdown>
             <el-dropdown-menu>
@@ -114,7 +117,7 @@ const handleCommand = (command) => {
     toggle.value = !toggle.value;
   }
 };
-
+// 文档查询
 const querySearchAsync = async (queryString, cb) => {
   try {
     const response = await request.get("/document/search/" + queryString);
@@ -128,7 +131,10 @@ const querySearchAsync = async (queryString, cb) => {
     ElMessage.error(error);
   }
 };
-
+// 点击查询结果
+const handleSelect = (item) => {
+  router.push({ name: 'edit', params: { id: item.id } });
+};
 // 新建文档
 const createDoc = async () => {
   const loadingInstance = ElLoading.service({
@@ -149,9 +155,9 @@ const createDoc = async () => {
     loadingInstance.close();
   }
 };
-
-const handleSelect = (item) => {
-  router.push({ name: 'edit', params: { id: item.id } });
+// 更多功能
+const getMore = () => {
+  ElMessage.info('更多功能正在开发中...');
 };
 </script>
 
