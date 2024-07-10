@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <h2 class="title">回收站</h2>
-    <el-table :data="documents" class="table" :row-style="{ height: '50px' }" @row-click="handleRowClick">
+    <el-table :data="documents" class="table" :row-style="{ height: '50px' }">
       <el-table-column label="标题"><template #default="{ row }">
           <div style="display: flex; align-items: center;">
             <img src="../assets/images/docs.png" alt="Document" style="height: 30px; margin-right: 8px;">
@@ -58,10 +58,6 @@ const formatDate = (dateString) => {
     hour12: false,
     timeZone: 'Asia/Shanghai'
   }).format(date);
-};
-
-const handleRowClick = (row) => {
-  console.log(row);
 };
 
 const loadDocuments = async () => {

@@ -151,7 +151,7 @@ const createDoc = async () => {
 };
 
 const handleSelect = (item) => {
-  console.log(item);
+  router.push({ name: 'edit', params: { id: item.id } });
 };
 </script>
 

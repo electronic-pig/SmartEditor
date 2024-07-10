@@ -87,7 +87,6 @@ export default {
 					try {
 						const response = await request.post('/function/AIFunc', { text: editor.getHTML(), command: '全文翻译' });
 						if (response.code == 200) {
-							console.log(response.message);
 							editor.commands.setContent(response.message);
 						} else {
 							ElMessage.error(response.message);

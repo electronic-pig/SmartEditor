@@ -5,6 +5,17 @@
       <div v-for="(doc, index) in documents" :key="index" class="document-card" @click="handleClick(doc.id)">
         <img src="../assets/images/docs.png" alt="Document" class="document-logo">
         <div class="document-title">{{ doc.title }}</div>
+        <el-dropdown class="document-dropdown">
+          <el-icon :size="18">
+            <Setting />
+          </el-icon>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item @click="openInNewTab(doc.id)">新标签打开</el-dropdown-item>
+              <el-dropdown-item @click="createFromTemplate(doc.content)">从模板创建文档</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
       </div>
     </div>
   </div>
@@ -12,7 +23,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { ElMessage } from "element-plus";
+import { ElMessage, ElLoading } from "element-plus";
 import request from "../utils/request.js";
 import router from "../router";
 import NProgress from 'nprogress';
@@ -20,13 +31,12 @@ import 'nprogress/nprogress.css';
 
 const documents = ref([]);
 
-onMounted(async () => {
+const loadDocuments = async () => {
   try {
     NProgress.start();
     const response = await request.get("/document/template");
     if (response.code == 200) {
-      documents.value = response.document;
-      console.log(documents);
+      documents.value = response.documents;
     } else {
       ElMessage.error(response.message);
     }
@@ -35,11 +45,38 @@ onMounted(async () => {
   } finally {
     NProgress.done();
   }
-});
-
+};
+// 在新标签中打开文档
+const openInNewTab = (id) => {
+  const url = router.resolve({ name: 'edit', params: { id: id } }).href;
+  window.open(url, '_blank');
+};
+// 从模板创建文档
+const createFromTemplate = async (content) => {
+  const loadingInstance = ElLoading.service({
+    fullscreen: true,
+    text: "正在创建文档...",
+  });
+  try {
+    const response = await request.post('/document', { content: content });
+    if (response.code == 200) {
+      ElMessage.success('创建文档成功!');
+      router.push({ name: 'edit', params: { id: response.id } });
+    } else {
+      ElMessage.error(response.message);
+    }
+  } catch (error) {
+    ElMessage.error(error);
+  } finally {
+    loadingInstance.close();
+  }
+};
+// 点击模板卡片
 const handleClick = (id) => {
   router.push({ name: 'edit', params: { id: id } });
 };
+
+onMounted(loadDocuments)
 </script>
 
 <style scoped>
@@ -80,5 +117,16 @@ const handleClick = (id) => {
   font-family: Arial, sans-serif;
   color: #555;
   font-weight: bold;
+}
+
+.document-dropdown {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  visibility: hidden;
+}
+
+.document-card:hover .document-dropdown {
+  visibility: visible
 }
 </style>

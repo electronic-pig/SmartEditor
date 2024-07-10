@@ -588,7 +588,6 @@ const loadDocuments = async () => {
     }
   } catch (error) {
     ElMessage.error(error);
-    console.log(error);
   } finally {
     NProgress.done();
   }

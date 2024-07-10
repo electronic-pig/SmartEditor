@@ -20,15 +20,16 @@
       </el-table-column>
       <el-table-column label="操作">
         <template #default="{ row }">
-          <el-dropdown @command="command => handleCommand(command, row)">
+          <el-dropdown>
             <el-icon :size="20">
               <Setting />
             </el-icon>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item command="editDocument">编辑</el-dropdown-item>
-                <el-dropdown-item command="removeFavorite">取消收藏</el-dropdown-item>
-                <el-dropdown-item command="addRecycle">放入回收站</el-dropdown-item>
+                <el-dropdown-item @click="openInNewTab(row.id)">新标签打开</el-dropdown-item>
+                <el-dropdown-item @click="addTemplate(row.id)">另存为模板</el-dropdown-item>
+                <el-dropdown-item @click="removeFavorite(row.id)">取消收藏</el-dropdown-item>
+                <el-dropdown-item @click="addRecycle(row.id)">放入回收站</el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
@@ -62,26 +63,6 @@ const formatDate = (dateString) => {
   }).format(date);
 };
 
-const handleRowClick = (row) => {
-  router.push({ name: 'edit', params: { id: row.id } });
-};
-
-const handleCommand = (command, document) => {
-  switch (command) {
-    case 'editDocument':
-      editDocument(document);
-      break;
-    case 'removeFavorite':
-      removeFavorite(document);
-      break;
-    case 'addRecycle':
-      addRecycle(document);
-      break;
-    default:
-      break;
-  }
-};
-
 const loadDocuments = async () => {
   try {
     NProgress.start();
@@ -97,16 +78,32 @@ const loadDocuments = async () => {
     NProgress.done();
   }
 };
-
-const editDocument = (document) => {
-  // 编辑文档的代码
-  console.log('Editing document:', document.id);
+// 在新标签中打开文档
+const openInNewTab = (id) => {
+  const url = router.resolve({ name: 'edit', params: { id: id } }).href;
+  window.open(url, '_blank');
 };
-
-const removeFavorite = async (document) => {
+// 另存为模板
+const addTemplate = async (id) => {
   try {
     NProgress.start();
-    const response = await request.put(`/document/unfavorite/${document.id}`);
+    const response = await request.put(`/document/template/${id}`);
+    if (response.code == 200) {
+      ElMessage.success(response.message);
+    } else {
+      ElMessage.error(response.message);
+    }
+  } catch (error) {
+    ElMessage.error(error);
+  } finally {
+    NProgress.done();
+  }
+};
+// 取消收藏
+const removeFavorite = async (id) => {
+  try {
+    NProgress.start();
+    const response = await request.put(`/document/unfavorite/${id}`);
     if (response.code == 200) {
       ElMessage.success(response.message);
       loadDocuments();
@@ -119,11 +116,11 @@ const removeFavorite = async (document) => {
     NProgress.done();
   }
 };
-
-const addRecycle = async (document) => {
+// 放入回收站
+const addRecycle = async (id) => {
   try {
     NProgress.start();
-    const response = await request.put(`/document/delete/${document.id}`);
+    const response = await request.put(`/document/delete/${id}`);
     if (response.code == 200) {
       ElMessage.success(response.message);
       loadDocuments();
@@ -135,6 +132,10 @@ const addRecycle = async (document) => {
   } finally {
     NProgress.done();
   }
+};
+// 点击文档
+const handleRowClick = (row) => {
+  router.push({ name: 'edit', params: { id: row.id } });
 };
 
 onMounted(loadDocuments);
