@@ -11,12 +11,20 @@ export default {
 			{
 				title: '文心助手',
 				command: ({ editor }) => {
+					const { state, dispatch } = editor.view;
+					const { $from } = state.selection;
+					const tr = state.tr.delete($from.pos - 1, $from.pos);
+					dispatch(tr);
 					editor.chain().focus().insertContent('<vue-component />').run()
 				},
 			},
 			{
 				title: '智能排版',
 				command: async ({ editor }) => {
+					const { state, dispatch } = editor.view;
+					const { $from } = state.selection;
+					const tr = state.tr.delete($from.pos - 1, $from.pos);
+					dispatch(tr);
 					const loadingInstance = ElLoading.service({
 						fullscreen: true,
 						text: "正在生成内容...",
@@ -38,6 +46,10 @@ export default {
 			{
 				title: '全文总结',
 				command: async ({ editor }) => {
+					const { state, dispatch } = editor.view;
+					const { $from } = state.selection;
+					const tr = state.tr.delete($from.pos - 1, $from.pos);
+					dispatch(tr);
 					const loadingInstance = ElLoading.service({
 						fullscreen: true,
 						text: "正在生成内容...",
@@ -59,6 +71,10 @@ export default {
 			{
 				title: '摘要提取',
 				command: async ({ editor }) => {
+					const { state, dispatch } = editor.view;
+					const { $from } = state.selection;
+					const tr = state.tr.delete($from.pos - 1, $from.pos);
+					dispatch(tr);
 					const loadingInstance = ElLoading.service({
 						fullscreen: true,
 						text: "正在生成内容...",
@@ -80,6 +96,10 @@ export default {
 			{
 				title: '全文翻译',
 				command: async ({ editor }) => {
+					const { state, dispatch } = editor.view;
+					const { $from } = state.selection;
+					const tr = state.tr.delete($from.pos - 1, $from.pos);
+					dispatch(tr);
 					const loadingInstance = ElLoading.service({
 						fullscreen: true,
 						text: "正在生成内容...",

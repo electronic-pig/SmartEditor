@@ -38,12 +38,12 @@
       </div>
       <div class="right-group2" style="margin-right: 1vw;">
         <el-tooltip content="字符识别" :hide-after="0">
-          <el-button @click="ocrDialog = true" class="icon">
+          <el-button @click="ocrDialog = true; uploadSuccess = false" class="icon">
             <i style="font-size: 22px;" class="ri-character-recognition-line"></i>
           </el-button>
         </el-tooltip>
         <el-tooltip content="语音识别" :hide-after="0">
-          <el-button @click="asrDialog = true" class="icon">
+          <el-button @click="asrDialog = true; uploadSuccess = false" class="icon">
             <i style="font-size: 22px;" class="ri-voice-recognition-line"></i>
           </el-button>
         </el-tooltip>
@@ -343,7 +343,7 @@
       </div>
       <div class="word-count">总字符数：{{ editor?.storage.characterCount.characters() }}</div>
       <el-dialog v-model="ocrDialog" width="500" title="上传图片">
-        <el-upload v-if="!uploadSuccess" ref="upload" drag action="http://127.0.0.1:5000/function/ocr"
+        <el-upload v-if="!uploadSuccess" ref="ocrUpload" drag action="http://127.0.0.1:5000/function/ocr"
           accept=".jpg, .jpeg, .png" :limit="1" :on-exceed="handleExceed" :before-upload="checkImage"
           :auto-upload="false" :on-success="handleSuccess">
           <el-icon class="el-icon--upload"><upload-filled /></el-icon>
@@ -355,13 +355,13 @@
         <template #footer>
           <div class="dialog-footer">
             <el-button @click="ocrDialog = false">取消</el-button>
-            <el-button v-if="!uploadSuccess" type="primary" @click="submitUpload">上传</el-button>
+            <el-button v-if="!uploadSuccess" type="primary" @click="ocrUpload.submit();">上传</el-button>
             <el-button v-if="uploadSuccess" type="primary" @click="ocrDialog = false">确认</el-button>
           </div>
         </template>
       </el-dialog>
       <el-dialog v-model="asrDialog" width="500" title="上传音频">
-        <el-upload v-if="!uploadSuccess" ref="upload" drag action="http://127.0.0.1:5000/function/asr"
+        <el-upload v-if="!uploadSuccess" ref="asrUpload" drag action="http://127.0.0.1:5000/function/asr"
           accept=".wav, .mp3" :limit="1" :on-exceed="handleExceed" :before-upload="checkSpeech" :auto-upload="false"
           :on-success="handleSuccess">
           <el-icon class="el-icon--upload"><upload-filled /></el-icon>
@@ -373,7 +373,7 @@
         <template #footer>
           <div class="dialog-footer">
             <el-button @click="asrDialog = false">取消</el-button>
-            <el-button v-if="!uploadSuccess" type="primary" @click="submitUpload">上传</el-button>
+            <el-button v-if="!uploadSuccess" type="primary" @click="asrUpload.submit();">上传</el-button>
             <el-button v-if="uploadSuccess" type="primary" @click="asrDialog = false">确认</el-button>
           </div>
         </template>
@@ -442,7 +442,8 @@ const ocrDialog = ref(false); // OCR弹窗
 const asrDialog = ref(false); // ASR弹窗
 const uploadSuccess = ref(false); // 上传成功
 const uploadResult = ref(''); // 上传结果
-const upload = ref(null); // 上传图片
+const ocrUpload = ref(null); // 图片上传
+const asrUpload = ref(null); // 音频上传
 const drawer = ref(false);
 const MindMapContent = ref('');
 // 返回文档页面
@@ -553,14 +554,16 @@ const checkSpeech = (file) => {
 };
 // 处理超出文件
 const handleExceed = (files) => {
-  upload.value.clearFiles()
   const file = files[0]
   file.uid = genFileId()
-  upload.value.handleStart(file)
-}
-// 提交上传
-const submitUpload = () => {
-  upload.value.submit();
+  if (ocrUpload) {
+    ocrUpload.value.clearFiles()
+    ocrUpload.value.handleStart(file)
+  }
+  else {
+    asrUpload.value.clearFiles()
+    asrUpload.value.handleStart(file)
+  }
 }
 // 上传成功
 const handleSuccess = (response) => {
@@ -610,6 +613,10 @@ const loadDocuments = async () => {
     response = await request.get("/document/" + router.currentRoute.value.params.id);
     if (response.code == 200) {
       editor.value.commands.setContent(response.document.content);
+      if (response.document.user_id == 1) {
+        editor.value.setEditable(false);
+        ElMessage.warning("只读模式");
+      }
       title.value = response.document.title;
     } else {
       ElMessage.error(response.message);
