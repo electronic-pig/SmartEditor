@@ -37,7 +37,7 @@
     "@tiptap/vue-3": "^2.4.0",
     "axios": "^1.7.2",
     "element-plus": "^2.7.6",
-    "highlight.js": "^11.9.0",
+    "highlight.js": "^11.10.0",
     "html2canvas": "^1.4.1",
     "jsmind": "^0.8.5",
     "jspdf": "^2.5.1",

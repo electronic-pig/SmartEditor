@@ -38,21 +38,21 @@
       </div>
       <div class="right-group2" style="margin-right: 1vw;">
         <el-tooltip content="字符识别" :hide-after="0">
-          <el-button @click="dialogVisible = true" class="icon">
+          <el-button @click="ocrDialog = true" class="icon">
             <i style="font-size: 22px;" class="ri-character-recognition-line"></i>
           </el-button>
         </el-tooltip>
         <el-tooltip content="语音识别" :hide-after="0">
-          <el-button @click="dialogVisible = true" class="icon">
+          <el-button @click="asrDialog = true" class="icon">
             <i style="font-size: 22px;" class="ri-voice-recognition-line"></i>
           </el-button>
         </el-tooltip>
         <el-tooltip content="视频总结" :hide-after="0">
-          <el-button @click="dialogVisible = true" class="icon">
+          <el-button @click="ElMessage.info('正在开发中...');" class="icon">
             <i style="font-size: 22px;" class="ri-youtube-line"></i>
           </el-button>
         </el-tooltip>
-        <el-tooltip content="生成思维导图" :hide-after="0">
+        <el-tooltip content="思维导图" :hide-after="0">
           <el-button @click="createMindMap()" class="icon">
             <i style="font-size: 22px;" class="ri-mind-map"></i>
           </el-button>
@@ -342,9 +342,9 @@
         </div>
       </div>
       <div class="word-count">总字符数：{{ editor?.storage.characterCount.characters() }}</div>
-      <el-dialog v-model="dialogVisible" width="500" title="上传图片">
+      <el-dialog v-model="ocrDialog" width="500" title="上传图片">
         <el-upload v-if="!uploadSuccess" ref="upload" drag action="http://127.0.0.1:5000/function/ocr"
-          accept=".jpg, .jpeg, .png" :limit="1" :on-exceed="handleExceed" :before-upload="beforeUpload"
+          accept=".jpg, .jpeg, .png" :limit="1" :on-exceed="handleExceed" :before-upload="checkImage"
           :auto-upload="false" :on-success="handleSuccess">
           <el-icon class="el-icon--upload"><upload-filled /></el-icon>
           <div class="el-upload__text">
@@ -354,9 +354,27 @@
         <p v-if="uploadSuccess">{{ uploadResult }}</p>
         <template #footer>
           <div class="dialog-footer">
-            <el-button @click="dialogVisible = false">取消</el-button>
+            <el-button @click="ocrDialog = false">取消</el-button>
             <el-button v-if="!uploadSuccess" type="primary" @click="submitUpload">上传</el-button>
-            <el-button v-if="uploadSuccess" type="primary" @click="dialogVisible = false">确认</el-button>
+            <el-button v-if="uploadSuccess" type="primary" @click="ocrDialog = false">确认</el-button>
+          </div>
+        </template>
+      </el-dialog>
+      <el-dialog v-model="asrDialog" width="500" title="上传音频">
+        <el-upload v-if="!uploadSuccess" ref="upload" drag action="http://127.0.0.1:5000/function/asr"
+          accept=".wav, .mp3" :limit="1" :on-exceed="handleExceed" :before-upload="checkSpeech" :auto-upload="false"
+          :on-success="handleSuccess">
+          <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+          <div class="el-upload__text">
+            将文件拖到此处或 <em>点击上传</em>
+          </div>
+        </el-upload>
+        <p v-if="uploadSuccess">{{ uploadResult }}</p>
+        <template #footer>
+          <div class="dialog-footer">
+            <el-button @click="asrDialog = false">取消</el-button>
+            <el-button v-if="!uploadSuccess" type="primary" @click="submitUpload">上传</el-button>
+            <el-button v-if="uploadSuccess" type="primary" @click="asrDialog = false">确认</el-button>
           </div>
         </template>
       </el-dialog>
@@ -419,10 +437,11 @@ const lowlight = createLowlight()
 lowlight.register({ html, ts, css, js })
 const title = ref('');
 const documents = ref([]);
-const header = ref(0); //标题级别
-const dialogVisible = ref(false); //OCR弹窗
-const uploadSuccess = ref(false); //上传成功
-const uploadResult = ref(''); //上传结果
+const header = ref(0); // 标题级别
+const ocrDialog = ref(false); // OCR弹窗
+const asrDialog = ref(false); // ASR弹窗
+const uploadSuccess = ref(false); // 上传成功
+const uploadResult = ref(''); // 上传结果
 const upload = ref(null); // 上传图片
 const drawer = ref(false);
 const MindMapContent = ref('');
@@ -514,12 +533,21 @@ const addImage = () => {
   if (url === null) return // Abort if the user cancels
   editor.value.chain().focus().setImage({ src: url }).run()
 }
-// 检查上传文件格式
-const beforeUpload = (file) => {
+// 检查上传图片格式
+const checkImage = (file) => {
   const fileSuffix = file.name.substring(file.name.lastIndexOf(".") + 1);
   const whiteList = ["jpg", "jpeg", "png"];
   if (whiteList.indexOf(fileSuffix) === -1) {
-    ElMessage.error("上传文件只能是jpg, png格式");
+    ElMessage.error("上传文件只能是jpg, jpeg, png格式");
+    return false;
+  }
+};
+// 检查上传音频格式
+const checkSpeech = (file) => {
+  const fileSuffix = file.name.substring(file.name.lastIndexOf(".") + 1);
+  const whiteList = ["wav", "mp3"];
+  if (whiteList.indexOf(fileSuffix) === -1) {
+    ElMessage.error("wav, mp3格式");
     return false;
   }
 };
@@ -555,7 +583,7 @@ const createDoc = async () => {
     text: "正在新建文档...",
   });
   try {
-    const response = await request.post('/document');
+    const response = await request.post('/document', { content: "" });
     if (response.code == 200) {
       ElMessage.success('新建文档成功!');
       router.push({ name: 'edit', params: { id: response.id } });

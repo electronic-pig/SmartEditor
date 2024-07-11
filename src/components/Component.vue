@@ -61,9 +61,9 @@ const send = async () => {
 const copyToClipboard = async () => {
 	try {
 		await navigator.clipboard.writeText(reply.value)
-		ElMessage.success('复制到剪贴板')
+		ElMessage.success('复制到剪贴板!')
 	} catch (error) {
-		ElMessage.error('复制失败', error)
+		ElMessage.error('复制失败!', error)
 	}
 }
 </script>
