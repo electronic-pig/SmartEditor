@@ -276,11 +276,14 @@
 
 /* Bubble menu */
 .bubble-menu {
+	width: 500px;
 	background-color: var(--white);
 	border: 1px solid var(--gray-1);
 	border-radius: 0.7rem;
 	box-shadow: var(--shadow);
 	display: flex;
+	justify-content: space-between;
+	align-items: center;
 	padding: 0.2rem;
 
 	button:not(.el-button) {

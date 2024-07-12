@@ -3,14 +3,14 @@
     <el-header class="header">
       <div class="left-group">
         <el-tooltip content="回到首页" :hide-after="0">
-          <el-button @click="returnHome()" class="icon">
+          <el-button @click="returnHome()" class="icon exclude">
             <el-icon :size="22">
               <HomeFilled />
             </el-icon>
           </el-button>
         </el-tooltip>
         <el-tooltip content="创建文档" :hide-after="0">
-          <el-button @click="createDoc()" class="icon">
+          <el-button @click="createDoc()" class="icon exclude">
             <el-icon :size="22">
               <Plus />
             </el-icon>
@@ -23,12 +23,12 @@
           </el-button>
         </el-tooltip>
         <el-tooltip content="下载" :hide-after="0">
-          <el-button @click="download(title)" class="icon">
+          <el-button @click="download(title)" class="icon exclude">
             <i style="font-size: 22px;" class="ri-download-2-line"></i>
           </el-button>
         </el-tooltip>
         <el-tooltip content="打印" :hide-after="0">
-          <el-button @click="print()" class="icon">
+          <el-button @click="print()" class="icon exclude">
             <i style="font-size: 22px;" class="ri-printer-line"></i>
           </el-button>
         </el-tooltip>
@@ -77,14 +77,24 @@
           </button>
         </el-tooltip>
         <el-divider direction="vertical" />
-        <el-select v-model="header" @change="handleHeader" style="width: 72px">
-          <el-option :key="0" label="正文" :value="0">
-            正文
-          </el-option>
-          <el-option v-for="i in 5" :key="i" :label="'H' + i" :value="i">
-            <i :class="`ri-h-${i}`" :style="{ fontSize: `${28 - i * 2}px` }"></i>
-          </el-option>
-        </el-select>
+        <el-tooltip content="段落级别" :hide-after="0">
+          <el-dropdown trigger="click">
+            <button :class="{ 'is-active': headingStyle }">
+              <i v-if="headingLevel == 0" class="ri-paragraph"></i>
+              <i v-else :class="`ri-h-${headingLevel}`"></i>
+              <i class="ri-arrow-drop-down-fill"></i>
+            </button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item @click="editor.chain().focus().setParagraph().run()">
+                  <i class="ri-paragraph"></i>正文</el-dropdown-item>
+                <el-dropdown-item v-for="index in 4" :key="index"
+                  @click="editor.chain().focus().toggleHeading({ level: index }).run()">
+                  <i :class="`ri-h-${index}`"></i>标题{{ index }}</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </el-tooltip>
         <el-tooltip content="字体" :hide-after="0">
           <el-dropdown trigger="click">
             <button>
@@ -197,7 +207,10 @@
         <el-tooltip content="表格" :hide-after="0">
           <span>
             <el-dropdown trigger="click">
-              <button><i class="ri-table-2"></i></button>
+              <button>
+                <i class="ri-table-view"></i>
+                <i class="ri-arrow-drop-down-fill"></i>
+              </button>
               <template #dropdown>
                 <el-dropdown-menu>
                   <el-dropdown-item
@@ -270,7 +283,8 @@
         </el-tooltip>
         <el-divider direction="vertical" />
         <el-dropdown trigger="click">
-          <el-button type="primary" text bg><i class="ri-bard-line"></i>AI</el-button>
+          <el-button type="primary" text bg><i class="ri-bard-line"></i>AI <i class="ri-arrow-drop-down-fill"></i>
+          </el-button>
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item @click="AIfunc('续写')">AI 续写</el-dropdown-item>
@@ -283,6 +297,22 @@
       </div>
       <bubble-menu :editor="editor" :tippy-options="{ duration: 100 }" v-if="editor">
         <div class="bubble-menu">
+          <el-dropdown trigger="click">
+            <button :class="{ 'is-active': headingStyle }">
+              <i v-if="headingLevel == 0" class="ri-paragraph"></i>
+              <i v-else :class="`ri-h-${headingLevel}`"></i>
+              <i class="ri-arrow-drop-down-fill"></i>
+            </button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item @click="editor.chain().focus().setParagraph().run()">
+                  <i class="ri-paragraph"></i>正文</el-dropdown-item>
+                <el-dropdown-item v-for="index in 4" :key="index"
+                  @click="editor.chain().focus().toggleHeading({ level: index }).run()">
+                  <i :class="`ri-h-${index}`"></i>标题{{ index }}</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
           <button @click="editor.chain().focus().toggleBold().run()" :class="{ 'is-active': editor.isActive('bold') }">
             <i class="ri-bold"></i>
           </button>
@@ -319,6 +349,19 @@
           <button @click="editor.chain().focus().setHorizontalRule().run()">
             <i class="ri-separator"></i>
           </button>
+          <el-divider direction="vertical" />
+          <el-dropdown trigger="click">
+            <el-button type="primary" text bg><i class="ri-bard-line"></i>AI <i class="ri-arrow-drop-down-fill"></i>
+            </el-button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item @click="AIfunc('续写')">AI 续写</el-dropdown-item>
+                <el-dropdown-item @click="AIfunc('润色')">AI 润色</el-dropdown-item>
+                <el-dropdown-item @click="AIfunc('校对')">AI 校对</el-dropdown-item>
+                <el-dropdown-item @click="AIfunc('翻译')">AI 翻译</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
         </div>
       </bubble-menu>
       <div class="editor-container">
@@ -485,6 +528,22 @@ const editor = useEditor({
     VueComponent,
     slash.configure({ suggestion }),],
 })
+// 计算标题级别
+const headingLevel = computed(() => {
+  for (let level = 1; level <= 4; level++) {
+    if (editor.value.isActive('heading', { level })) {
+      return level;
+    }
+  }
+  return 0; // 正文
+});
+// 计算标题样式
+const headingStyle = computed(() => {
+  if (headingLevel.value == 0) {
+    return editor.value.isActive('paragraph');
+  }
+  return editor.value.isActive('heading', { level: headingLevel.value });
+});
 // 计算大纲
 const outline = computed(() => {
   const matches = []
@@ -615,7 +674,13 @@ const loadDocuments = async () => {
       editor.value.commands.setContent(response.document.content);
       if (response.document.user_id == 1) {
         editor.value.setEditable(false);
-        ElMessage.warning("只读模式");
+        //禁用编辑按钮
+        document.querySelectorAll('button').forEach(item => {
+          if (!item.classList.contains('exclude')) {
+            item.disabled = true;
+          }
+        });
+        ElMessage.info("只读模式");
       }
       title.value = response.document.title;
     } else {
@@ -709,12 +774,6 @@ onBeforeUnmount(() => {
   align-items: center;
   background-color: var(--nav--color);
   color: #606266;
-
-  .avatar {
-    display: flex;
-    align-items: center;
-    margin-right: 8vw;
-  }
 }
 
 .icon {

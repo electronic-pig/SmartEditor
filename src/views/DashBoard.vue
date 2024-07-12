@@ -46,7 +46,9 @@
     </el-aside>
     <el-container>
       <el-header class="header">
-        <span><i style="font-size: 22px;" class="ri-edit-2-fill"></i></span>
+        <a href="https://github.com/electronic-pig/SmartEditor" target="_blank" style="text-decoration: none; ">
+          <i style="font-size: 30px; color: #555" class="ri-github-fill"></i>
+        </a>
         <el-autocomplete v-model="search" :fetch-suggestions="querySearchAsync" :trigger-on-focus="false"
           value-key="title" @select="handleSelect" placeholder="通过文档名搜索文档" clearable
           style="width: 40vw;margin-left: 15vw">
