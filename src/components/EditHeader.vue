@@ -112,9 +112,8 @@ import { HomeFilled, Plus } from '@element-plus/icons-vue';
 import { Check } from '@element-plus/icons-vue'
 import request from "../utils/request.js";
 import router from "../router/index.js";
-import { htmlPdf } from '../utils/htmlToPDF.js'
 import MindMap from '../components/MindMap.vue';
-
+import htmlToPDF from '../utils/htmlToPDF.js';
 const ocrDialog = ref(false); // OCR弹窗
 const asrDialog = ref(false); // ASR弹窗
 const uploadSuccess = ref(false); // 上传成功
@@ -191,8 +190,15 @@ const print = () => {
 }
 // 下载文档
 const download = (fileName) => {
+  let element = document.querySelector('#editor-content');
+  // 设置打印区域的高度和overflow属性，否则打印内容会被截断为浏览器视图的高度
+  element.style.overflowY = 'visible';
+  element.style.height = 'auto';
   const fileList = document.getElementById('editor-content')   // 很重要
-  htmlPdf(fileName, document.querySelector('#editor-content'), fileList)
+  htmlToPDF(fileName, element, fileList)
+  // 恢复原来的样式
+  element.style.overflowY = 'auto';
+  element.style.height = '100%';
 }
 // 检查上传图片格式
 const checkImage = (file) => {

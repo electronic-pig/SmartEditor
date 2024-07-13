@@ -3,7 +3,7 @@ import html2Canvas from 'html2canvas'
 import JsPDF from 'jspdf'
 var noTableHeight = 0 //table外的元素高度
 
-export const htmlPdf = (title, html, fileList, type) => {// type传有效值pdf则为横版
+const htmlToPDF = (title, html, fileList, type) => {// type传有效值pdf则为横版
   if (fileList) {
     const pageHeight = Math.floor(277 * html.scrollWidth / 190) + 20 //计算pdf高度
     for (let i = 0; i < fileList.length; i++) { //循环获取的元素
@@ -88,3 +88,5 @@ const isSplit = (nodes, index, pageHeight) => {
     return nodes[index].offsetTop + nodes[index].offsetHeight + noTableHeight < pageHeight && nodes[index + 1] && nodes[index + 1].offsetTop + nodes[index + 1].offsetHeight + noTableHeight > pageHeight
   }
 }
+
+export default htmlToPDF
