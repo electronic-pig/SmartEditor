@@ -33,7 +33,7 @@ const reply = ref('')
 const tone = ref('')
 const replySuccess = ref(false)
 
-const options = ["写实", "学术", '恐怖'];
+const options = ["商业", "学术", '随意', '正式', '感性', '客观', '诗意'];
 // 定义 props
 const props = defineProps(nodeViewProps)
 

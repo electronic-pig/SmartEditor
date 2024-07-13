@@ -42,6 +42,14 @@
           回收站
         </router-link>
         <div class="more" @click="getMore()">更多</div>
+        <el-dialog v-model="RightsDialog" title="权益对比">
+          <el-table :data="tableData" :header-cell-style="setHeader" :cell-style="setCell">
+            <el-table-column prop="Type" label="权益类型"></el-table-column>
+            <el-table-column prop="super" label="超级会员"></el-table-column>
+            <el-table-column prop="gold" label="黄金会员"></el-table-column>
+            <el-table-column prop="normal" label="普通会员"></el-table-column>
+          </el-table>
+        </el-dialog>
       </div>
     </el-aside>
     <el-container>
@@ -103,7 +111,20 @@ import { ElMessage, ElLoading } from "element-plus";
 
 const userStore = useUserStore();
 const toggle = ref(false);  // 控制重置密码对话框的显示
+const RightsDialog = ref(false);  // 控制权益对比表格的显示
 let search = ref('');
+const tableData = ref([
+  { Type: '存储空间', super: '10G', gold: '1G', normal: '100M' },
+  { Type: '文档数量', super: '无限制', gold: '1000', normal: '100' },
+  { Type: '个人模板', super: '无限制', gold: '100', normal: '10' },
+  { Type: '下载打印', super: '支持', gold: '支持', normal: '无' },
+  { Type: '信息提取', super: '全功能', gold: '部分功能', normal: '无' },
+  { Type: 'AI编辑', super: '全功能', gold: '部分功能', normal: '无' },
+  { Type: '模板库', super: '全部', gold: '部分', normal: '无' },
+  { Type: '价格', super: '￥99/年', gold: '￥49/年', normal: 'Free' },
+  { Type: '退款', super: '无理由退款', gold: '无理由退款', normal: '无理由退款' },
+  { Type: '客服', super: '7*24小时', gold: '7*24小时', normal: '7*24小时' },
+]);
 
 const handleCommand = (command) => {
   if (command === "logout") {
@@ -159,7 +180,24 @@ const createDoc = async () => {
 };
 // 更多功能
 const getMore = () => {
-  ElMessage.info('更多功能正在开发中...');
+  RightsDialog.value = true;
+};
+// 权益对比表格样式
+const setHeader = ({ row, column, rowIndex, columnIndex }) => {
+  if (columnIndex == 1) {
+    return { color: 'blueviolet' };
+  }
+  if (columnIndex == 2) {
+    return { color: 'orange' };
+  }
+};
+const setCell = ({ row, column, rowIndex, columnIndex }) => {
+  if (columnIndex == 1) {
+    return { color: 'blueviolet' };
+  }
+  if (columnIndex == 2) {
+    return { color: 'orange' };
+  }
 };
 </script>
 

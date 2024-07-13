@@ -397,8 +397,10 @@
         <p v-if="uploadSuccess">{{ uploadResult }}</p>
         <template #footer>
           <div class="dialog-footer">
-            <el-button @click="ocrDialog = false">取消</el-button>
+            <el-button v-if="!uploadSuccess" @click="ocrDialog = false">取消</el-button>
             <el-button v-if="!uploadSuccess" type="primary" @click="ocrUpload.submit();">上传</el-button>
+            <el-button v-if="uploadSuccess" type="primary" :icon="Check" round plain
+              @click="copyToClipboard">复制</el-button>
             <el-button v-if="uploadSuccess" type="primary" @click="ocrDialog = false">确认</el-button>
           </div>
         </template>
@@ -415,9 +417,11 @@
         <p v-if="uploadSuccess">{{ uploadResult }}</p>
         <template #footer>
           <div class="dialog-footer">
-            <el-button @click="asrDialog = false">取消</el-button>
-            <el-button v-if="!uploadSuccess" type="primary" @click="asrUpload.submit();">上传</el-button>
-            <el-button v-if="uploadSuccess" type="primary" @click="asrDialog = false">确认</el-button>
+            <el-button v-if="!uploadSuccess" @click="ocrDialog = false">取消</el-button>
+            <el-button v-if="!uploadSuccess" type="primary" @click="ocrUpload.submit();">上传</el-button>
+            <el-button v-if="uploadSuccess" type="primary" :icon="Check" round plain
+              @click="copyToClipboard">复制</el-button>
+            <el-button v-if="uploadSuccess" type="primary" @click="ocrDialog = false">确认</el-button>
           </div>
         </template>
       </el-dialog>
@@ -436,6 +440,7 @@
 <script setup>
 import { ref, onMounted, computed, onBeforeUnmount } from 'vue';
 import { ElMessage, genFileId, ElLoading } from "element-plus";
+import { Check } from '@element-plus/icons-vue'
 import request from "../utils/request.js";
 import router from "../router";
 import colorList from "../utils/colors.js"
@@ -751,6 +756,15 @@ const print = () => {
 const download = (fileName) => {
   const fileList = document.getElementById('content')   // 很重要
   htmlPdf(fileName, document.querySelector('#content'), fileList)
+}
+// 复制到剪贴板
+const copyToClipboard = async () => {
+  try {
+    await navigator.clipboard.writeText(uploadResult.value)
+    ElMessage.success('复制到剪贴板!')
+  } catch (error) {
+    ElMessage.error('复制失败!', error)
+  }
 }
 // 初次挂载
 onMounted(loadDocuments);
