@@ -66,8 +66,6 @@ const loadDocuments = async () => {
     const response = await request.get("/document/deleted/user");
     if (response.code == 200) {
       documents.value = response.documents;
-    } else {
-      ElMessage.error(response.message);
     }
   } catch (error) {
     ElMessage.error(error);

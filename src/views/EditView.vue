@@ -12,7 +12,7 @@
           <div class="doc" :class="{ 'doc-active': doc.id == router.currentRoute.value.params.id }"
             v-for="doc in documents" :key="doc.id" @click="handleDocClick(doc.id)">
             <h3>{{ doc.title }}</h3>
-            <p>{{ doc.content.replace(/<[^>]*>/g, " ").slice(0, 28) }}...</p>
+            <p>{{ doc.content.replace(/<[^>]*>/g, " ").slice(0, 24) }}...</p>
           </div>
         </div>
         <div class="content">
