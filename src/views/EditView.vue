@@ -1,369 +1,11 @@
 <template>
   <el-container class="container">
     <el-header class="header">
-      <div class="left-group">
-        <el-tooltip content="回到首页" :hide-after="0">
-          <el-button @click="returnHome()" class="icon exclude">
-            <el-icon :size="22">
-              <HomeFilled />
-            </el-icon>
-          </el-button>
-        </el-tooltip>
-        <el-tooltip content="创建文档" :hide-after="0">
-          <el-button @click="createDoc()" class="icon exclude">
-            <el-icon :size="22">
-              <Plus />
-            </el-icon>
-          </el-button>
-        </el-tooltip>
-        <el-divider direction="vertical" />
-        <el-tooltip content="保存" :hide-after="0">
-          <el-button @click="save()" class="icon">
-            <i style="font-size: 22px;" class="ri-save-3-line"></i>
-          </el-button>
-        </el-tooltip>
-        <el-tooltip content="下载" :hide-after="0">
-          <el-button @click="download(title)" class="icon exclude">
-            <i style="font-size: 22px;" class="ri-download-2-line"></i>
-          </el-button>
-        </el-tooltip>
-        <el-tooltip content="打印" :hide-after="0">
-          <el-button @click="print()" class="icon exclude">
-            <i style="font-size: 22px;" class="ri-printer-line"></i>
-          </el-button>
-        </el-tooltip>
-      </div>
-      <div style="font-size: 20px;">
-        <input type="text" v-model="title" style="background: none; border: 0px; outline: none" />
-      </div>
-      <div class="right-group2" style="margin-right: 1vw;">
-        <el-tooltip content="字符识别" :hide-after="0">
-          <el-button @click="ocrDialog = true; uploadSuccess = false" class="icon">
-            <i style="font-size: 22px;" class="ri-character-recognition-line"></i>
-          </el-button>
-        </el-tooltip>
-        <el-tooltip content="语音识别" :hide-after="0">
-          <el-button @click="asrDialog = true; uploadSuccess = false" class="icon">
-            <i style="font-size: 22px;" class="ri-voice-recognition-line"></i>
-          </el-button>
-        </el-tooltip>
-        <el-tooltip content="视频总结" :hide-after="0">
-          <el-button @click="ElMessage.info('正在开发中...');" class="icon">
-            <i style="font-size: 22px;" class="ri-youtube-line"></i>
-          </el-button>
-        </el-tooltip>
-        <el-tooltip content="思维导图" :hide-after="0">
-          <el-button @click="createMindMap()" class="icon">
-            <i style="font-size: 22px;" class="ri-mind-map"></i>
-          </el-button>
-        </el-tooltip>
-      </div>
+      <EditHeader :title="title" :editor="editor" @reload="loadDocuments" @updateTitle="title = $event" />
     </el-header>
     <el-main class="main">
-      <div v-if="editor" class="fixed-menu">
-        <el-tooltip content="撤回" :hide-after="0">
-          <button @click="editor.chain().focus().undo().run()" :disabled="!editor.can().chain().focus().undo().run()">
-            <i class="ri-arrow-go-back-line"></i>
-          </button>
-        </el-tooltip>
-        <el-tooltip content="取消撤回" :hide-after="0">
-          <button @click="editor.chain().focus().redo().run()" :disabled="!editor.can().chain().focus().redo().run()">
-            <i class="ri-arrow-go-forward-line"></i>
-          </button>
-        </el-tooltip>
-        <el-tooltip content="清除样式" :hide-after="0">
-          <button @click="editor.chain().focus().clearNodes().unsetAllMarks().run()">
-            <i class="ri-eraser-fill"></i>
-          </button>
-        </el-tooltip>
-        <el-divider direction="vertical" />
-        <el-tooltip content="段落级别" :hide-after="0">
-          <el-dropdown trigger="click">
-            <button :class="{ 'is-active': headingStyle }">
-              <i v-if="headingLevel == 0" class="ri-paragraph"></i>
-              <i v-else :class="`ri-h-${headingLevel}`"></i>
-              <i class="ri-arrow-drop-down-fill"></i>
-            </button>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item @click="editor.chain().focus().setParagraph().run()">
-                  <i class="ri-paragraph"></i>正文</el-dropdown-item>
-                <el-dropdown-item v-for="index in 4" :key="index"
-                  @click="editor.chain().focus().toggleHeading({ level: index }).run()">
-                  <i :class="`ri-h-${index}`"></i>标题{{ index }}</el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
-        </el-tooltip>
-        <el-tooltip content="字体" :hide-after="0">
-          <el-dropdown trigger="click">
-            <button>
-              <i class="ri-font-family"></i>
-              <i class="ri-arrow-drop-down-fill"></i>
-            </button>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item @click="editor.chain().focus().unsetFontFamily().run()">默认</el-dropdown-item>
-                <el-dropdown-item v-for="font in fontFamily" :key="font"
-                  @click="editor.chain().focus().setFontFamily(font).run()">
-                  <div :style="{ fontFamily: font }">{{ font }}</div>
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
-        </el-tooltip>
-        <el-tooltip content=" 加粗" :hide-after="0">
-          <button @click="editor.chain().focus().toggleBold().run()"
-            :disabled="!editor.can().chain().focus().toggleBold().run()"
-            :class="{ 'is-active': editor.isActive('bold') }">
-            <i class="ri-bold"></i>
-          </button>
-        </el-tooltip>
-        <el-tooltip content="斜体" :hide-after="0">
-          <button @click="editor.chain().focus().toggleItalic().run()"
-            :disabled="!editor.can().chain().focus().toggleItalic().run()"
-            :class="{ 'is-active': editor.isActive('italic') }">
-            <i class="ri-italic"></i>
-          </button>
-        </el-tooltip>
-        <el-tooltip content="下划线" :hide-after="0">
-          <button @click="editor.chain().focus().toggleUnderline().run()"
-            :disabled="!editor.can().chain().focus().toggleUnderline().run()"
-            :class="{ 'is-active': editor.isActive('underline') }">
-            <i class="ri-underline"></i>
-          </button>
-        </el-tooltip>
-        <el-tooltip content="删除线" :hide-after="0">
-          <button @click="editor.chain().focus().toggleStrike().run()"
-            :disabled="!editor.can().chain().focus().toggleStrike().run()"
-            :class="{ 'is-active': editor.isActive('strike') }">
-            <i class="ri-strikethrough"></i>
-          </button>
-        </el-tooltip>
-        <el-tooltip content="文字颜色" :hide-after="0">
-          <span>
-            <el-popover trigger="click" width="250">
-              <div class="color-box">
-                <div class="color-item" v-for="color in colorList" :key="color"
-                  @click="editor.chain().focus().setColor(color).run()" :style="{ backgroundColor: color }"></div>
-              </div>
-              <template #reference>
-                <button>
-                  <i class="ri-font-color"></i>
-                  <i class="ri-arrow-drop-down-fill"></i>
-                </button>
-              </template>
-            </el-popover>
-          </span>
-        </el-tooltip>
-        <el-tooltip content="文本高亮" :hide-after="0">
-          <button @click="editor.chain().focus().toggleHighlight().run()"
-            :class="{ 'is-active': editor.isActive('highlight') }">
-            <i class="ri-mark-pen-line"></i>
-          </button>
-        </el-tooltip>
-        <el-tooltip content="代码" :hide-after="0">
-          <button @click="editor.chain().focus().toggleCode().run()"
-            :disabled="!editor.can().chain().focus().toggleCode().run()"
-            :class="{ 'is-active': editor.isActive('code') }">
-            <i class="ri-code-line"></i>
-          </button>
-        </el-tooltip>
-        <el-tooltip content="代码块" :hide-after="0">
-          <button @click="editor.chain().focus().toggleCodeBlock().run()"
-            :class="{ 'is-active': editor.isActive('codeBlock') }">
-            <i class="ri-code-box-line"></i>
-          </button>
-        </el-tooltip>
-        <el-tooltip content="上标" :hide-after="0">
-          <button @click="editor.chain().focus().toggleSuperscript().run()"
-            :disabled="!editor.can().chain().focus().toggleSuperscript().run()"
-            :class="{ 'is-active': editor.isActive('superscript') }">
-            <i class="ri-superscript"></i>
-          </button>
-        </el-tooltip>
-        <el-tooltip content="下标" :hide-after="0">
-          <button @click="editor.chain().focus().toggleSubscript().run()"
-            :disabled="!editor.can().chain().focus().toggleSubscript().run()"
-            :class="{ 'is-active': editor.isActive('subscript') }">
-            <i class="ri-subscript"></i>
-          </button>
-        </el-tooltip>
-        <el-tooltip content="链接" :hide-after="0">
-          <button @click="setLink()" :class="{ 'is-active': editor.isActive('link') }">
-            <i class="ri-link"></i>
-          </button>
-        </el-tooltip>
-        <el-tooltip content="取消链接" :hide-after="0">
-          <button @click="editor.chain().focus().unsetLink().run()" :disabled="!editor.isActive('link')">
-            <i class="ri-link-unlink"></i>
-          </button>
-        </el-tooltip>
-        <el-tooltip content="插入图片" :hide-after="0">
-          <button @click="addImage">
-            <i class="ri-image-add-line"></i>
-          </button>
-        </el-tooltip>
-        <el-tooltip content="表格" :hide-after="0">
-          <span>
-            <el-dropdown trigger="click">
-              <button>
-                <i class="ri-table-view"></i>
-                <i class="ri-arrow-drop-down-fill"></i>
-              </button>
-              <template #dropdown>
-                <el-dropdown-menu>
-                  <el-dropdown-item
-                    @click="editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()">插入表格</el-dropdown-item>
-                  <el-dropdown-item divided @click="editor.chain().focus().addRowAfter().run()">添加行</el-dropdown-item>
-                  <el-dropdown-item @click="editor.chain().focus().deleteRow().run()">删除行</el-dropdown-item>
-                  <el-dropdown-item divided
-                    @click="editor.chain().focus().addColumnAfter().run()">添加列</el-dropdown-item>
-                  <el-dropdown-item @click="editor.chain().focus().deleteColumn().run()">删除列</el-dropdown-item>
-                  <el-dropdown-item divided @click="editor.chain().focus().mergeCells().run()">合并单元格</el-dropdown-item>
-                  <el-dropdown-item @click="editor.chain().focus().splitCell().run()">拆分单元格</el-dropdown-item>
-                  <el-dropdown-item @click="editor.chain().focus().deleteTable().run()">删除表格</el-dropdown-item>
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown>
-          </span>
-        </el-tooltip>
-        <el-divider direction="vertical" />
-        <el-tooltip content="无序列表" :hide-after="0">
-          <button @click="editor.chain().focus().toggleBulletList().run()"
-            :class="{ 'is-active': editor.isActive('bulletList') }">
-            <i class="ri-list-unordered"></i>
-          </button>
-        </el-tooltip>
-        <el-tooltip content="有序列表" :hide-after="0">
-          <button @click="editor.chain().focus().toggleOrderedList().run()"
-            :class="{ 'is-active': editor.isActive('orderedList') }">
-            <i class="ri-list-ordered-2"></i>
-          </button>
-        </el-tooltip>
-        <el-tooltip content="任务列表" :hide-after="0">
-          <button @click="editor.chain().focus().toggleTaskList().run()"
-            :class="{ 'is-active': editor.isActive('taskList') }">
-            <i class="ri-task-line"></i>
-          </button>
-        </el-tooltip>
-        <el-tooltip content="左对齐" :hide-after="0">
-          <button @click="editor.chain().focus().setTextAlign('left').run()"
-            :class="{ 'is-active': editor.isActive('textAlign', { align: 'left' }) }">
-            <i class="ri-align-left"></i>
-          </button>
-        </el-tooltip>
-        <el-tooltip content="居中对齐" :hide-after="0">
-          <button @click="editor.chain().focus().setTextAlign('center').run()"
-            :class="{ 'is-active': editor.isActive('textAlign', { align: 'center' }) }">
-            <i class="ri-align-center"></i>
-          </button>
-        </el-tooltip>
-        <el-tooltip content="右对齐" :hide-after="0">
-          <button @click="editor.chain().focus().setTextAlign('right').run()"
-            :class="{ 'is-active': editor.isActive('textAlign', { align: 'right' }) }">
-            <i class="ri-align-right"></i>
-          </button>
-        </el-tooltip>
-        <el-tooltip content="引用" :hide-after="0">
-          <button @click="editor.chain().focus().toggleBlockquote().run()"
-            :class="{ 'is-active': editor.isActive('blockquote') }">
-            <i class="ri-double-quotes-l"></i>
-          </button>
-        </el-tooltip>
-        <el-tooltip content="强制换行" :hide-after="0">
-          <button @click="editor.chain().focus().setHardBreak().run()">
-            <i class="ri-text-wrap"></i>
-          </button>
-        </el-tooltip>
-        <el-tooltip content="分隔线" :hide-after="0">
-          <button @click="editor.chain().focus().setHorizontalRule().run()">
-            <i class="ri-separator"></i>
-          </button>
-        </el-tooltip>
-        <el-divider direction="vertical" />
-        <el-dropdown trigger="click">
-          <el-button type="primary" text bg><i class="ri-bard-line"></i>AI <i class="ri-arrow-drop-down-fill"></i>
-          </el-button>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item @click="AIfunc('续写')">AI 续写</el-dropdown-item>
-              <el-dropdown-item @click="AIfunc('润色')">AI 润色</el-dropdown-item>
-              <el-dropdown-item @click="AIfunc('校对')">AI 校对</el-dropdown-item>
-              <el-dropdown-item @click="AIfunc('翻译')">AI 翻译</el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
-      </div>
-      <bubble-menu :editor="editor" :tippy-options="{ duration: 100 }" v-if="editor">
-        <div class="bubble-menu">
-          <el-dropdown trigger="click">
-            <button :class="{ 'is-active': headingStyle }">
-              <i v-if="headingLevel == 0" class="ri-paragraph"></i>
-              <i v-else :class="`ri-h-${headingLevel}`"></i>
-              <i class="ri-arrow-drop-down-fill"></i>
-            </button>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item @click="editor.chain().focus().setParagraph().run()">
-                  <i class="ri-paragraph"></i>正文</el-dropdown-item>
-                <el-dropdown-item v-for="index in 4" :key="index"
-                  @click="editor.chain().focus().toggleHeading({ level: index }).run()">
-                  <i :class="`ri-h-${index}`"></i>标题{{ index }}</el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
-          <button @click="editor.chain().focus().toggleBold().run()" :class="{ 'is-active': editor.isActive('bold') }">
-            <i class="ri-bold"></i>
-          </button>
-          <button @click="editor.chain().focus().toggleItalic().run()"
-            :class="{ 'is-active': editor.isActive('italic') }">
-            <i class="ri-italic"></i>
-          </button>
-          <button @click="editor.chain().focus().toggleUnderline().run()"
-            :class="{ 'is-active': editor.isActive('underline') }">
-            <i class="ri-underline"></i>
-          </button>
-          <button @click="editor.chain().focus().toggleStrike().run()"
-            :class="{ 'is-active': editor.isActive('strike') }">
-            <i class="ri-strikethrough"></i>
-          </button>
-          <button @click="editor.chain().focus().toggleHighlight().run()"
-            :class="{ 'is-active': editor.isActive('highlight') }">
-            <i class="ri-mark-pen-line"></i>
-          </button>
-          <button @click="editor.chain().focus().toggleSuperscript().run()"
-            :disabled="!editor.can().chain().focus().toggleSuperscript().run()"
-            :class="{ 'is-active': editor.isActive('superscript') }">
-            <i class="ri-superscript"></i>
-          </button>
-          <button @click="editor.chain().focus().toggleSubscript().run()"
-            :disabled="!editor.can().chain().focus().toggleSubscript().run()"
-            :class="{ 'is-active': editor.isActive('subscript') }">
-            <i class="ri-subscript"></i>
-          </button>
-          <button @click="editor.chain().focus().toggleBlockquote().run()"
-            :class="{ 'is-active': editor.isActive('blockquote') }">
-            <i class="ri-double-quotes-l"></i>
-          </button>
-          <button @click="editor.chain().focus().setHorizontalRule().run()">
-            <i class="ri-separator"></i>
-          </button>
-          <el-divider direction="vertical" />
-          <el-dropdown trigger="click">
-            <el-button type="primary" text bg><i class="ri-bard-line"></i>AI <i class="ri-arrow-drop-down-fill"></i>
-            </el-button>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item @click="AIfunc('续写')">AI 续写</el-dropdown-item>
-                <el-dropdown-item @click="AIfunc('润色')">AI 润色</el-dropdown-item>
-                <el-dropdown-item @click="AIfunc('校对')">AI 校对</el-dropdown-item>
-                <el-dropdown-item @click="AIfunc('翻译')">AI 翻译</el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
-        </div>
-      </bubble-menu>
+      <FixedMenu v-if="editor" :editor="editor" />
+      <BubbleMenu v-if="editor" :editor="editor" :tippy-options="{ duration: 100 }" />
       <div class="editor-container">
         <div class="docs">
           <h2 style="color: #555;margin-left: 5vw">我的文档</h2>
@@ -373,8 +15,8 @@
             <p>{{ doc.content.replace(/<[^>]*>/g, " ").slice(0, 28) }}...</p>
           </div>
         </div>
-        <div class="content" id="content">
-          <editor-content :editor="editor" class="editor-content" />
+        <div class="content">
+          <editor-content :editor="editor" id="editor-content" />
         </div>
         <div class="catalog">
           <h2 style="color: #555;">大纲</h2>
@@ -385,71 +27,22 @@
         </div>
       </div>
       <div class="word-count">总字符数：{{ editor?.storage.characterCount.characters() }}</div>
-      <el-dialog v-model="ocrDialog" width="500" title="上传图片">
-        <el-upload v-if="!uploadSuccess" ref="ocrUpload" drag action="http://127.0.0.1:5000/function/ocr"
-          accept=".jpg, .jpeg, .png" :limit="1" :on-exceed="handleExceed" :before-upload="checkImage"
-          :auto-upload="false" :on-success="handleSuccess">
-          <el-icon class="el-icon--upload"><upload-filled /></el-icon>
-          <div class="el-upload__text">
-            将图片拖到此处或 <em>点击上传</em>
-          </div>
-        </el-upload>
-        <p v-if="uploadSuccess">{{ uploadResult }}</p>
-        <template #footer>
-          <div class="dialog-footer">
-            <el-button v-if="!uploadSuccess" @click="ocrDialog = false">取消</el-button>
-            <el-button v-if="!uploadSuccess" type="primary" @click="ocrUpload.submit();">上传</el-button>
-            <el-button v-if="uploadSuccess" type="primary" :icon="Check" round plain
-              @click="copyToClipboard">复制</el-button>
-            <el-button v-if="uploadSuccess" type="primary" @click="ocrDialog = false">确认</el-button>
-          </div>
-        </template>
-      </el-dialog>
-      <el-dialog v-model="asrDialog" width="500" title="上传音频">
-        <el-upload v-if="!uploadSuccess" ref="asrUpload" drag action="http://127.0.0.1:5000/function/asr"
-          accept=".wav, .mp3" :limit="1" :on-exceed="handleExceed" :before-upload="checkSpeech" :auto-upload="false"
-          :on-success="handleSuccess">
-          <el-icon class="el-icon--upload"><upload-filled /></el-icon>
-          <div class="el-upload__text">
-            将文件拖到此处或 <em>点击上传</em>
-          </div>
-        </el-upload>
-        <p v-if="uploadSuccess">{{ uploadResult }}</p>
-        <template #footer>
-          <div class="dialog-footer">
-            <el-button v-if="!uploadSuccess" @click="ocrDialog = false">取消</el-button>
-            <el-button v-if="!uploadSuccess" type="primary" @click="ocrUpload.submit();">上传</el-button>
-            <el-button v-if="uploadSuccess" type="primary" :icon="Check" round plain
-              @click="copyToClipboard">复制</el-button>
-            <el-button v-if="uploadSuccess" type="primary" @click="ocrDialog = false">确认</el-button>
-          </div>
-        </template>
-      </el-dialog>
-      <el-drawer v-model="drawer" size="40%">
-        <template #header>
-          <h2>思维导图</h2>
-        </template>
-        <template #default>
-          <MindMap :htmlContent="MindMapContent" />
-        </template>
-      </el-drawer>
     </el-main>
   </el-container>
 </template>
 
 <script setup>
 import { ref, onMounted, computed, onBeforeUnmount } from 'vue';
-import { ElMessage, genFileId, ElLoading } from "element-plus";
-import { Check } from '@element-plus/icons-vue'
+import { ElContainer, ElHeader, ElMain } from 'element-plus';
+import { ElMessage } from "element-plus";
+import EditHeader from '../components/EditHeader.vue';
+import FixedMenu from '../components/FixedMenu.vue';
+import BubbleMenu from '../components/BubbleMenu.vue';
 import request from "../utils/request.js";
 import router from "../router";
-import colorList from "../utils/colors.js"
-import fontFamily from "../utils/fontFamily.js"
-import { htmlPdf } from '../utils/htmlToPDF.js'
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
-
-import { BubbleMenu, useEditor, EditorContent } from '@tiptap/vue-3'
+import { useEditor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 import TextStyle from '@tiptap/extension-text-style'
 import FontFamily from '@tiptap/extension-font-family'
@@ -479,25 +72,12 @@ import { Color } from '@tiptap/extension-color'
 import VueComponent from '../utils/Extension.js'
 import slash from '../utils/slash.js'
 import suggestion from '../utils/suggestion.js'
-import MindMap from '../components/MindMap.vue';
 
 const lowlight = createLowlight()
 lowlight.register({ html, ts, css, js })
 const title = ref('');
 const documents = ref([]);
-const header = ref(0); // 标题级别
-const ocrDialog = ref(false); // OCR弹窗
-const asrDialog = ref(false); // ASR弹窗
-const uploadSuccess = ref(false); // 上传成功
-const uploadResult = ref(''); // 上传结果
-const ocrUpload = ref(null); // 图片上传
-const asrUpload = ref(null); // 音频上传
-const drawer = ref(false);
-const MindMapContent = ref('');
-// 返回文档页面
-const returnHome = () => {
-  router.push('/dashboard/DocumentPage');
-}
+
 // 创建编辑器实例
 const editor = useEditor({
   content: "",
@@ -533,22 +113,6 @@ const editor = useEditor({
     VueComponent,
     slash.configure({ suggestion }),],
 })
-// 计算标题级别
-const headingLevel = computed(() => {
-  for (let level = 1; level <= 4; level++) {
-    if (editor.value.isActive('heading', { level })) {
-      return level;
-    }
-  }
-  return 0; // 正文
-});
-// 计算标题样式
-const headingStyle = computed(() => {
-  if (headingLevel.value == 0) {
-    return editor.value.isActive('paragraph');
-  }
-  return editor.value.isActive('heading', { level: headingLevel.value });
-});
 // 计算大纲
 const outline = computed(() => {
   const matches = []
@@ -573,97 +137,6 @@ const goToHeading = (item) => {
     editor.value.commands.focus(item.end + 1);
   }, 800);
 }
-// 正文或列表
-const handleHeader = (value) => {
-  if (value === 0) {
-    editor.value.chain().focus().setParagraph().run();
-  } else {
-    editor.value.chain().focus().toggleHeading({ level: value }).run();
-  }
-}
-// 设置链接
-const setLink = () => {
-  const previousUrl = editor.value.getAttributes('link').href
-  const url = window.prompt('URL', previousUrl)
-  if (url === null) return // Abort if the user cancels
-  if (url === '') {
-    editor.value.chain().focus().extendMarkRange('link').unsetLink().run()
-    return
-  }
-  editor.value.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
-};
-// 添加图片
-const addImage = () => {
-  const url = window.prompt('URL')
-  if (url === null) return // Abort if the user cancels
-  editor.value.chain().focus().setImage({ src: url }).run()
-}
-// 检查上传图片格式
-const checkImage = (file) => {
-  const fileSuffix = file.name.substring(file.name.lastIndexOf(".") + 1);
-  const whiteList = ["jpg", "jpeg", "png"];
-  if (whiteList.indexOf(fileSuffix) === -1) {
-    ElMessage.error("上传文件只能是jpg, jpeg, png格式");
-    return false;
-  }
-};
-// 检查上传音频格式
-const checkSpeech = (file) => {
-  const fileSuffix = file.name.substring(file.name.lastIndexOf(".") + 1);
-  const whiteList = ["wav", "mp3"];
-  if (whiteList.indexOf(fileSuffix) === -1) {
-    ElMessage.error("wav, mp3格式");
-    return false;
-  }
-};
-// 处理超出文件
-const handleExceed = (files) => {
-  const file = files[0]
-  file.uid = genFileId()
-  if (ocrUpload) {
-    ocrUpload.value.clearFiles()
-    ocrUpload.value.handleStart(file)
-  }
-  else {
-    asrUpload.value.clearFiles()
-    asrUpload.value.handleStart(file)
-  }
-}
-// 上传成功
-const handleSuccess = (response) => {
-  if (response.code !== 200) {
-    ElMessage.error(response.message);
-    return;
-  }
-  uploadSuccess.value = true;
-  uploadResult.value = response.message;
-};
-// 创建思维导图
-const createMindMap = () => {
-  MindMapContent.value = editor.value.getHTML();
-  drawer.value = true;
-}
-// 新建文档
-const createDoc = async () => {
-  const loadingInstance = ElLoading.service({
-    fullscreen: true,
-    text: "正在新建文档...",
-  });
-  try {
-    const response = await request.post('/document', { content: "" });
-    if (response.code == 200) {
-      ElMessage.success('新建文档成功!');
-      router.push({ name: 'edit', params: { id: response.id } });
-      loadDocuments();
-    } else {
-      ElMessage.error(response.message);
-    }
-  } catch (error) {
-    ElMessage.error(error);
-  } finally {
-    loadingInstance.close();
-  }
-};
 // 加载文档
 const loadDocuments = async () => {
   try {
@@ -697,75 +170,11 @@ const loadDocuments = async () => {
     NProgress.done();
   }
 };
-// AI功能
-const AIfunc = async (command) => {
-  const { from, to } = editor.value.state.selection;
-  const selectedText = editor.value.state.doc.textBetween(from, to, ' ');
-  const loadingInstance = ElLoading.service({
-    fullscreen: true,
-    text: "正在生成内容...",
-  });
-  try {
-    const response = await request.post('/function/AIFunc', { text: selectedText, command: command });
-    if (response.code == 200) {
-      const transaction = editor.value.state.tr.insertText(response.message, from, to);
-      editor.value.view.dispatch(transaction);
-    } else {
-      ElMessage.error(response.message);
-    }
-  } catch (error) {
-    ElMessage.error(error);
-  } finally {
-    loadingInstance.close();
-  }
-}
 // 处理文档点击
 const handleDocClick = (id) => {
   router.push({ name: 'edit', params: { id: id } });
   loadDocuments();
 };
-// 保存文档
-const save = async () => {
-  const loadingInstance = ElLoading.service({
-    fullscreen: true,
-    text: "正在保存...",
-  });
-  try {
-    const response = await request.put('/document/' + router.currentRoute.value.params.id, { title: title.value, content: editor.value.getHTML() });
-    if (response.code == 200) {
-      ElMessage.success("保存成功！");
-      loadDocuments();
-    } else {
-      ElMessage.error(response.message);
-    }
-  } catch (error) {
-    ElMessage.error(error);
-  } finally {
-    loadingInstance.close();
-  }
-}
-// 打印文档
-const print = () => {
-  const printHTML = document.querySelector('#content').innerHTML;
-  // 将打印的区域赋值，进行打印
-  window.document.body.innerHTML = printHTML;
-  window.print(); // 调用window打印方法
-  window.location.reload(); // 打印完成后重新加载页面
-}
-// 下载文档
-const download = (fileName) => {
-  const fileList = document.getElementById('content')   // 很重要
-  htmlPdf(fileName, document.querySelector('#content'), fileList)
-}
-// 复制到剪贴板
-const copyToClipboard = async () => {
-  try {
-    await navigator.clipboard.writeText(uploadResult.value)
-    ElMessage.success('复制到剪贴板!')
-  } catch (error) {
-    ElMessage.error('复制失败!', error)
-  }
-}
 // 初次挂载
 onMounted(loadDocuments);
 // 销毁编辑器

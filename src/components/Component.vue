@@ -22,8 +22,8 @@
 </template>
 
 <script setup>
+import { ref } from 'vue';
 import { Check } from '@element-plus/icons-vue'
-import { ref, defineProps } from 'vue';
 import { nodeViewProps, NodeViewWrapper } from '@tiptap/vue-3';
 import request from "../utils/request.js";
 import { ElMessage, ElLoading } from "element-plus";
