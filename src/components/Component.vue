@@ -1,6 +1,6 @@
 <template>
 	<node-view-wrapper class="vue-component">
-		<label>文心一言</label>
+		<label>ERNIE Bot</label>
 		<div class="reply">
 			<blockquote>
 				<p v-if="replySuccess">{{ reply }}</p>

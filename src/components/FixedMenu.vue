@@ -262,20 +262,20 @@ const headingStyle = computed(() => {
 });
 // 设置链接
 const setLink = () => {
-  const previousUrl = editor.value.getAttributes('link').href
+  const previousUrl = props.editor.getAttributes('link').href
   const url = window.prompt('URL', previousUrl)
   if (url === null) return // Abort if the user cancels
   if (url === '') {
-    editor.value.chain().focus().extendMarkRange('link').unsetLink().run()
+    props.editor.chain().focus().extendMarkRange('link').unsetLink().run()
     return
   }
-  editor.value.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
+  props.editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
 };
 // 添加图片
 const addImage = () => {
   const url = window.prompt('URL')
   if (url === null) return // Abort if the user cancels
-  editor.value.chain().focus().setImage({ src: url }).run()
+  props.editor.chain().focus().setImage({ src: url }).run()
 }
 // AI功能
 const AIfunc = async (command) => {
