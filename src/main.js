@@ -18,7 +18,7 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 }
 app
   .use(createPinia())
-  .use(ElementPlus, { locale: zhCn })
+  .use(ElementPlus, { locale: zhCn, zIndex: 99999 })
   .use(router)
 
 const token = localStorage.getItem("token");

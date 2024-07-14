@@ -15,7 +15,8 @@ export default {
 					const { $from } = state.selection;
 					const tr = state.tr.delete($from.pos - 1, $from.pos);
 					dispatch(tr);
-					editor.chain().focus().insertContent('<vue-component />').run()
+					editor.chain().focus().insertContent('<vue-component />').run();
+					editor.chain().blur().run();
 				},
 			},
 			{
@@ -30,7 +31,7 @@ export default {
 						text: "正在生成内容...",
 					});
 					try {
-						const response = await request.post('/function/AIFunc', { text: editor.getHTML(), command: '智能排版' });
+						const response = await request.post('/function/AIFunc', { text: editor.getText(), command: '智能排版' });
 						if (response.code == 200) {
 							editor.commands.setContent(response.message);
 						} else {
@@ -69,7 +70,7 @@ export default {
 				},
 			},
 			{
-				title: '摘要提取',
+				title: '重点提取',
 				command: async ({ editor }) => {
 					const { state, dispatch } = editor.view;
 					const { $from } = state.selection;
@@ -80,7 +81,7 @@ export default {
 						text: "正在生成内容...",
 					});
 					try {
-						const response = await request.post('/function/AIFunc', { text: editor.getHTML(), command: '摘要提取' });
+						const response = await request.post('/function/AIFunc', { text: editor.getHTML(), command: '重点提取' });
 						if (response.code == 200) {
 							editor.chain().focus().insertContent(response.message).run();
 						} else {
