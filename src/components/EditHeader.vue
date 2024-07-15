@@ -235,6 +235,8 @@ const handleExceed = (files) => {
 const handleSuccess = (response) => {
   if (response.code !== 200) {
     ElMessage.error(response.message);
+    ocrUpload.value.clearFiles();
+    asrUpload.value.clearFiles();
     return;
   }
   uploadSuccess.value = true;

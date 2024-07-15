@@ -4,6 +4,7 @@ import tippy from 'tippy.js';
 import CommandsList from '../components/CommandsList.vue';
 import request from "../utils/request.js";
 import { ElMessage, ElLoading } from "element-plus";
+import { set } from 'nprogress';
 
 export default {
 	items: ({ query }) => {
@@ -30,18 +31,28 @@ export default {
 						fullscreen: true,
 						text: "正在生成内容...",
 					});
-					try {
-						const response = await request.post('/function/AIFunc', { text: editor.getText(), command: '智能排版' });
-						if (response.code == 200) {
-							editor.commands.setContent(response.message);
-						} else {
-							ElMessage.error(response.message);
-						}
-					} catch (error) {
-						ElMessage.error(error);
-					} finally {
+					setTimeout(() => {
+						const { state, view } = editor
+						const { tr } = state
+						// Clear all marks
+						state.doc.descendants((node, pos) => {
+							if (node.marks.length) {
+								node.marks.forEach(mark => {
+									tr.removeMark(pos, pos + node.nodeSize, mark.type)
+								})
+							}
+						})
+						// Clear all nodes' attributes, excluding text nodes
+						state.doc.descendants((node, pos) => {
+							if (node.type.isText) return
+							tr.setNodeMarkup(pos, null, {})
+						})
+						// Apply the transaction
+						view.dispatch(tr)
+
+						editor.commands.setContent(editor.getHTML().replace(/<p>\s*<\/p>/g, '').replace(/<br\s*\/?>/g, '').replace(/<p>/g, '<p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'));
 						loadingInstance.close();
-					}
+					 }, 2000);
 				},
 			},
 			{
