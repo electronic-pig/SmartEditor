@@ -3,7 +3,7 @@
     <h2 class="title">我的模板</h2>
     <div class="documents-grid">
       <div v-for="(doc, index) in documents" :key="index" class="document-card" @click="handleClick(doc.id)">
-        <img src="../assets/images/docs.png" alt="Document" class="document-logo">
+        <img src="../assets/images/doc.png" alt="Document" class="document-logo">
         <div class="document-title">{{ doc.title }}</div>
         <el-dropdown class="document-dropdown">
           <el-icon :size="18">
@@ -54,23 +54,23 @@ const openInNewTab = (id) => {
 };
 // 从模板创建文档
 const createFromTemplate = async (content) => {
-    const loadingInstance = ElLoading.service({
-      fullscreen: true,
-      text: "正在创建文档...",
-    });
-    try {
-      const response = await request.post('/document', { content: content });
-      if (response.code == 200) {
-        ElMessage.success('创建文档成功!');
-        router.push({ name: 'edit', params: { id: response.id } });
-      } else {
-        ElMessage.error(response.message);
-      }
-    } catch (error) {
-      ElMessage.error(error);
-    } finally {
-      loadingInstance.close();
+  const loadingInstance = ElLoading.service({
+    fullscreen: true,
+    text: "正在创建文档...",
+  });
+  try {
+    const response = await request.post('/document', { content: content });
+    if (response.code == 200) {
+      ElMessage.success('创建文档成功!');
+      router.push({ name: 'edit', params: { id: response.id } });
+    } else {
+      ElMessage.error(response.message);
     }
+  } catch (error) {
+    ElMessage.error(error);
+  } finally {
+    loadingInstance.close();
+  }
 };
 // 撤销模板
 const cancelTemplate = async (id) => {

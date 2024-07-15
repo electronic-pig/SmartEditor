@@ -4,7 +4,7 @@
     <el-table :data="documents" class="table" :row-style="{ height: '50px' }">
       <el-table-column label="标题"><template #default="{ row }">
           <div style="display: flex; align-items: center;">
-            <img src="../assets/images/docs.png" alt="Document" style="height: 30px; margin-right: 8px;">
+            <img src="../assets/images/doc.png" alt="Document" style="height: 30px; margin-right: 8px;">
             {{ row.title }}
           </div>
         </template></el-table-column>

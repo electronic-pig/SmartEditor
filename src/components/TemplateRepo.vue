@@ -3,7 +3,7 @@
     <h2 class="title">模板库</h2>
     <div class="documents-grid">
       <div v-for="(doc, index) in documents" :key="index" class="document-card" @click="handleClick(doc.id)">
-        <img src="../assets/images/docs.png" alt="Document" class="document-logo">
+        <img src="../assets/images/doc.png" alt="Document" class="document-logo">
         <div class="document-title">{{ doc.title }}</div>
         <el-dropdown class="document-dropdown">
           <el-icon :size="18">
