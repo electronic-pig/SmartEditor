@@ -2,7 +2,7 @@
   <div class="container">
     <div class="header">
       <div class="logo">
-        <img style="height: 40px;" alt="logo" src="../assets/images/白底logo.png" />
+        <img style="height: 40px;" alt="logo" src="../assets/images/white_bg_logo.png" />
         <span href="#" class="name">妙笔 · 智能编辑器</span>
       </div>
       <ul class="links">
@@ -25,7 +25,7 @@
       </div>
       <div class="image">
         <div class="img-bg"></div>
-        <img style="height: 250px;" alt="logo" src="../assets/images/圆logo.png" />
+        <img style="height: 250px;" alt="logo" src="../assets/images/round_logo.png" />
       </div>
     </div>
     <div class="features">

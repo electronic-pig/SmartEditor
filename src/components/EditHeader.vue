@@ -57,9 +57,9 @@
     </el-tooltip>
   </div>
   <el-dialog v-model="ocrDialog" width="500" title="上传图片">
-    <el-upload v-if="!uploadSuccess" ref="ocrUpload" drag action="http://127.0.0.1:5000/function/ocr"
-      accept=".jpg, .jpeg, .png" :limit="1" :on-exceed="handleExceed" :before-upload="checkImage" :auto-upload="false"
-      :on-success="handleSuccess">
+    <el-upload v-if="!uploadSuccess" ref="ocrUpload" drag
+      action="/api/function/ocr" accept=".jpg, .jpeg, .png" :limit="1"
+      :on-exceed="handleExceed" :before-upload="checkImage" :auto-upload="false" :on-success="handleSuccess">
       <el-icon class="el-icon--upload"><upload-filled /></el-icon>
       <div class="el-upload__text">
         将图片拖到此处或 <em>点击上传</em>
@@ -76,9 +76,9 @@
     </template>
   </el-dialog>
   <el-dialog v-model="asrDialog" width="500" title="上传音频">
-    <el-upload v-if="!uploadSuccess" ref="asrUpload" drag action="http://127.0.0.1:5000/function/asr"
-      accept=".wav, .mp3" :limit="1" :on-exceed="handleExceed" :before-upload="checkSpeech" :auto-upload="false"
-      :on-success="handleSuccess">
+    <el-upload v-if="!uploadSuccess" ref="asrUpload" drag
+      action="/api/function/asr" accept=".wav, .mp3" :limit="1"
+      :on-exceed="handleExceed" :before-upload="checkSpeech" :auto-upload="false" :on-success="handleSuccess">
       <el-icon class="el-icon--upload"><upload-filled /></el-icon>
       <div class="el-upload__text">
         将文件拖到此处或 <em>点击上传</em>

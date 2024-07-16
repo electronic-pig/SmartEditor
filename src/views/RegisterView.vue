@@ -2,7 +2,7 @@
   <div class="container">
     <div class="register">
       <div class="image">
-        <img style="width: 160px;" alt="logo" src="../assets/images/白底logo.png" />
+        <img style="width: 160px;" alt="logo" src="../assets/images/white_bg_logo.png" />
       </div>
       <p class="logo">妙笔</p>
       <el-form class="form" :model="registerForm" :rules="rules" ref="registerFormRef">
