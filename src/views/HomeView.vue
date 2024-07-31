@@ -2,7 +2,7 @@
   <div class="container">
     <div class="header">
       <div class="logo">
-        <img style="height: 40px;" alt="logo" src="../assets/images/white_bg_logo.png" />
+        <img style="height: 6vh;" alt="logo" src="../assets/images/white_bg_logo.png" />
         <span href="#" class="name">妙笔 · 智能编辑器</span>
       </div>
       <ul class="links">
@@ -25,7 +25,7 @@
       </div>
       <div class="image">
         <div class="img-bg"></div>
-        <img style="height: 250px;" alt="logo" src="../assets/images/round_logo.png" />
+        <img style="height: 30vh;" alt="logo" src="../assets/images/round_logo.png" />
       </div>
     </div>
     <div class="features">
@@ -43,7 +43,7 @@
       </div>
     </div>
     <div class="footer">
-      <p>Copyright © 2024 妙笔.</p>
+      <p style="font-size: 2vh;">Copyright © 2024 妙笔.</p>
     </div>
   </div>
 </template>
@@ -71,8 +71,8 @@ const start = () => {
 }
 
 .name {
-  margin-left: 10px;
-  font-size: 20px;
+  margin-left: 1vw;
+  font-size: 3vh;
   color: #555;
   font-weight: bold
 }
@@ -81,11 +81,12 @@ const start = () => {
   list-style: none;
   display: flex;
   align-items: center;
+  font-size: 2.5vh;
 }
 
 .links li a {
   text-decoration: none;
-  margin-left: 30px;
+  margin-left: 3vw;
   color: #5d5d5d;
   cursor: pointer;
   transition: 0.3s;
@@ -93,9 +94,9 @@ const start = () => {
 
 .toLogin {
   text-decoration: none;
-  margin-left: 30px;
-  border-radius: 20px;
-  padding: 10px 20px;
+  margin-left: 3vw;
+  border-radius: 2vh;
+  padding: 1vh 1.5vw;
   color: #fff;
   background-color: #6c63ff;
 }
@@ -118,12 +119,12 @@ const start = () => {
 
 .content .info h1 {
   color: #444;
-  font-size: 56px;
+  font-size: 6vh;
   margin: 0;
 }
 
 .content .info .clip {
-  font-size: 56px;
+  font-size: 8vh;
   margin: 0;
   font-weight: bold;
   background: linear-gradient(135deg, #47caff, #bd34fe);
@@ -133,16 +134,17 @@ const start = () => {
 
 .content .info p {
   margin: 0;
-  padding-top: 12px;
-  font-size: 24px;
+  padding-top: 1.5vh;
+  font-size: 4vh;
   color: #5d5d5d;
 }
 
 .content .info button {
+  font-size: 2vh;
   border: 0;
-  border-radius: 20px;
-  padding: 12px 30px;
-  margin-top: 30px;
+  border-radius: 3vh;
+  padding: 2vh 2vw;
+  margin-top: 3vh;
   cursor: pointer;
   color: #fff;
   background-color: #6c63ff;
@@ -157,12 +159,12 @@ const start = () => {
 
 .content .image .img-bg {
   position: absolute;
-  top: -25px;
-  width: 300px;
-  height: 300px;
+  top: -5vh;
+  width: 40vh;
+  height: 40vh;
   background-color: var(--el-color-primary-light-3);
   border-radius: 50%;
-  filter: blur(120px);
+  filter: blur(14vh);
 }
 
 .features {
@@ -175,17 +177,19 @@ const start = () => {
 .feat {
   flex: 1;
   background-color: #f6f6f7;
-  border-radius: 10px;
-  margin: 0 10px;
-  padding: 20px;
+  border-radius: 1vh;
+  margin: 0 1vh;
+  padding: 2vh;
 }
 
 .feat h3 {
+  font-size: 3vh;
   color: #666;
   margin: 0;
 }
 
 .feat p {
+  font-size: 2vh;
   color: #888;
   line-height: 1.5;
 }
