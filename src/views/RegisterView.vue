@@ -34,15 +34,20 @@
         </el-form-item>
         <el-form-item prop="verification_code">
           <div class="code-container">
-            <el-input v-model="registerForm.verification_code" autocomplete="off" placeholder="验证码"><template #prepend>
+            <el-input style="width: 14vw;" v-model="registerForm.verification_code" autocomplete="off"
+              placeholder="验证码">
+              <template #prepend>
                 <el-icon>
                   <Check />
-                </el-icon> </template></el-input>
-            <el-button :disabled="isButtonDisabled" @click="getCode" style="margin-left: 5px">{{ isButtonDisabled ?
-              `已发送(${countdown}s)` : '发送验证码' }}</el-button>
+                </el-icon>
+              </template>
+            </el-input>
+            <el-button :disabled="isButtonDisabled" @click="getCode" style="width: 5vw; margin-left: 1vw; font-size: 0.8vw;">{{
+              isButtonDisabled ?
+                `已发送(${countdown}s)` : '发送验证码' }}</el-button>
           </div>
         </el-form-item>
-        <div style="text-align: center">
+        <div class="buttons">
           <el-button type="default" @click="cancel">取消</el-button>
           <el-button type="primary" @click="register">注册</el-button>
         </div>
@@ -170,7 +175,7 @@ const goLogin = () => {
   align-items: center;
   height: 80vh;
   width: 24vw;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 0px 1vh rgba(0, 0, 0, 0.3);
   border-radius: 1vw;
   background-color: #fff;
 }
@@ -178,16 +183,16 @@ const goLogin = () => {
 .image {
   display: flex;
   justify-content: center;
-  margin-top: 24px;
+  margin-top: 2vh;
 }
 
 .logo {
-  margin: 10px auto;
+  margin: 1vh auto;
   font-weight: bold;
   background: linear-gradient(135deg, #5DAEFF, #bd34fe);
   background-clip: text;
   color: transparent;
-  font-size: 32px;
+  font-size: 6vh;
 }
 
 img {
@@ -202,11 +207,20 @@ img {
   display: flex;
 }
 
+.buttons {
+  text-align: center;
+}
+
+.buttons .el-button {
+  height: 4vh;
+  width: 6vw;
+  font-size: 2vh;
+}
+
 .login {
-  margin-top: 20px;
-  font-size: 14px;
-  line-height: 22px;
-  text-indent: 8px;
+  margin-top: 2vh;
+  font-size: 2vh;
+  line-height: 2vh;
   color: var(--theme--color);
   cursor: pointer;
   display: inline-block;

@@ -2,7 +2,7 @@
   <div class="container">
     <div class="login">
       <div class="image">
-        <img style="width: 160px;" alt="logo" src="../assets/images/white_bg_logo.png" />
+        <img style="width: 10vw;" alt="logo" src="../assets/images/white_bg_logo.png" />
       </div>
       <p class="logo">妙笔</p>
       <el-form class="form" :model="loginForm" :rules="rules" ref="loginFormRef">
@@ -24,7 +24,7 @@
         v-if="!isSuccess">点击按钮进行验证</el-button>
       <el-button type="success" plain :icon="CircleCheck" class="varify" v-if="isSuccess">验证成功</el-button>
       <Vcode :show="isShow" @success="onSuccess" @close="onClose" />
-      <div style="text-align: center">
+      <div class="buttons">
         <el-button type="default" @click="cancel">取消</el-button>
         <el-button type="primary" @click="login">登录</el-button>
       </div>
@@ -35,7 +35,7 @@
 
 <script setup>
 import { ref, reactive } from "vue";
-import { ElLoading, ElMessage } from "element-plus";
+import { buttonEmits, ElLoading, ElMessage } from "element-plus";
 import { Pointer, CircleCheck } from '@element-plus/icons-vue'
 import { useUserStore } from '../stores/userStore.js';
 import Vcode from "vue3-puzzle-vcode";
@@ -117,7 +117,7 @@ const goRegist = () => {
 
 </script>
 
-<style scoped>
+<style scoped >
 .container {
   display: flex;
   justify-content: center;
@@ -132,7 +132,7 @@ const goRegist = () => {
   align-items: center;
   height: 80vh;
   width: 24vw;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 0px 1vh rgba(0, 0, 0, 0.3);
   border-radius: 1vw;
   background-color: #fff;
 }
@@ -140,16 +140,16 @@ const goRegist = () => {
 .image {
   display: flex;
   justify-content: center;
-  margin-top: 24px;
+  margin-top: 2vh;
 }
 
 .logo {
-  margin: 10px auto;
+  margin: 1vh auto;
   font-weight: bold;
   background: linear-gradient(135deg, #5DAEFF, #bd34fe);
   background-clip: text;
   color: transparent;
-  font-size: 32px;
+  font-size: 6vh;
 }
 
 .form {
@@ -163,14 +163,20 @@ const goRegist = () => {
 .varify {
   width: 20vw;
   height: 5vh;
-  margin-bottom: 20px;
+  margin-bottom: 2vh;
+  font-size: 2vh;
+}
+
+.buttons .el-button{
+  height: 4vh;
+  width: 6vw;
+  font-size: 2vh;
 }
 
 .register {
-  margin-top: 20px;
-  font-size: 14px;
-  line-height: 22px;
-  text-indent: 8px;
+  margin-top: 2vh;
+  font-size: 2vh;
+  line-height: 2vh;
   color: var(--theme--color);
   cursor: pointer;
   display: inline-block;

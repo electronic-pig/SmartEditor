@@ -14,7 +14,7 @@ body,
 }
 
 .name {
-  font-size: 56px;
+  font-size: 5vh;
   font-weight: bold;
   background: linear-gradient(135deg, #47caff, #bd34fe);
   background-clip: text;
@@ -22,8 +22,8 @@ body,
 }
 
 .loading {
-  width: 35px;
-  height: 35px;
+  width: 3vh;
+  height: 3vh;
   border: 3px solid #6c63ff;
   border-top-color: transparent;
   border-radius: 100%;
@@ -32,7 +32,7 @@ body,
 
 .load_title {
   color: #6c63ff;
-  font-size: 24px;
+  font-size: 2vh;
   width: 100%;
   text-align: center;
 }
