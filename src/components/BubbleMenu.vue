@@ -99,22 +99,40 @@ const headingStyle = computed(() => {
 const AIfunc = async (command) => {
   const { from, to } = props.editor.state.selection;
   const selectedText = props.editor.state.doc.textBetween(from, to, ' ');
-  const loadingInstance = ElLoading.service({
-    fullscreen: true,
-    text: "正在生成内容...",
-  });
   try {
-    const response = await request.post('/function/AIFunc', { text: selectedText, command: command });
-    if (response.code == 200) {
-      const transaction = props.editor.state.tr.insertText(response.message, from, to);
-      props.editor.view.dispatch(transaction);
-    } else {
-      ElMessage.error(response.message);
+    const response = await fetch('/function/AIFunc', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ text: selectedText, command: command }),
+    });
+
+    if (!response.ok) {
+      throw new Error('网络响应不正常');
     }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder('utf-8');
+    let receivedText = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      receivedText += decoder.decode(value, { stream: true });
+
+      // 逐步插入接收到的文本
+      const transaction = props.editor.state.tr.insertText(receivedText, from, to);
+      props.editor.view.dispatch(transaction);
+    }
+
+    // 最后一次解码剩余的文本
+    receivedText += decoder.decode();
+    const transaction = props.editor.state.tr.insertText(receivedText, from, to);
+    props.editor.view.dispatch(transaction);
+
   } catch (error) {
-    ElMessage.error(error);
-  } finally {
-    loadingInstance.close();
+    ElMessage.error(error.message);
   }
 }
 </script>
