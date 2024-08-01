@@ -73,7 +73,6 @@ import { BubbleMenu } from '@tiptap/vue-3'
 import { computed } from 'vue';
 import { ElButton, ElDivider, ElDropdown, ElDropdownMenu, ElDropdownItem } from 'element-plus';
 import { ElMessage, ElLoading } from "element-plus";
-import request from "../utils/request.js";
 
 const props = defineProps({
   editor: Object
@@ -97,10 +96,18 @@ const headingStyle = computed(() => {
 });
 // AI功能
 const AIfunc = async (command) => {
-  const { from, to } = props.editor.state.selection;
+  let { from, to } = props.editor.state.selection;
+  if (from === to) {
+    ElMessage.warning('请先选中文本!');
+    return;
+  }
   const selectedText = props.editor.state.doc.textBetween(from, to, ' ');
+  const loadingInstance = ElLoading.service({
+    fullscreen: true,
+    text: "正在加载中...",
+  });
   try {
-    const response = await fetch('/function/AIFunc', {
+    const response = await fetch('/api/function/AIFunc', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -115,21 +122,29 @@ const AIfunc = async (command) => {
     const reader = response.body.getReader();
     const decoder = new TextDecoder('utf-8');
     let receivedText = '';
+    let firstChunk = true; // 标记是否是第一次插入
 
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
-      receivedText += decoder.decode(value, { stream: true });
+      const decodedValue = decoder.decode(value, { stream: true });
+      receivedText += decodedValue;
 
-      // 逐步插入接收到的文本
-      const transaction = props.editor.state.tr.insertText(receivedText, from, to);
+      let transaction;
+      if (firstChunk) {
+        loadingInstance.close();
+        // 第一次插入时覆盖选中的文本
+        transaction = props.editor.state.tr.insertText(decodedValue, from, to);
+        firstChunk = false; // 标记为已经插入过第一次
+      } else {
+        // 后续插入追加文本
+        transaction = props.editor.state.tr.insertText(decodedValue, from);
+      }
       props.editor.view.dispatch(transaction);
-    }
 
-    // 最后一次解码剩余的文本
-    receivedText += decoder.decode();
-    const transaction = props.editor.state.tr.insertText(receivedText, from, to);
-    props.editor.view.dispatch(transaction);
+      // 更新 from 的位置
+      from += decodedValue.length;
+    }
 
   } catch (error) {
     ElMessage.error(error.message);

@@ -279,24 +279,58 @@ const addImage = () => {
 }
 // AI功能
 const AIfunc = async (command) => {
-  const { from, to } = props.editor.state.selection;
+  let { from, to } = props.editor.state.selection;
+  if (from === to) {
+    ElMessage.warning('请先选中文本!');
+    return;
+  }
   const selectedText = props.editor.state.doc.textBetween(from, to, ' ');
   const loadingInstance = ElLoading.service({
     fullscreen: true,
-    text: "正在生成内容...",
+    text: "正在加载中...",
   });
   try {
-    const response = await request.post('/function/AIFunc', { text: selectedText, command: command });
-    if (response.code == 200) {
-      const transaction = props.editor.state.tr.insertText(response.message, from, to);
-      props.editor.view.dispatch(transaction);
-    } else {
-      ElMessage.error(response.message);
+    const response = await fetch('/api/function/AIFunc', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ text: selectedText, command: command }),
+    });
+
+    if (!response.ok) {
+      throw new Error('网络响应不正常');
     }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder('utf-8');
+    let receivedText = '';
+    let firstChunk = true; // 标记是否是第一次插入
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const decodedValue = decoder.decode(value, { stream: true });
+      receivedText += decodedValue;
+
+      let transaction;
+      if (firstChunk) {
+        loadingInstance.close();
+        // 第一次插入时覆盖选中的文本
+        transaction = props.editor.state.tr.insertText(decodedValue, from, to);
+        firstChunk = false; // 标记为已经插入过第一次
+      } else {
+        // 后续插入追加文本
+        transaction = props.editor.state.tr.insertText(decodedValue, from);
+      }
+      props.editor.view.dispatch(transaction);
+
+      // 更新 from 的位置
+      from += decodedValue.length;
+    }
+
   } catch (error) {
-    ElMessage.error(error);
-  } finally {
-    loadingInstance.close();
+    ElMessage.error(error.message);
   }
 }
 </script>

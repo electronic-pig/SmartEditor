@@ -41,20 +41,35 @@ const props = defineProps(nodeViewProps)
 const send = async () => {
 	const loadingInstance = ElLoading.service({
 		fullscreen: true,
-		text: "正在生成内容...",
+		text: "正在加载中...",
 	});
 	try {
-		const response = await request.post('/function/AIFunc', { command: '', text: '', prompt: prompt.value, tone: tone.value });
-		if (response.code == 200) {
-			reply.value = response.message;
-			replySuccess.value = true;
-		} else {
-			ElMessage.error(response.message);
+		const response = await fetch('/api/function/AIFunc', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ command: '', text: '', prompt: prompt.value, tone: tone.value }),
+		});
+		if (!response.ok) {
+			throw new Error('网络响应不正常');
+		}
+		const reader = response.body.getReader();
+		const decoder = new TextDecoder('utf-8');
+		let receivedText = '';
+		loadingInstance.close();
+		while (true) {
+			const { done, value } = await reader.read();
+			if (done) break;
+			if (!replySuccess.value) {
+				replySuccess.value = true;
+			}
+			const decodedValue = decoder.decode(value, { stream: true });
+			receivedText += decodedValue;
+			reply.value = receivedText;
 		}
 	} catch (error) {
-		ElMessage.error(error);
-	} finally {
-		loadingInstance.close();
+		ElMessage.error(error.message);
 	}
 }
 

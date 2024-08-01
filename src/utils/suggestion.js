@@ -2,9 +2,7 @@ import { VueRenderer } from '@tiptap/vue-3';
 import tippy from 'tippy.js';
 
 import CommandsList from '../components/CommandsList.vue';
-import request from "../utils/request.js";
 import { ElMessage, ElLoading } from "element-plus";
-import { set } from 'nprogress';
 
 export default {
 	items: ({ query }) => {
@@ -52,7 +50,7 @@ export default {
 
 						editor.commands.setContent(editor.getHTML().replace(/<p>\s*<\/p>/g, '').replace(/<br\s*\/?>/g, '').replace(/<p>/g, '<p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'));
 						loadingInstance.close();
-					 }, 2000);
+					}, 2000);
 				},
 			},
 			{
@@ -64,19 +62,32 @@ export default {
 					dispatch(tr);
 					const loadingInstance = ElLoading.service({
 						fullscreen: true,
-						text: "正在生成内容...",
+						text: "正在加载中...",
 					});
 					try {
-						const response = await request.post('/function/AIFunc', { text: editor.getHTML(), command: '全文总结' });
-						if (response.code == 200) {
-							editor.chain().focus().insertContent(response.message).run();
-						} else {
-							ElMessage.error(response.message);
+						const response = await fetch('/api/function/AIFunc', {
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json',
+							},
+							body: JSON.stringify({ text: editor.getHTML(), command: '全文总结' }),
+						});
+						if (!response.ok) {
+							throw new Error('网络响应不正常');
+						}
+						const reader = response.body.getReader();
+						const decoder = new TextDecoder('utf-8');
+						let receivedText = '';
+						loadingInstance.close();
+						while (true) {
+							const { done, value } = await reader.read();
+							if (done) break;
+							const decodedValue = decoder.decode(value, { stream: true });
+							receivedText += decodedValue;
+							editor.chain().focus().insertContent(decodedValue).run();
 						}
 					} catch (error) {
-						ElMessage.error(error);
-					} finally {
-						loadingInstance.close();
+						ElMessage.error(error.message);
 					}
 				},
 			},
@@ -89,19 +100,32 @@ export default {
 					dispatch(tr);
 					const loadingInstance = ElLoading.service({
 						fullscreen: true,
-						text: "正在生成内容...",
+						text: "正在加载中...",
 					});
 					try {
-						const response = await request.post('/function/AIFunc', { text: editor.getHTML(), command: '重点提取' });
-						if (response.code == 200) {
-							editor.chain().focus().insertContent(response.message).run();
-						} else {
-							ElMessage.error(response.message);
+						const response = await fetch('/api/function/AIFunc', {
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json',
+							},
+							body: JSON.stringify({ text: editor.getHTML(), command: '重点提取' }),
+						});
+						if (!response.ok) {
+							throw new Error('网络响应不正常');
+						}
+						const reader = response.body.getReader();
+						const decoder = new TextDecoder('utf-8');
+						let receivedText = '';
+						loadingInstance.close();
+						while (true) {
+							const { done, value } = await reader.read();
+							if (done) break;
+							const decodedValue = decoder.decode(value, { stream: true });
+							receivedText += decodedValue;
+							editor.chain().focus().insertContent(decodedValue).run();
 						}
 					} catch (error) {
-						ElMessage.error(error);
-					} finally {
-						loadingInstance.close();
+						ElMessage.error(error.message);
 					}
 				},
 			},
@@ -114,19 +138,32 @@ export default {
 					dispatch(tr);
 					const loadingInstance = ElLoading.service({
 						fullscreen: true,
-						text: "正在生成内容...",
+						text: "正在加载中...",
 					});
 					try {
-						const response = await request.post('/function/AIFunc', { text: editor.getHTML(), command: '全文翻译' });
-						if (response.code == 200) {
-							editor.commands.setContent(response.message);
-						} else {
-							ElMessage.error(response.message);
+						const response = await fetch('/api/function/AIFunc', {
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json',
+							},
+							body: JSON.stringify({ text: editor.getHTML(), command: '全文翻译' }),
+						});
+						if (!response.ok) {
+							throw new Error('网络响应不正常');
+						}
+						const reader = response.body.getReader();
+						const decoder = new TextDecoder('utf-8');
+						let receivedText = '';
+						loadingInstance.close();
+						while (true) {
+							const { done, value } = await reader.read();
+							if (done) break;
+							const decodedValue = decoder.decode(value, { stream: true });
+							receivedText += decodedValue;
+							editor.chain().focus().insertContent(decodedValue).run();
 						}
 					} catch (error) {
-						ElMessage.error(error);
-					} finally {
-						loadingInstance.close();
+						ElMessage.error(error.message);
 					}
 				},
 			},
