@@ -1,39 +1,23 @@
 <template>
   <div class="container">
     <h2 class="title">回收站</h2>
-    <el-table :data="documents" class="table" :row-style="{ height: '50px' }">
-      <el-table-column label="标题"><template #default="{ row }">
-          <div style="display: flex; align-items: center;">
-            <img src="../assets/images/doc.png" alt="Document" style="height: 30px; margin-right: 8px;">
-            {{ row.title }}
-          </div>
-        </template></el-table-column>
-      <el-table-column label="创建时间">
-        <template #default="{ row }">
-          {{ formatDate(row.created_at) }}
-        </template>
-      </el-table-column>
-      <el-table-column label="更新时间">
-        <template #default="{ row }">
-          {{ formatDate(row.updated_at) }}
-        </template>
-      </el-table-column>
-      <el-table-column label="操作">
-        <template #default="{ row }">
-          <el-dropdown @command="command => handleCommand(command, row)">
-            <el-icon :size="20">
-              <Setting />
-            </el-icon>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item command="recoverDocument">恢复文档</el-dropdown-item>
-                <el-dropdown-item command="deleteDocument">彻底删除</el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
-        </template>
-      </el-table-column>
-    </el-table>
+    <div class="documents-grid">
+      <div v-for="(doc, index) in documents" :key="index" class="document-card">
+        <img src="../assets/images/doc.png" alt="Document" class="document-logo">
+        <div class="document-title">{{ doc.title }}</div>
+        <el-dropdown class="document-dropdown">
+          <el-icon :size="18">
+            <Setting />
+          </el-icon>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item @click="recoverDocument(doc.id)">恢复文档</el-dropdown-item>
+              <el-dropdown-item @click="deleteDocument(doc.id)">彻底删除</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -45,20 +29,6 @@ import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 
 const documents = ref([]);
-
-const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  return new Intl.DateTimeFormat('zh-CN', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: false,
-    timeZone: 'Asia/Shanghai'
-  }).format(date);
-};
 
 const loadDocuments = async () => {
   try {
@@ -73,24 +43,11 @@ const loadDocuments = async () => {
     NProgress.done();
   }
 };
-
-const handleCommand = (command, document) => {
-  switch (command) {
-    case 'recoverDocument':
-      recoverDocument(document);
-      break;
-    case 'deleteDocument':
-      deleteDocument(document);
-      break;
-    default:
-      break;
-  }
-};
-
-const recoverDocument = async (document) => {
+// 恢复文档
+const recoverDocument = async (id) => {
   try {
     NProgress.start();
-    const response = await request.put(`/document/recover/${document.id}`);
+    const response = await request.put(`/document/recover/${id}`);
     if (response.code == 200) {
       ElMessage.success(response.message);
       loadDocuments();
@@ -103,11 +60,11 @@ const recoverDocument = async (document) => {
     NProgress.done();
   }
 };
-
-const deleteDocument = async (document) => {
+// 彻底删除文档
+const deleteDocument = async (id) => {
   try {
     NProgress.start();
-    const response = await request.delete(`/document/${document.id}`);
+    const response = await request.delete(`/document/${id}`);
     if (response.code == 200) {
       ElMessage.success(response.message);
       loadDocuments();
@@ -126,18 +83,52 @@ onMounted(loadDocuments);
 
 <style scoped>
 .container {
-  margin: 20px 2vw;
+  margin: 2vh 2vw;
 }
 
 .title {
   color: #555;
 }
 
-.table {
+.documents-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  margin-top: 2vh;
+}
+
+.document-card {
+  width: 10%;
+  margin: 3vh 1.5vw;
+  margin-bottom: 1vh;
+  position: relative;
+}
+
+.document-card:hover {
+  background-color: #f5f5f5;
+  border-radius: 1vh;
+}
+
+.document-logo {
   width: 100%;
 }
 
-.table :deep(.el-table__body) :hover {
+.document-title {
+  text-align: center;
+  font-family: Arial, sans-serif;
+  color: #555;
+  font-weight: bold;
+}
+
+.document-dropdown {
+  position: absolute;
+  top: 0.5vh;
+  right: 0.5vw;
+  visibility: hidden;
   cursor: pointer;
+}
+
+.document-card:hover .document-dropdown {
+  visibility: visible
 }
 </style>

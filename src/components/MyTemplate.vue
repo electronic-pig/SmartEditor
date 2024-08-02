@@ -106,7 +106,7 @@ const addRecycle = async (id) => {
     NProgress.done();
   }
 };
-// 点击模板卡片
+// 点击文档
 const handleClick = (id) => {
   router.push({ name: 'edit', params: { id: id } });
 };
@@ -116,7 +116,7 @@ onMounted(loadDocuments);
 
 <style scoped>
 .container {
-  margin: 20px 2vw;
+  margin: 2vh 2vw;
 }
 
 .title {
@@ -127,20 +127,20 @@ onMounted(loadDocuments);
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-  margin-top: 20px;
+  margin-top: 2vh;
 }
 
 .document-card {
   width: 10%;
   margin: 3vh 1.5vw;
-  margin-bottom: 10px;
+  margin-bottom: 1vh;
   position: relative;
   cursor: pointer;
 }
 
 .document-card:hover {
   background-color: #f5f5f5;
-  border-radius: 8px;
+  border-radius: 1vh;
 }
 
 .document-logo {
@@ -156,8 +156,8 @@ onMounted(loadDocuments);
 
 .document-dropdown {
   position: absolute;
-  top: 4px;
-  right: 4px;
+  top: 0.5vh;
+  right: 0.5vw;
   visibility: hidden;
 }
 

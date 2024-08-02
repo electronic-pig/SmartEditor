@@ -1,41 +1,25 @@
 <template>
   <div class="container">
     <h2 class="title">我的文档</h2>
-    <el-table :data="documents" class="table" :row-style="{ height: '50px' }" @row-click="handleRowClick">
-      <el-table-column label="标题"><template #default="{ row }">
-          <div style="display: flex; align-items: center;">
-            <img src="../assets/images/doc.png" alt="Document" style="height: 30px; margin-right: 8px;">
-            {{ row.title }}
-          </div>
-        </template></el-table-column>
-      <el-table-column label="创建时间">
-        <template #default="{ row }">
-          {{ formatDate(row.created_at) }}
-        </template>
-      </el-table-column>
-      <el-table-column label="更新时间">
-        <template #default="{ row }">
-          {{ formatDate(row.updated_at) }}
-        </template>
-      </el-table-column>
-      <el-table-column label="操作">
-        <template #default="{ row }">
-          <el-dropdown>
-            <el-icon :size="20">
-              <Setting />
-            </el-icon>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item @click="openInNewTab(row.id)">新标签打开</el-dropdown-item>
-                <el-dropdown-item @click="addTemplate(row.id)">另存为模板</el-dropdown-item>
-                <el-dropdown-item @click="addFavorite(row.id)">收藏文档</el-dropdown-item>
-                <el-dropdown-item @click="addRecycle(row.id)">放入回收站</el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
-        </template>
-      </el-table-column>
-    </el-table>
+    <div class="documents-grid">
+      <div v-for="(doc, index) in documents" :key="index" class="document-card" @click="handleClick(doc.id)">
+        <img src="../assets/images/doc.png" alt="Document" class="document-logo">
+        <div class="document-title">{{ doc.title }}</div>
+        <el-dropdown class="document-dropdown">
+          <el-icon :size="18">
+            <Setting />
+          </el-icon>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item @click="openInNewTab(doc.id)">新标签打开</el-dropdown-item>
+              <el-dropdown-item @click="addTemplate(doc.id)">另存为模板</el-dropdown-item>
+              <el-dropdown-item @click="addFavorite(doc.id)">收藏文档</el-dropdown-item>
+              <el-dropdown-item @click="addRecycle(doc.id)">放入回收站</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -48,20 +32,6 @@ import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 
 const documents = ref([]);
-
-const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  return new Intl.DateTimeFormat('zh-CN', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: false,
-    timeZone: 'Asia/Shanghai'
-  }).format(date);
-};
 
 const loadDocuments = async () => {
   try {
@@ -131,8 +101,8 @@ const addRecycle = async (id) => {
   }
 };
 // 点击文档
-const handleRowClick = (row) => {
-  router.push({ name: 'edit', params: { id: row.id } });
+const handleClick = (id) => {
+  router.push({ name: 'edit', params: { id: id } });
 };
 
 onMounted(loadDocuments);
@@ -140,18 +110,52 @@ onMounted(loadDocuments);
 
 <style scoped>
 .container {
-  margin: 20px 2vw;
+  margin: 2vh 2vw;
 }
 
 .title {
   color: #555;
 }
 
-.table {
+.documents-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  margin-top: 2vh;
+}
+
+.document-card {
+  width: 10%;
+  margin: 3vh 1.5vw;
+  margin-bottom: 1vh;
+  position: relative;
+  cursor: pointer;
+}
+
+.document-card:hover {
+  background-color: #f5f5f5;
+  border-radius: 1vh;
+}
+
+.document-logo {
   width: 100%;
 }
 
-.table :deep(.el-table__body) :hover {
-  cursor: pointer;
+.document-title {
+  text-align: center;
+  font-family: Arial, sans-serif;
+  color: #555;
+  font-weight: bold;
+}
+
+.document-dropdown {
+  position: absolute;
+  top: 0.5vh;
+  right: 0.5vw;
+  visibility: hidden;
+}
+
+.document-card:hover .document-dropdown {
+  visibility: visible
 }
 </style>

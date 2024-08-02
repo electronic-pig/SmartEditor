@@ -71,7 +71,7 @@ const createFromTemplate = async (content) => {
     loadingInstance.close();
   }
 };
-// 点击模板卡片
+// 点击文档
 const handleClick = (id) => {
   router.push({ name: 'edit', params: { id: id } });
 };
