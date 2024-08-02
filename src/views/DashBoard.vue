@@ -7,6 +7,8 @@
       </div>
       <div class="add-container">
         <button class="add" @click="createDoc()"><i class="ri-add-line"></i>&nbsp;新建文档</button>
+        <button class="import" @click="importDoc()"><i class="ri-import-line"></i>&nbsp;导入文档</button>
+        <input type="file" ref="fileInput" accept=".docx" @change="handleFileChange" style="display: none;">
       </div>
       <el-divider class="divider-title">功能区</el-divider>
       <!-- 左侧导航链接 -->
@@ -55,7 +57,7 @@
     <el-container>
       <el-header class="header">
         <a href="https://github.com/electronic-pig/SmartEditor" target="_blank" style="text-decoration: none; ">
-          <i style="font-size: 30px; color: #555" class="ri-github-fill"></i>
+          <i style="font-size: 4vh; color: #555" class="ri-github-fill"></i>
         </a>
         <el-autocomplete v-model="search" :fetch-suggestions="querySearchAsync" :trigger-on-focus="false"
           value-key="title" @select="handleSelect" placeholder="通过文档名搜索文档" clearable
@@ -108,11 +110,13 @@ import { useUserStore } from "../stores/userStore.js";
 import ResetPassword from "../components/ResetPassword.vue";
 import request from "../utils/request.js";
 import { ElMessage, ElLoading } from "element-plus";
+import mammoth from 'mammoth';
 
 const userStore = useUserStore();
 const toggle = ref(false);  // 控制重置密码对话框的显示
 const RightsDialog = ref(false);  // 控制权益对比表格的显示
 let search = ref('');
+const fileInput = ref(null);
 const tableData = ref([
   { Type: '存储空间', super: '10G', gold: '1G', normal: '100M' },
   { Type: '文档数量', super: '无限制', gold: '1000', normal: '100' },
@@ -165,7 +169,7 @@ const createDoc = async () => {
     text: "正在新建文档...",
   });
   try {
-    const response = await request.post('/document', { content: "" });
+    const response = await request.post('/document', { title: "未命名文档", content: "" });
     if (response.code == 200) {
       ElMessage.success('新建文档成功!');
       router.push({ name: 'edit', params: { id: response.id } });
@@ -176,6 +180,35 @@ const createDoc = async () => {
     ElMessage.error(error);
   } finally {
     loadingInstance.close();
+  }
+};
+// 导入文档
+const importDoc = () => {
+  fileInput.value.click();
+};
+// 处理文档输入
+const handleFileChange = async (event) => {
+  const file = event.target.files[0];
+  const loadingInstance = ElLoading.service({
+    fullscreen: true,
+    text: "正在导入文档...",
+  });
+  if (file) {
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const result = await mammoth.extractRawText({ arrayBuffer });
+      const response = await request.post('/document', { title: file.name.substring(0, file.name.lastIndexOf('.')), content: result.value });
+      if (response.code == 200) {
+        ElMessage.success('导入文档成功!');
+        router.push({ name: 'edit', params: { id: response.id } });
+      } else {
+        ElMessage.error(response.message);
+      }
+    } catch (error) {
+      ElMessage.error(error);
+    } finally {
+      loadingInstance.close();
+    }
   }
 };
 // 更多功能
@@ -211,13 +244,13 @@ const setCell = ({ row, column, rowIndex, columnIndex }) => {
 
 .platform-logo {
   width: 7vw;
-  margin: 10px auto;
+  margin: 1vh auto;
 }
 
 .platform-title {
   position: relative;
   font-weight: bolder;
-  font-size: 28px;
+  font-size: 4vh;
   cursor: pointer;
   background: linear-gradient(135deg, #5DAEFF, #bd34fe);
   background-clip: text;
@@ -242,6 +275,7 @@ const setCell = ({ row, column, rowIndex, columnIndex }) => {
 
 .add-container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   margin: 3vh 0;
@@ -257,6 +291,22 @@ const setCell = ({ row, column, rowIndex, columnIndex }) => {
   cursor: pointer;
 }
 
+.import {
+  width: 80%;
+  border: 1px solid #DCDFE6;
+  padding: 1.5vh 0;
+  margin-top: 1vh;
+  border-radius: 10px;
+  background-color: #fff;
+  color: var(--el-color-primary);
+}
+
+.import:hover {
+  border: 1px solid var(--el-color-primary-light-5);
+  color: var(--el-color-primary);
+  cursor: pointer;
+}
+
 .divider-title :deep(.el-divider__text) {
   line-height: 24px;
   background-color: var(--nav--color);
@@ -269,7 +319,7 @@ const setCell = ({ row, column, rowIndex, columnIndex }) => {
   margin-left: 1vw;
   color: var(--el-color-primary);
   cursor: pointer;
-  font-size: 16px;
+  font-size: 2.5vh;
 }
 
 .router-link {
@@ -308,20 +358,20 @@ const setCell = ({ row, column, rowIndex, columnIndex }) => {
 
 .more {
   width: 100%;
-  padding: 10px 0;
-  margin-top: 26vh;
+  padding: 1.5vh 0;
+  margin-top: 20vh;
   display: block;
   text-align: center;
   text-decoration: none;
   border-radius: 10px;
   color: var(--el-color-primary-light-3);
   background-color: #DCDFE6;
-  cursor: pointer;
 }
 
 .more:hover {
   background-color: var(--el-color-primary-light-5);
   color: #eee;
+  cursor: pointer;
 }
 
 .header {
@@ -334,6 +384,6 @@ const setCell = ({ row, column, rowIndex, columnIndex }) => {
 }
 
 .main {
-  padding: 0px;
+  padding: 0;
 }
 </style>

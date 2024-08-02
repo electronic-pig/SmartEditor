@@ -144,7 +144,7 @@ const createDoc = async () => {
     text: "正在新建文档...",
   });
   try {
-    const response = await request.post('/document', { content: "" });
+    const response = await request.post('/document', { title: "未命名文档", content: "" });
     if (response.code == 200) {
       ElMessage.success('新建文档成功!');
       router.push({ name: 'edit', params: { id: response.id } });

@@ -41,6 +41,7 @@
     "jsmind": "^0.8.5",
     "jspdf": "^2.5.1",
     "lowlight": "^3.1.0",
+    "mammoth": "^1.8.0",
     "normalize.css": "^8.0.1",
     "nprogress": "^0.2.0",
     "pinia": "^2.1.7",

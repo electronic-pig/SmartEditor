@@ -12,7 +12,7 @@
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item @click="openInNewTab(doc.id)">新标签打开</el-dropdown-item>
-              <el-dropdown-item @click="createFromTemplate(doc.content)">从模板创建文档</el-dropdown-item>
+              <el-dropdown-item @click="createFromTemplate(doc.title, doc.content)">从模板创建文档</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -52,13 +52,13 @@ const openInNewTab = (id) => {
   window.open(url, '_blank');
 };
 // 从模板创建文档
-const createFromTemplate = async (content) => {
+const createFromTemplate = async (title, content) => {
   const loadingInstance = ElLoading.service({
     fullscreen: true,
     text: "正在创建文档...",
   });
   try {
-    const response = await request.post('/document', { content: content });
+    const response = await request.post('/document', { title: title + "_副本", content: content });
     if (response.code == 200) {
       ElMessage.success('创建文档成功!');
       router.push({ name: 'edit', params: { id: response.id } });
