@@ -22,10 +22,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { Check } from '@element-plus/icons-vue'
 import { nodeViewProps, NodeViewWrapper } from '@tiptap/vue-3';
-import request from "../utils/request.js";
 import { ElMessage, ElLoading } from "element-plus";
 
 const prompt = ref('')
@@ -35,7 +34,7 @@ const replySuccess = ref(false)
 
 const options = ["商业", "学术", '随意', '正式', '感性', '客观', '诗意'];
 // 定义 props
-const props = defineProps(nodeViewProps)
+const props = defineProps(nodeViewProps);
 
 // 定义 send 方法
 const send = async () => {
@@ -81,6 +80,12 @@ const copyToClipboard = async () => {
 		ElMessage.error('复制失败!', error)
 	}
 }
+
+onMounted(() => {
+	if (props.node.attrs.message) {
+		prompt.value = props.node.attrs.message;
+	}
+})
 </script>
 
 <style lang="scss">

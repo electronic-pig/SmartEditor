@@ -12,7 +12,7 @@
           <div class="doc" :class="{ 'doc-active': doc.id == router.currentRoute.value.params.id }"
             v-for="doc in documents" :key="doc.id" @click="handleDocClick(doc.id)">
             <h3>{{ doc.title }}</h3>
-            <p>{{ doc.content.replace(/<[^>]*>/g, " ").slice(0, 24) }}...</p>
+            <p>{{ doc.content.replace(/<[^>]*>/g, " ") }}</p>
           </div>
         </div>
         <div class="content">
@@ -33,7 +33,18 @@
               </transition-group>
             </div>
             <div v-else key="tools">
-              <p>这是一段文本</p>
+              <el-select v-model="profession" placeholder="选择职业">
+                <el-option v-for="item in promptPresets" :key="item.value" :label="item.label" :value="item.value" />
+              </el-select>
+              <div v-for="item in promptPresets.find(item => item.value === profession).options" class="option-card"
+                @click="InsertErnie(item.prompt)">
+                <h3>
+                  <i v-for="item in promptPresets" :key="item.value"
+                    :class="item.value === profession ? item.icon : ''"></i>
+                  {{ item.title }}
+                </h3>
+                <p>{{ item.prompt }}</p>
+              </div>
             </div>
           </transition>
         </div>
@@ -84,12 +95,14 @@ import { Color } from '@tiptap/extension-color'
 import VueComponent from '../utils/Extension.js'
 import slash from '../utils/slash.js'
 import suggestion from '../utils/suggestion.js'
+import promptPresets from '../utils/promptPresets';
 
 const lowlight = createLowlight()
 lowlight.register({ html, ts, css, js })
 const title = ref('');
 const documents = ref([]);
-const catalog = ref(true);
+const catalog = ref(false);
+const profession = ref('学生');
 
 // 创建编辑器实例
 const editor = useEditor({
@@ -188,6 +201,15 @@ const handleDocClick = (id) => {
   router.push({ name: 'edit', params: { id: id } });
   loadDocuments();
 };
+// 文心助手
+const InsertErnie = (prompt) => {
+  const { state, dispatch } = editor.value.view;
+  const { $from } = state.selection;
+  const tr = state.tr.delete($from.pos - 1, $from.pos);
+  dispatch(tr);
+  editor.value.chain().focus().insertContent(`<vue-component message="${prompt}" />`).run();
+  editor.value.chain().blur().run();
+}
 // 初次挂载
 onMounted(loadDocuments);
 // 销毁编辑器

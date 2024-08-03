@@ -10,6 +10,14 @@ export default Node.create({
 
 	atom: true,
 
+	addAttributes() {
+		return {
+			message: {
+				default: null,
+			},
+		};
+	},
+
 	parseHTML() {
 		return [
 			{
