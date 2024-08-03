@@ -35,6 +35,11 @@
     <input type="text" :value="title" @input="updateTitle" style="background: none; border: 0px; outline: none" />
   </div>
   <div class="right-group" style="margin-right: 1vw;">
+    <el-tooltip content="文心助手" :hide-after="0">
+      <el-button @click="InsertErnie()" class="icon">
+        <i style="font-size: 22px;" class="ri-baidu-fill"></i>
+      </el-button>
+    </el-tooltip>
     <el-tooltip content="字符识别" :hide-after="0">
       <el-button @click="ocrDialog = true; uploadSuccess = false" class="icon">
         <i style="font-size: 22px;" class="ri-character-recognition-line"></i>
@@ -43,11 +48,6 @@
     <el-tooltip content="语音识别" :hide-after="0">
       <el-button @click="asrDialog = true; uploadSuccess = false" class="icon">
         <i style="font-size: 22px;" class="ri-voice-recognition-line"></i>
-      </el-button>
-    </el-tooltip>
-    <el-tooltip content="视频总结" :hide-after="0">
-      <el-button @click="ElMessage.info('正在开发中...');" class="icon">
-        <i style="font-size: 22px;" class="ri-youtube-line"></i>
       </el-button>
     </el-tooltip>
     <el-tooltip content="思维导图" :hide-after="0">
@@ -197,6 +197,15 @@ const download = (fileName) => {
   // 恢复原来的样式
   element.style.overflowY = 'auto';
   element.style.height = '100%';
+}
+// 文心助手
+const InsertErnie = () => {
+  const { state, dispatch } = props.editor.view;
+  const { $from } = state.selection;
+  const tr = state.tr.delete($from.pos - 1, $from.pos);
+  dispatch(tr);
+  props.editor.chain().focus().insertContent('<vue-component />').run();
+  props.editor.chain().blur().run();
 }
 // 检查上传图片格式
 const checkImage = (file) => {

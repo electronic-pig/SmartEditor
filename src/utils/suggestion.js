@@ -8,17 +8,6 @@ export default {
 	items: ({ query }) => {
 		return [
 			{
-				title: '文心助手',
-				command: ({ editor }) => {
-					const { state, dispatch } = editor.view;
-					const { $from } = state.selection;
-					const tr = state.tr.delete($from.pos - 1, $from.pos);
-					dispatch(tr);
-					editor.chain().focus().insertContent('<vue-component />').run();
-					editor.chain().blur().run();
-				},
-			},
-			{
 				title: '智能排版',
 				command: async ({ editor }) => {
 					const { state, dispatch } = editor.view;

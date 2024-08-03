@@ -57,10 +57,10 @@
         </el-button>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item @click="AIfunc('续写')">AI 续写</el-dropdown-item>
-            <el-dropdown-item @click="AIfunc('润色')">AI 润色</el-dropdown-item>
-            <el-dropdown-item @click="AIfunc('校对')">AI 校对</el-dropdown-item>
-            <el-dropdown-item @click="AIfunc('翻译')">AI 翻译</el-dropdown-item>
+            <el-dropdown-item @click="AIfunc('续写')"><i class="ri-edit-line"></i> AI 续写</el-dropdown-item>
+            <el-dropdown-item @click="AIfunc('润色')"><i class="ri-palette-fill"></i>AI 润色</el-dropdown-item>
+            <el-dropdown-item @click="AIfunc('校对')"><i class="ri-shield-check-fill"></i>AI 校对</el-dropdown-item>
+            <el-dropdown-item @click="AIfunc('翻译')"><i class="ri-translate"></i>AI 翻译</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
