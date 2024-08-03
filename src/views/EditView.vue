@@ -19,11 +19,23 @@
           <editor-content :editor="editor" id="editor-content" />
         </div>
         <div class="catalog">
-          <h2 style="color: #555;">大纲</h2>
-          <div v-for="(item, index) in outline" :key="index" :level="item.level" class="outline-item"
-            @click="goToHeading(item)">
-            {{ item.text }}
+          <div class="title">
+            <div @click="catalog = true" :class="['option', { 'option-active': catalog }]">大纲</div>
+            <div @click="catalog = false" :class="['option', { 'option-active': !catalog }]">工具</div>
           </div>
+          <transition name="fade" mode="out-in">
+            <div v-if="catalog" key="catalog">
+              <transition-group name="fade" tag="div">
+                <div v-for="(item, index) in outline" :key="item.text" :level="item.level" class="outline-item"
+                  @click="goToHeading(item)">
+                  {{ item.text }}
+                </div>
+              </transition-group>
+            </div>
+            <div v-else key="tools">
+              <p>这是一段文本</p>
+            </div>
+          </transition>
         </div>
       </div>
       <div class="word-count">总字符数：{{ editor?.storage.characterCount.characters() }}</div>
@@ -77,6 +89,7 @@ const lowlight = createLowlight()
 lowlight.register({ html, ts, css, js })
 const title = ref('');
 const documents = ref([]);
+const catalog = ref(true);
 
 // 创建编辑器实例
 const editor = useEditor({
@@ -211,5 +224,15 @@ onBeforeUnmount(() => {
 .main {
   padding: 1vh;
   overflow-y: hidden;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

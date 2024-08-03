@@ -404,8 +404,8 @@
 	}
 
 	.catalog {
-		width: 18vw;
-		padding-left: 40px;
+		width: 15vw;
+		padding: 0 1vw;
 		background-color: var(--white);
 		border-radius: 0 10px 0 0;
 		overflow-y: auto;
@@ -418,6 +418,33 @@
 			// WebKit 
 			width: 0;
 			height: 0;
+		}
+
+		.title {
+			color: #555;
+			font-size: 3vh;
+			font-weight: bold;
+			margin: 2vh 0 3vh 0;
+			display: flex;
+			justify-content: space-evenly;
+			border: 1px solid #f0f0f0;
+			border-radius: 8px;
+
+			.option {
+				height: 5vh;
+				line-height: 5vh;
+				width: 50%;
+				text-align: center;
+				cursor: pointer;
+				transition: background-color 0.5s, color 0.5s;
+
+			}
+
+			.option-active {
+				background-color: #f0f0f0;
+				border-radius: 8px;
+				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+			}
 		}
 	}
 
@@ -434,7 +461,6 @@
 }
 
 .outline-item {
-	margin-right: 4vw;
 	cursor: pointer;
 	padding: 10px 0;
 	color: #666;
