@@ -35,21 +35,37 @@
         </div>
         <div class="right-side">
           <div class="title">
-            <div class="option option-active">提 示</div>
-            <div class="option">排 版</div>
+            <div @click="typography = false" :class="['option', { 'option-active': !typography }]">提 示</div>
+            <div @click="typography = true" :class="['option', { 'option-active': typography }]">排 版</div>
           </div>
-          <el-select v-model="profession" placeholder="选择职业" style="margin-top: 1vh;">
-            <el-option v-for="item in promptPresets" :key="item.value" :label="item.label" :value="item.value" />
-          </el-select>
-          <div v-for="item in promptPresets.find(item => item.value === profession).options" class="option-card"
-            @click="InsertErnie(item.prompt)">
-            <h3>
-              <i v-for="item in promptPresets" :key="item.value" :class="item.value === profession ? item.icon : ''"
-                style="color: var(--el-color-primary-light-5);"></i>
-              {{ item.title }}
-            </h3>
-            <p>{{ item.prompt }}</p>
-          </div>
+          <transition name="fade" mode="out-in">
+            <div v-if="typography" key="typographyTemps">
+              <transition-group name="fade" tag="div">
+                <div v-for="item in typographyTemps" class="typography-card" @click="setTypograph(item)">
+                  <h3><i class="ri-article-fill" style="color: var(--el-color-primary-light-5);"></i> {{ item.title }}
+                  </h3>
+                  <p><b><i class="ri-font-family"></i>&nbsp;字体：</b>{{ item.font }}</p>
+                  <p><b><i class="ri-font-size"></i>&nbsp;字号：</b>{{ item.font_size }}</p>
+                  <p><b><i class="ri-line-height"></i>&nbsp;行距：</b>{{ item.line_spacing }}</p>
+                  <p><b><i class="ri-paragraph"></i>&nbsp;段落：</b>{{ item.paragraph }}</p>
+                </div>
+              </transition-group>
+            </div>
+            <div v-else key="promptPresets">
+              <el-select v-model="profession" placeholder="选择职业" style="margin-top: 1vh;">
+                <el-option v-for="item in promptPresets" :key="item.value" :label="item.label" :value="item.value" />
+              </el-select>
+              <div v-for="item in promptPresets.find(item => item.value === profession).options" class="presets-card"
+                @click="InsertErnie(item.prompt)">
+                <h3>
+                  <i v-for="item in promptPresets" :key="item.value" :class="item.value === profession ? item.icon : ''"
+                    style="color: var(--el-color-primary-light-5);"></i>
+                  {{ item.title }}
+                </h3>
+                <p>{{ item.prompt }}</p>
+              </div>
+            </div>
+          </transition>
         </div>
       </div>
       <div class="word-count">总字符数：{{ editor?.storage.characterCount.characters() }}</div>
@@ -59,7 +75,7 @@
 
 <script setup>
 import { ref, onMounted, computed, onBeforeUnmount } from 'vue';
-import { ElContainer, ElHeader, ElMain } from 'element-plus';
+import { ElContainer, ElHeader, ElMain, ElLoading } from 'element-plus';
 import { ElMessage } from "element-plus";
 import EditHeader from '../components/EditHeader.vue';
 import FixedMenu from '../components/FixedMenu.vue';
@@ -99,6 +115,7 @@ import VueComponent from '../utils/Extension.js'
 import slash from '../utils/slash.js'
 import suggestion from '../utils/suggestion.js'
 import promptPresets from '../utils/promptPresets';
+import typographyTemps from '../utils/typographyTemps';
 
 const lowlight = createLowlight()
 lowlight.register({ html, ts, css, js })
@@ -106,6 +123,7 @@ const title = ref('');
 const documents = ref([]);
 const catalog = ref(false);
 const profession = ref('学生');
+const typography = ref(true);
 
 // 创建编辑器实例
 const editor = useEditor({
@@ -206,12 +224,41 @@ const handleDocClick = (id) => {
 };
 // 文心助手
 const InsertErnie = (prompt) => {
-  const { state, dispatch } = editor.value.view;
-  const { $from } = state.selection;
-  const tr = state.tr.delete($from.pos - 1, $from.pos);
-  dispatch(tr);
   editor.value.chain().focus().insertContent(`<vue-component message="${prompt}" />`).run();
   editor.value.chain().blur().run();
+}
+// 排版
+const setTypograph = async (item) => {
+  const loadingInstance = ElLoading.service({
+    fullscreen: true,
+    text: "正在加载中...",
+  });
+  try {
+    const response = await fetch('/api/function/typography', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ text: editor.value.getHTML(), title: item.title, font: item.font, font_size: item.font_size, line_spacing: item.line_spacing, paragraph: item.paragraph }),
+    });
+    if (!response.ok) {
+      throw new Error('网络响应不正常');
+    }
+    editor.value.commands.setContent('');
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder('utf-8');
+    let receivedText = '';
+    loadingInstance.close();
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const decodedValue = decoder.decode(value, { stream: true });
+      receivedText += decodedValue;
+      editor.value.chain().focus().insertContent(decodedValue).run();
+    }
+  } catch (error) {
+    ElMessage.error(error.message);
+  }
 }
 // 初次挂载
 onMounted(loadDocuments);

@@ -488,7 +488,7 @@
 
 }
 
-.option-card {
+.presets-card {
 	width: 100%;
 	height: 14vh;
 	background-color: #f5f5f5;
@@ -519,11 +519,38 @@
 	}
 }
 
+.typography-card {
+	width: 100%;
+	height: 16vh;
+	background-color: #f5f5f5;
+	border-radius: 10px;
+	margin-top: 1.5vh;
+
+	&:hover {
+		background-color: var(--el-color-primary-light-9);
+		cursor: pointer;
+	}
+
+	h3 {
+		color: #555;
+		margin: 0;
+		padding: 1vh 1vw;
+	}
+
+	p {
+		font-size: 2vh;
+		color: #888;
+		margin: 0;
+		padding: 0 0 0 2vw;	
+	}
+}
+
 .word-count {
-	font-size: 18px;
+	height: 3.8vh;
+	font-size: 2.5vh;
 	color: #888;
 	background-color: var(--white);
-	padding-bottom: 8px;
+	padding-top: 0.5vh;
 	padding-right: 2vw;
 	border-radius: 0 0 10px 10px;
 	text-align: right;
