@@ -223,10 +223,10 @@
       </el-button>
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item @click="AIfunc('续写')"><i class="ri-edit-line"></i> AI 续写</el-dropdown-item>
-          <el-dropdown-item @click="AIfunc('润色')"><i class="ri-palette-fill"></i>AI 润色</el-dropdown-item>
-          <el-dropdown-item @click="AIfunc('校对')"><i class="ri-shield-check-fill"></i>AI 校对</el-dropdown-item>
-          <el-dropdown-item @click="AIfunc('翻译')"><i class="ri-translate"></i>AI 翻译</el-dropdown-item>
+          <el-dropdown-item @click="AIfunc('续写')"><i class="ri-edit-line"></i> 文本续写</el-dropdown-item>
+          <el-dropdown-item @click="AIfunc('润色')"><i class="ri-palette-fill"></i>修饰润色</el-dropdown-item>
+          <el-dropdown-item @click="AIfunc('校对')"><i class="ri-shield-check-fill"></i>病句改写</el-dropdown-item>
+          <el-dropdown-item @click="AIfunc('翻译')"><i class="ri-translate"></i>中英翻译</el-dropdown-item>
         </el-dropdown-menu>
       </template>
     </el-dropdown>

@@ -7,21 +7,10 @@
       <FixedMenu v-if="editor" :editor="editor" />
       <BubbleMenu v-if="editor" :editor="editor" :tippy-options="{ duration: 100 }" />
       <div class="editor-container">
-        <div class="docs">
-          <h2 style="color: #555;margin-left: 5vw">我的文档</h2>
-          <div class="doc" :class="{ 'doc-active': doc.id == router.currentRoute.value.params.id }"
-            v-for="doc in documents" :key="doc.id" @click="handleDocClick(doc.id)">
-            <h3>{{ doc.title }}</h3>
-            <p>{{ doc.content.replace(/<[^>]*>/g, " ") }}</p>
-          </div>
-        </div>
-        <div class="content">
-          <editor-content :editor="editor" id="editor-content" />
-        </div>
-        <div class="catalog">
+        <div class="left-side">
           <div class="title">
-            <div @click="catalog = true" :class="['option', { 'option-active': catalog }]">大纲</div>
-            <div @click="catalog = false" :class="['option', { 'option-active': !catalog }]">工具</div>
+            <div @click="catalog = false" :class="['option', { 'option-active': !catalog }]">文 档</div>
+            <div @click="catalog = true" :class="['option', { 'option-active': catalog }]">大 纲</div>
           </div>
           <transition name="fade" mode="out-in">
             <div v-if="catalog" key="catalog">
@@ -32,21 +21,35 @@
                 </div>
               </transition-group>
             </div>
-            <div v-else key="tools">
-              <el-select v-model="profession" placeholder="选择职业">
-                <el-option v-for="item in promptPresets" :key="item.value" :label="item.label" :value="item.value" />
-              </el-select>
-              <div v-for="item in promptPresets.find(item => item.value === profession).options" class="option-card"
-                @click="InsertErnie(item.prompt)">
-                <h3>
-                  <i v-for="item in promptPresets" :key="item.value"
-                    :class="item.value === profession ? item.icon : ''"></i>
-                  {{ item.title }}
-                </h3>
-                <p>{{ item.prompt }}</p>
+            <div v-else key="docs">
+              <div class="doc" :class="{ 'doc-active': doc.id == router.currentRoute.value.params.id }"
+                v-for="doc in documents" :key="doc.id" @click="handleDocClick(doc.id)">
+                <h3>{{ doc.title }}</h3>
+                <p>{{ doc.content.replace(/<[^>]*>/g, " ") }}</p>
               </div>
             </div>
           </transition>
+        </div>
+        <div class="content">
+          <editor-content :editor="editor" id="editor-content" />
+        </div>
+        <div class="right-side">
+          <div class="title">
+            <div class="option option-active">提 示</div>
+            <div class="option">排 版</div>
+          </div>
+          <el-select v-model="profession" placeholder="选择职业" style="margin-top: 1vh;">
+            <el-option v-for="item in promptPresets" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+          <div v-for="item in promptPresets.find(item => item.value === profession).options" class="option-card"
+            @click="InsertErnie(item.prompt)">
+            <h3>
+              <i v-for="item in promptPresets" :key="item.value" :class="item.value === profession ? item.icon : ''"
+                style="color: var(--el-color-primary-light-5);"></i>
+              {{ item.title }}
+            </h3>
+            <p>{{ item.prompt }}</p>
+          </div>
         </div>
       </div>
       <div class="word-count">总字符数：{{ editor?.storage.characterCount.characters() }}</div>

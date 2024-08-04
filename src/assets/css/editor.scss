@@ -296,11 +296,11 @@
 		transition: background-color 0.3s;
 
 		&:hover {
-			background-color: #f0f0f0;
+			background-color: var(--el-color-primary-light-9);
 		}
 
 		&.is-active {
-			background-color: #f0f0f0;
+			background-color: var(--el-color-primary-light-9);
 		}
 	}
 
@@ -331,11 +331,11 @@
 		transition: background-color 0.3s;
 
 		&:hover {
-			background-color: #f0f0f0;
+			background-color: var(--el-color-primary-light-9);
 		}
 
 		&.is-active {
-			background-color: #f0f0f0;
+			background-color: var(--el-color-primary-light-9);
 		}
 	}
 
@@ -352,7 +352,7 @@
 	margin-top: 1vh;
 	height: 82vh;
 
-	.docs {
+	.left-side {
 		width: 16vw;
 		background-color: var(--white);
 		border-right: 1px solid #f0f0f0;
@@ -369,6 +369,36 @@
 			height: 0;
 		}
 
+		.title {
+			height: 8vh;
+			position: sticky;
+			top: 0;
+			z-index: 1;
+			background-color: white;
+			display: flex;
+			justify-content: space-evenly;
+			align-items: center;
+
+			.option {
+				font-size: 2.5vh;
+				font-weight: bold;
+				padding: 0 1vw 1vh;
+				color: #555;
+				border-bottom: 3px solid #555;
+
+				&:hover {
+					cursor: pointer;
+					color: var(--el-color-primary-light-3);
+					border-bottom: 3px solid var(--el-color-primary-light-3);
+				}
+			}
+
+			.option-active {
+				color: var(--el-color-primary-light-3);
+				border-bottom: 3px solid var(--el-color-primary-light-3);
+			}
+		}
+
 		.doc {
 			height: 11vh;
 			color: #666;
@@ -377,7 +407,7 @@
 			border: 1px solid #f0f0f0;
 
 			&:hover {
-				background-color: #f0f0f0;
+				background-color: var(--el-color-primary-light-9);
 			}
 
 			h3,
@@ -393,7 +423,7 @@
 		}
 
 		.doc-active {
-			background-color: #f0f0f0;
+			background-color: var(--el-color-primary-light-9);
 		}
 	}
 
@@ -408,7 +438,8 @@
 		}
 	}
 
-	.catalog {
+	.right-side {
+		position: relative;
 		width: 15vw;
 		padding: 0 1vw;
 		background-color: var(--white);
@@ -426,27 +457,29 @@
 		}
 
 		.title {
-			color: #555;
-			font-size: 3vh;
-			font-weight: bold;
-			margin: 2vh 0 3vh 0;
+			height: 8vh;
+			position: sticky;
+			top: 0;
+			z-index: 1;
+			background-color: white;
 			display: flex;
 			justify-content: space-evenly;
-			border: 1px solid #f0f0f0;
-			border-radius: 8px;
+			align-items: center;
 
 			.option {
+				margin: 0 0.5vw;
+				font-size: 2.5vh;
 				height: 5vh;
 				line-height: 5vh;
+				font-weight: bold;
 				width: 50%;
 				text-align: center;
 				cursor: pointer;
 				transition: background-color 0.5s, color 0.5s;
-
 			}
 
 			.option-active {
-				background-color: #f0f0f0;
+				background-color: var(--el-color-primary-light-8);
 				border-radius: 8px;
 				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 			}
@@ -463,7 +496,7 @@
 	margin-top: 1.5vh;
 
 	&:hover {
-		background-color: #f0f0f0;
+		background-color: var(--el-color-primary-light-9);
 		cursor: pointer;
 	}
 
@@ -498,12 +531,13 @@
 
 .outline-item {
 	cursor: pointer;
-	padding: 10px 0;
-	color: #666;
+	margin: 0 1vw;
+	padding: 1.5vh 0;
+	color: #555;
 }
 
 .outline-item:hover {
-	background-color: #EBEDF0;
+	background-color: var(--el-color-primary-light-9);
 	border-radius: 5px;
 	color: #000;
 }

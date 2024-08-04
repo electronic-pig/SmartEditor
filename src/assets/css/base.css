@@ -55,3 +55,11 @@
 .el-drawer__body {
   padding: 0;
 }
+
+.dropdown-menu button.is-selected {
+  background-color: var(--el-color-primary-light-8);
+}
+
+.dropdown-menu button:hover {
+  background-color: var(--el-color-primary-light-8);
+}
