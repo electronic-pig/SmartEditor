@@ -8,7 +8,7 @@ export default {
 	items: ({ query }) => {
 		return [
 			{
-				title: '智能排版',
+				title: '内容简化',
 				command: async ({ editor }) => {
 					const { state, dispatch } = editor.view;
 					const { $from } = state.selection;
@@ -16,30 +16,33 @@ export default {
 					dispatch(tr);
 					const loadingInstance = ElLoading.service({
 						fullscreen: true,
-						text: "正在生成内容...",
+						text: "正在加载中...",
 					});
-					setTimeout(() => {
-						const { state, view } = editor
-						const { tr } = state
-						// Clear all marks
-						state.doc.descendants((node, pos) => {
-							if (node.marks.length) {
-								node.marks.forEach(mark => {
-									tr.removeMark(pos, pos + node.nodeSize, mark.type)
-								})
-							}
-						})
-						// Clear all nodes' attributes, excluding text nodes
-						state.doc.descendants((node, pos) => {
-							if (node.type.isText) return
-							tr.setNodeMarkup(pos, null, {})
-						})
-						// Apply the transaction
-						view.dispatch(tr)
-
-						editor.commands.setContent(editor.getHTML().replace(/<p>\s*<\/p>/g, '').replace(/<br\s*\/?>/g, '').replace(/<p>/g, '<p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'));
+					try {
+						const response = await fetch('/api/function/AIFunc', {
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json',
+							},
+							body: JSON.stringify({ text: editor.getHTML(), command: '内容简化' }),
+						});
+						if (!response.ok) {
+							throw new Error('网络响应不正常');
+						}
+						const reader = response.body.getReader();
+						const decoder = new TextDecoder('utf-8');
+						let receivedText = '';
 						loadingInstance.close();
-					}, 2000);
+						while (true) {
+							const { done, value } = await reader.read();
+							if (done) break;
+							const decodedValue = decoder.decode(value, { stream: true });
+							receivedText += decodedValue;
+							editor.chain().focus().insertContent(decodedValue).run();
+						}
+					} catch (error) {
+						ElMessage.error(error.message);
+					}
 				},
 			},
 			{

@@ -223,7 +223,7 @@
       </el-button>
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item @click="AIfunc('续写')"><i class="ri-edit-line"></i> 文本续写</el-dropdown-item>
+          <el-dropdown-item @click="AIfunc('续写')"><i class="ri-edit-line"></i>文本续写</el-dropdown-item>
           <el-dropdown-item @click="AIfunc('润色')"><i class="ri-palette-fill"></i>修饰润色</el-dropdown-item>
           <el-dropdown-item @click="AIfunc('校对')"><i class="ri-shield-check-fill"></i>病句改写</el-dropdown-item>
           <el-dropdown-item @click="AIfunc('翻译')"><i class="ri-translate"></i>中英翻译</el-dropdown-item>
@@ -237,7 +237,6 @@
 import { computed } from 'vue';
 import { ElButton, ElTooltip, ElDivider, ElDropdown, ElDropdownMenu, ElDropdownItem, ElPopover } from 'element-plus';
 import { ElMessage, ElLoading } from "element-plus";
-import request from "../utils/request.js";
 import colorList from "../utils/colors.js"
 import fontFamily from "../utils/fontFamily.js"
 
@@ -314,19 +313,24 @@ const AIfunc = async (command) => {
       receivedText += decodedValue;
 
       let transaction;
-      if (firstChunk) {
+      if (command === '续写') {
         loadingInstance.close();
-        // 第一次插入时覆盖选中的文本
-        transaction = props.editor.state.tr.insertText(decodedValue, from, to);
-        firstChunk = false; // 标记为已经插入过第一次
+        transaction = props.editor.state.tr.insertText(decodedValue, to);
       } else {
-        // 后续插入追加文本
-        transaction = props.editor.state.tr.insertText(decodedValue, from);
+        // 其他功能追加文本
+        if (firstChunk) {
+          loadingInstance.close();
+          transaction = props.editor.state.tr.insertText(decodedValue, from, to);
+          firstChunk = false; // 标记为已经插入过第一次
+        } else {
+          transaction = props.editor.state.tr.insertText(decodedValue, from);
+        }
       }
       props.editor.view.dispatch(transaction);
 
-      // 更新 from 的位置
+      // 更新选区
       from += decodedValue.length;
+      to += decodedValue.length;
     }
 
   } catch (error) {
