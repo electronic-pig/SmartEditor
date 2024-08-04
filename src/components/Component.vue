@@ -7,7 +7,8 @@
 			</blockquote>
 		</div>
 		<div class="content">
-			<textarea v-model="prompt" class="resizable-textarea" placeholder="请输入内容..."></textarea>
+			<el-input v-model="prompt" style="width: 100%" :autosize="{ minRows: 2 }" type="textarea"
+				placeholder="请输入内容..." />
 		</div>
 		<div class="footer">
 			<el-select v-model="tone" placeholder="切换风格" style="width: 140px">
@@ -25,7 +26,7 @@
 import { onMounted, ref } from 'vue';
 import { Check } from '@element-plus/icons-vue'
 import { nodeViewProps, NodeViewWrapper } from '@tiptap/vue-3';
-import { ElMessage, ElLoading } from "element-plus";
+import { ElMessage, ElLoading, ElInput } from "element-plus";
 
 const prompt = ref('')
 const reply = ref('')
@@ -123,27 +124,6 @@ onMounted(() => {
 			padding: 0.5rem;
 			display: flex;
 			justify-content: center;
-
-			.resizable-textarea {
-				width: 100%;
-				height: 60px;
-				background-color: transparent;
-				border: 1px solid var(--purple-contrast);
-				border-radius: 8px;
-				font-size: 1rem;
-				padding: 0.5rem;
-				resize: vertical;
-			}
-
-			textarea:focus {
-				outline: none;
-				box-shadow: 0 0 10px rgba(0, 0, 255, .2);
-			}
-
-			.resizable-textarea::placeholder {
-				color: #999;
-				font-style: italic;
-			}
 		}
 
 		.footer {
