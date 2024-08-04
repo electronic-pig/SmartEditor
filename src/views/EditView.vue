@@ -15,7 +15,7 @@
           <transition name="fade" mode="out-in">
             <div v-if="catalog" key="catalog">
               <transition-group name="fade" tag="div">
-                <div v-for="(item, index) in outline" :key="item.text" :level="item.level" class="outline-item"
+                <div v-for="item in outline" :key="item.text" :level="item.level" class="outline-item"
                   @click="goToHeading(item)">
                   {{ item.text }}
                 </div>
@@ -41,7 +41,8 @@
           <transition name="fade" mode="out-in">
             <div v-if="typography" key="typographyTemps">
               <transition-group name="fade" tag="div">
-                <div v-for="item in typographyTemps" class="typography-card" @click="setTypograph(item)">
+                <div v-for="item in typographyTemps" :key="item.title" class="typography-card"
+                  @click="setTypograph(item)">
                   <h3><i class="ri-article-fill" style="color: var(--el-color-primary-light-5);"></i> {{ item.title }}
                   </h3>
                   <p><b><i class="ri-font-family"></i>&nbsp;字体：</b>{{ item.font }}</p>
@@ -123,7 +124,7 @@ const title = ref('');
 const documents = ref([]);
 const catalog = ref(false);
 const profession = ref('学生');
-const typography = ref(true);
+const typography = ref(false);
 
 // 创建编辑器实例
 const editor = useEditor({
