@@ -14,18 +14,63 @@
 
 **妙笔** —— 基于大小模型的在线文档富文本编辑器
 
-> [!NOTE]
-> 2024中国软件杯A10赛题，智能编辑器赛道
+> 2024年中国软件杯A10赛题
 
 后端仓库请移步[SmartEditor_backend](https://github.com/electronic-pig/SmartEditor_backend)
 
-## Recommended IDE Setup
+# 🎉 特性
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## 整体功能
 
-## Customize configuration
+- 用户认证
+- 文档管理
+- 富文本编辑
+- AI功能
+  
+## 赛题要求
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+- 智能润色
+- 多媒体信息提取
+- 智能格式排版
+
+# 🛠 技术栈
+
+<table>
+    <tr>
+        <td align="center">vue3</td>
+        <td align="center">pinia</td>
+        <td align="center">Element Plus</td>
+        <td align="center">Tiptap</td>
+        <td align="center">Remix Icon</td>
+    </tr>
+    <tr>
+        <td align="center">
+            <a title="vue" href="https://cn.vuejs.org/" target="_blank">
+                <img height="64px" src="https://github.com/user-attachments/assets/a193ff61-8738-44ab-87af-ccfeacfeeb4c"/>
+            </a>
+        </td>
+        <td align="center">
+            <a title="pinia" href="https://pinia.vuejs.org/zh/" target="_blank">
+                <img height="64px" src="https://github.com/user-attachments/assets/376ea66f-2851-48dc-a7cf-31d505c807e2"/>
+            </a>
+        </td>
+        <td align="center">
+            <a title="element-plus" href="https://element-plus.org/zh-CN/" target="_blank">
+                <img height="64px" src="https://github.com/user-attachments/assets/a88e7158-64f7-4d51-bb7c-12b024f9f913"/>
+            </a>
+        </td>
+        <td align="center">
+            <a title="tiptap" href="https://tiptap.dev/product/editor" target="_blank">
+                <img height="64px" src="https://github.com/user-attachments/assets/ec0bbdae-93b8-4ab3-86f6-39192dc653b9"/>
+            </a>
+        </td>
+        <td align="center">
+            <a title="RemixIcon" href="https://remixicon.com/" target="_blank">
+                <img height="64px" src="https://github.com/user-attachments/assets/0ac7f6d4-a03a-47dd-b207-2b3ab2626684"/>
+            </a>
+        </td>
+    </tr>
+</table>
 
 ## Project Setup
 
