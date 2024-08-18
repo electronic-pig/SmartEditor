@@ -35,6 +35,9 @@
 
 # 🛠 技术栈
 
+> [!Note]
+> 本项目使用**vite**作为开发服务器
+
 <table>
     <tr>
         <td align="center">vue3</td>
@@ -72,26 +75,28 @@
     </tr>
 </table>
 
-## Project Setup
+# 🚀 运行
 
+在执行后续步骤之前，请确保您配置好了以下环境：
+
+- nodejs ≥ 18.19.1
+
+然后在项目根目录执行以下步骤：
+
+### 安装依赖
 ```sh
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+### 编译运行
 
 ```sh
 npm run dev
 ```
 
-### Compile and Minify for Production
+### 打包部署
 
 ```sh
 npm run build
 ```
 
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
