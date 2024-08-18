@@ -7,12 +7,17 @@
 ![node.js version](https://img.shields.io/badge/nodejs-18+-orange.svg)
 ![GitHub Repo stars](https://img.shields.io/github/stars/electronic-pig/SmartEditor)
 
-<h1 align="center">妙  笔</h1>
+<h1 align="center">妙笔 · 智能编辑器</h1>
 </div>
 
-# SmartEditor
+# ✨ 简介
 
-This template should help get you started developing with Vue 3 in Vite.
+**妙笔** —— 基于大小模型的在线文档富文本编辑器
+
+> [!NOTE]
+> 2024中国软件杯A10赛题，智能编辑器赛道
+
+后端仓库请移步[SmartEditor_backend](https://github.com/electronic-pig/SmartEditor_backend)
 
 ## Recommended IDE Setup
 
