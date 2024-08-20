@@ -38,7 +38,7 @@
 > [!Note]
 > 本项目使用**vite**作为前端构建工具
 
-| [vue3](https://cn.vuejs.org/) | [pinia](https://pinia.vuejs.org/zh/) | [Element Plus](https://element-plus.org/zh-CN/) | [Tiptap](https://tiptap.dev/product/editor) | [Remix Icon](https://surpriselib.com/) |
+| [vue3](https://cn.vuejs.org/) | [pinia](https://pinia.vuejs.org/zh/) | [Element Plus](https://element-plus.org/zh-CN/) | [Tiptap](https://tiptap.dev/product/editor) | [Remix Icon](https://remixicon.com/) |
 |:---:|:---:|:---:|:---:|:---:|
 | [<img src="https://github.com/user-attachments/assets/a193ff61-8738-44ab-87af-ccfeacfeeb4c" alt="vue3" height="50px"/>](https://cn.vuejs.org/) | [<img src="https://github.com/user-attachments/assets/376ea66f-2851-48dc-a7cf-31d505c807e2" alt="pinia" height="50px"/>](https://pinia.vuejs.org/zh/) | [<img src="https://github.com/user-attachments/assets/a88e7158-64f7-4d51-bb7c-12b024f9f913" alt="Element Plus" height="50px"/>](https://element-plus.org/zh-CN/) | [<img src="https://github.com/user-attachments/assets/ec0bbdae-93b8-4ab3-86f6-39192dc653b9" alt="Tiptap" height="50px"/>](https://tiptap.dev/product/editor) | [<img src="https://github.com/user-attachments/assets/0ac7f6d4-a03a-47dd-b207-2b3ab2626684" alt="Remix Icon" height="50px"/>](https://remixicon.com/) |
 
