@@ -2,17 +2,17 @@
     <p align="center">
         <img src="https://github.com/user-attachments/assets/c7324129-02d4-48e9-af12-f0541f1421b2" alt="logo" width="200" />
     </p>
+    <h1 align="center">妙笔 · 智能编辑器</h1>
     
 ![GitHub License](https://img.shields.io/github/license/electronic-pig/SmartEditor)
 ![node.js version](https://img.shields.io/badge/nodejs-18+-orange.svg)
 ![GitHub Repo stars](https://img.shields.io/github/stars/electronic-pig/SmartEditor)
 
-<h1 align="center">妙笔 · 智能编辑器</h1>
 </div>
 
-> 2024年中国软件杯A10赛题
-
 # ✨ 简介
+
+> 2024年中国软件杯A10赛题
 
 妙笔 —— 基于大小模型的在线文档富文本编辑器，通过结合AI技术，为用户提供了一个全面、高效的文档编辑平台。妙笔不仅支持智能润色、多媒体信息提取和智能格式排版等核心功能，还提供了用户友好的交互界面和安全的文档管理体验，极大地提升了内容创作的效率和质量。
 
