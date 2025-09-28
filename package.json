@@ -35,7 +35,7 @@
     "@tiptap/suggestion": "^2.4.0",
     "@tiptap/vue-3": "^2.4.0",
     "axios": "^1.8.2",
-    "element-plus": "^2.7.7",
+    "element-plus": "^2.11.0",
     "highlight.js": "^11.10.0",
     "html2canvas": "^1.4.1",
     "jsmind": "^0.8.5",
