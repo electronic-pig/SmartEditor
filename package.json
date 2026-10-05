@@ -34,7 +34,7 @@
     "@tiptap/starter-kit": "^3.31.0",
     "@tiptap/suggestion": "^3.31.0",
     "@tiptap/vue-3": "^3.31.0",
-    "axios": "^1.18.0",
+    "axios": "^1.20.0",
     "element-plus": "^2.11.0",
     "highlight.js": "^11.10.0",
     "html2canvas": "^1.4.1",
